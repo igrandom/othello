@@ -38,7 +38,6 @@ screenBuffer	db 64000 dup(?)	; the 64000 bytes for the screen
 main:
 
 ;kriz is een fietswiel vind jij ook niet?
-;eerlijk gezegd vind ik van niet
 mov	ax, @DATA
 	mov	ds, ax
 	mov es, ax
