@@ -37,7 +37,7 @@ screenBuffer	db 64000 dup(?)	; the 64000 bytes for the screen
 
 main:
 
-
+;kriz is een fietswiel vind jij ook niet?
 mov	ax, @DATA
 	mov	ds, ax
 	mov es, ax
@@ -58,7 +58,7 @@ mov  ax, 1012h          ; function 1012h of int 10h (set DAC palette)
     
     push cx
     push ax
-    
+    ;hier zetten we nog wat commentaar bij gewoon voor de duidelijkheid enzo 
     
     					
 	call printGame
