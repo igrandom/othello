@@ -52,14 +52,12 @@ startgame PROC FAR
 call setupvakjes
 
 ;zet aantal black coins op 2
-mov ax, 0
-mov al, 2
-mov blackcoins, al
+call addblack
+call addblack
 
 ;zet aantal white coins op 2
-mov ax, 0
-mov al, 2
-mov whitecoins al
+call addwhite
+call addblack
 
 call mousereader
 
@@ -75,7 +73,66 @@ call mousereader
 	pop bp
 	ret 0
 	startgame ENDP
+	
+	;---------------------------------------------------------------------------
 
+addblack PROC FAR
+	push bp
+	mov bp, sp
+	push bx
+	push dx
+	push es
+	push cx
+	push ax 
+
+;-------------------------------
+
+
+
+;zet aantal black coins op 2
+mov ax, 0
+mov al blackcoins
+add al, 1
+mov blackcoins, al
+	
+;-------------------------------	
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
+	addblack ENDP
+	;---------------------------------------------------------------------------
+	addwhite PROC FAR
+	push bp
+	mov bp, sp
+	push bx
+	push dx
+	push es
+	push cx
+	push ax 
+
+;-------------------------------
+
+;zet aantal white coins op 2
+mov ax, 0
+mov al, whitecoins
+add al, 1
+mov whitecoins al
+
+;-------------------------------	
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
+	addwhite ENDP
+	
+;---------------------------------------------------------------------------
 setupvakjes PROC FAR
 	push bp
 	mov bp, sp
