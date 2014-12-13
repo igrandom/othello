@@ -157,6 +157,14 @@ call swapleft
 mov richting, 4
 call swapleft
 
+call berekenpossible
+call countcoins
+call drawcoins
+call switchbeurt
+
+jmp startloop
+
+
 	
 ;-------------------------------
 	
@@ -261,7 +269,7 @@ jmp callup
 
 
 ;----------------------
-setbx1:
+setbx1:						;bij verandering een
 mov ax, richting
 cmp ax, 1
 je left1
@@ -288,7 +296,7 @@ cmp ax, 0
 jmp back1
 
 ;----------------------
-setbx12:
+setbx12:				;bij verandering twee
 mov ax, richting
 cmp ax, 1
 je left2
@@ -316,7 +324,7 @@ add ax, 8
 jmp down2
 
 ;----------------------
-setbx3:
+setbx3:				;bij verandering drie
 mov ax, richting
 cmp ax, 1
 je left3
@@ -343,7 +351,7 @@ cmp ax, 0
 jmp back3
 
 ;----------------------
-setbx14:
+setbx14:			;bij verandering vier
 mov ax, richting
 cmp ax, 1
 je left4
@@ -371,7 +379,7 @@ sub ax, 8
 jmp down4
 
 ;----------------------
-setbx15:
+setbx15:			;bij verandering vijf
 mov ax, richting
 cmp ax, 1
 je left5
