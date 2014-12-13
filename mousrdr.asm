@@ -81,23 +81,47 @@ mousereader PROC FAR
 
 ;loop: muisloop, zolang niet geklikt
 
+
+:looped
 mov ax, 03h
-;if bx = 1 ; if left button is down (1 = left down
-; right click
+int 33h				;lees uit
+cmp bx, 1
+
+je clicked			 ;if bx = 1 ; if left button is down (1 = left down
+jmp looped
 
 
 
-int 33h
-mov botton, bx
 
-mov row, dx ; row position
-mov col, cx ; column position
+:clicked 				;als er geklikt is
+mov row, dx 			; row position
+mov col, cx 			; column position
 
-;if row between 20 en 196
-;if col between 20 en 196
-;-->then in field
-;---->calcVak
+mov ax, ROW				;kijk of row boven 20 ligt
+cmp ax, 20
+ja comparerowbelow
+jmp looped
 
+:comparerowbelow
+cmp ax, 196				;kijk of row onder 196 ligt
+jb comparecolabove
+jmp looped
+
+:comparecolabove
+mov ax, COL				;kijk of col boven 20 ligt
+cmp ax, 20
+ja comparecolbelow
+jmp looped
+
+:comparecolbelow
+cmp ax, 20				;kijk of col onder 196 ligt
+jb calculatevak
+jmp looped
+
+
+:calculatevak
+call calcvak			;dan is de pijl in het veld : bereken het vakje
+	
 
 ;-------------------------------
 
