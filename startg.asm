@@ -1,4 +1,4 @@
-; ==============================================================================
+;hallo kriz ==============================================================================
 ; Example for buffered drawing in mode 13h.
 ; Example showing palette manipulation via port IO.
 ; Example for a very generic game-loop.
