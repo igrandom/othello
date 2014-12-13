@@ -22,6 +22,7 @@ SCREENH		equ 200
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA        ; data segment, variables
 
+savesi 			db 0
 oldVideoMode	db ?
 palette     db 0, 0, 0, 13, 53, 56    ; defines black and white
 hardOffset	dw 0 ; test variable
@@ -53,12 +54,151 @@ berekenpossible PROC FAR
 mov si, 0                ;your index
 mov al, bl               ;bl = byte value from your question
 mov bx, offset speelveld
-loop:
+startloop:
 cmp si, 64
 je eindeloop
 
 mov ax, byte ptr [bx+si]
+mov savesi, si
 
+cmp ax, 1				;witte steen?
+je restartloop			; jump over
+cmp ax, 2				; zwarte steen
+je restartloop			;jump over
+
+
+;---------------
+possibleup:
+mov si, savesi
+
+mov ax, si				;nu kijken of er ergens een steen omheen staat
+mov bx, 8				; delen om te kijken of vakje aan de rand zit
+div bx					; col: dx row: ax
+
+cmp ax, 0				; bovenste rij?
+je possibleleft			;ga naar volgende test			
+sub si, 8
+mov dx, byte ptr[bx+si]
+cmp dx, 1
+je loopposblackup
+cmp dx, 2
+je loopposwhiteup
+jmp restartloop
+
+bup:
+
+;---------------
+possibleleft
+mov si, savesi
+
+mov ax, si				;nu kijken of er ergens een steen omheen staat
+mov bx, 8				; delen om te kijken of vakje aan de rand zit
+div bx					; col: dx row: ax
+
+cmp dx, 0				;meest linkse kolom?
+je possibledown			; ga naar volgende test
+sub si, 1
+mov dx, byte ptr[bx+si]
+cmp dx, 1
+je loopposblackleft
+cmp dx, 2
+je loopposwhiteleft
+jmp restartloop
+
+bleft:
+
+
+;---------------
+possibledown
+mov si, savesi
+
+mov ax, si				;nu kijken of er ergens een steen omheen staat
+mov bx, 8				; delen om te kijken of vakje aan de rand zit
+div bx					; col: dx row: ax
+
+cmp ax, 7				;meest onderste rij?
+je possibleright		; ga naar volgende test
+add si, 8
+mov dx, byte ptr[bx+si]
+cmp dx, 1
+je loopposblackdown
+cmp dx, 2
+je loopposwhitedown
+jmp restartloop
+
+bdown:
+
+
+;---------------
+possibleright
+mov si, savesi
+
+mov ax, si				;nu kijken of er ergens een steen omheen staat
+mov bx, 8				; delen om te kijken of vakje aan de rand zit
+div bx					; col: dx row: ax
+
+cmp dx, 7				;meest rechtse kolom?
+je restartloop			; ga naar volgende test
+add si, 1
+mov dx, byte ptr[bx+si]
+cmp dx, 1
+je loopposblackright
+cmp dx, 2
+je loopposwhiteright
+jmp restartloop
+
+
+;---------------
+loopposblackup:
+
+
+jmp bup
+
+;---------------
+loopposwhiteup:
+
+
+jmp bup
+
+;---------------
+loopposblackleft:
+
+
+jmp bleft
+
+;---------------
+loopposwhiteleft:
+
+
+jmp bleft
+;---------------
+loopposblackdown:
+
+
+jmp bdown
+
+;---------------
+loopposwhitedown:
+
+
+jmp bdown
+
+;---------------
+loopposblackright:
+
+
+jmp restartloop
+
+;---------------
+loopposwhiteright:
+
+
+jmp restartloop
+
+;---------------
+restartloop:
+mov si, savesi
+add si, 1
 
 eindeloop:
 
