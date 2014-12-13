@@ -66,6 +66,8 @@ je restartloop			; jump over
 cmp ax, 2				; zwarte steen
 je restartloop			;jump over
 
+mov byte ptr [bx+si], 0
+
 
 ;---------------
 possibleup:
@@ -104,6 +106,7 @@ je loopposblackleft
 cmp dx, 2
 je loopposwhiteleft
 jmp restartloop
+
 
 bleft:
 
@@ -150,15 +153,48 @@ jmp restartloop
 
 ;---------------
 loopposblackup:
+			
+mov ax, si				;test of je boven aan bent	  		
+mov bx, 8
+div bx
+cmp ax, 0
+je bup					; zo ja volgende 
+
+sub si, 8				; een omlaag
+
+mov dx, byte ptr[bx+si]	;lees en zet in dx
+cmp dx, 1				;is het een zwarte?
+je placeposblackup		;plaats posblack
+jmp loopposblackup		;restart loop
 
 
+;-----
+placeposblackup:
+mov si, savesi
+
+mov dx, byte ptr[bx+si]
+cmp dx, 3
+jmp placebothup
+push si
+call setvakpossibleblack
 jmp bup
+
+
+
 
 ;---------------
 loopposwhiteup:
 
 
 jmp bup
+
+;---------------
+placebothup:
+mov si, savesi
+push si
+call setvakpossibleboth
+jmp bup
+
 
 ;---------------
 loopposblackleft:
