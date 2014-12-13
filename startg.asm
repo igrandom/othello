@@ -76,7 +76,7 @@ setupvakjes PROC FAR
 ; een vakje kan een pw: 3 ; possible white
 ; een vakje kan een pb: 4 ; possible black
 ; een vakje kan een pa: 5 ; possible both
-;-------------------------------
+;------------------------------- 
 
 mov ax, 0
 
