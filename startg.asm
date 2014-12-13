@@ -243,7 +243,7 @@ mov speelveld[ax], bl
 setvakwhite ENDP
     
 ;---------------------------------------------------------------------------
-setarrayblack PROC FAR
+setvakblack PROC FAR
 	push bp
 	mov bp, sp
 	push bx
@@ -322,7 +322,7 @@ mov speelveld[ax], bl
 setvakpossibleblack ENDP
     
 ;---------------------------------------------------------------------------
-setarraypossibleboth PROC FAR
+setvakpossibleboth PROC FAR
 	push bp
 	mov bp, sp
 	push bx
@@ -349,7 +349,7 @@ setvakpossibleboth ENDP
     
 ;---------------------------------------------------------------------------
 
-setupvakjes PROC FAR
+setupvakjes PROC NEAR
 	push bp
 	mov bp, sp
 	push bx
