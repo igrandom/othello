@@ -132,6 +132,66 @@ mov whitecoins al
 	ret 0
 	addwhite ENDP
 	
+	;---------------------------------------------------------------------------
+
+subblack PROC FAR
+	push bp
+	mov bp, sp
+	push bx
+	push dx
+	push es
+	push cx
+	push ax 
+
+;-------------------------------
+
+
+
+;zet aantal black coins op 2
+mov ax, 0
+mov al blackcoins
+sub al, 1
+mov blackcoins, al
+	
+;-------------------------------	
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
+	subblack ENDP
+	;---------------------------------------------------------------------------
+	subwhite PROC FAR
+	push bp
+	mov bp, sp
+	push bx
+	push dx
+	push es
+	push cx
+	push ax 
+
+;-------------------------------
+
+;zet aantal white coins op 2
+mov ax, 0
+mov al, whitecoins
+sub al, 1
+mov whitecoins al
+
+;-------------------------------	
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
+	subwhite ENDP
+	
+;---------------------------------------------------------------------------
+	
 ;---------------------------------------------------------------------------
 setupvakjes PROC FAR
 	push bp
