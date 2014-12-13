@@ -6,6 +6,8 @@ include DRAWR.INC
 ; Other constants	
 SCREENW		equ 320
 SCREENH		equ 200
+COL 		equ 0 ; in de inc zetten!
+ROW			equ 0 ; in de inc zetten!
 
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA        ; data segment, variables
@@ -24,8 +26,37 @@ screenBuffer	db 64000 dup(?)	; the 64000 bytes for the screen
 ; ----------------------------- CODE STARTS HERE -------------------------------
 .CODE
 
+calcvak PROC FAR
+	push bp
+	mov bp, sp
+	push bx
+	push dx
+	push es
+	push cx
+	push ax 
 
-printlines PROC FAR
+;-------------------------------
+
+
+;(row - 20) / 22 * 8
+;(col - 20) / 22 
+; vaknummer = row+col
+
+;-------------------------------
+
+
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
+	calcvak ENDP
+	
+	
+	;--------------------MOUSEREADRER----------------------
+mousereader PROC FAR
 	push bp
 	mov bp, sp
 	push bx
@@ -47,8 +78,15 @@ mov ax, 03h
 
 int 33h
 mov botton, bx
+
 mov row, dx ; row position
 mov col, cx ; column position
+
+;if row between 20 en 196
+;if col between 20 en 196
+;-->then in field
+;---->calcVak
+
 
 ;-------------------------------
 
@@ -60,6 +98,6 @@ mov col, cx ; column position
 	pop bx
 	pop bp
 	ret 0
-	printlines ENDP
+	mousereader ENDP
     
     END
