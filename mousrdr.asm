@@ -104,44 +104,32 @@ mov COL, cx 			; column position
 
 mov ax, ROW				;kijk of row boven 20 ligt
 cmp ax, 20
-<<<<<<< HEAD
+
 jae comparerowbelow
-jmp looped
-=======
-ja comparerowbelow
 jmp loopje
->>>>>>> FETCH_HEAD
+
 
 comparerowbelow:
 cmp ax, 196				;kijk of row onder 196 ligt
-<<<<<<< HEAD
+
 jbe comparecolabove
-jmp looped
-=======
-jb comparecolabove
 jmp loopje
->>>>>>> FETCH_HEAD
+
 
 comparecolabove:
 mov ax, COL				;kijk of col boven 20 ligt
 cmp ax, 20
-<<<<<<< HEAD
+
 jae comparecolbelow
-jmp looped
-=======
-ja comparecolbelow
 jmp loopje
->>>>>>> FETCH_HEAD
+
 
 comparecolbelow:
 cmp ax, 20				;kijk of col onder 196 ligt
-<<<<<<< HEAD
+
 jbe calculatevak
-jmp looped
-=======
-jb calculatevak
 jmp loopje
->>>>>>> FETCH_HEAD
+
 
 
 calculatevak:
