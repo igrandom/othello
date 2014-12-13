@@ -288,10 +288,10 @@ je down1
 cmp ax, 5
 je schuinlo1
 cmp ax, 6
-je shuinlo1
+je shuinld1
 cmp ax, 7
-je schuin1o1
-jmp schuin1o1
+je schuinro1
+jmp schuinrd1
 
 left1:
 cmp dx, 0	
@@ -302,17 +302,39 @@ cmp ax, 0
 jmp back1
 
 right1:
-cmp dx, 0	
+cmp dx, 7	
 jmp back1
 
 down1:
-cmp ax, 0
+cmp ax, 7
 jmp back1
 
 schuinlo1:
 cmp dx, 0
+je back1
 cmp ax, 0
-jmp back1:
+jmp back1
+
+schuinld1:
+cmp dx, 0
+je back1
+cmp ax, 7
+jmp back1
+
+schuinro1:
+cmp dx, 7
+je back1
+cmp ax, 0
+jmp back1
+
+schuinrd1:
+cmp dx, 7
+je back1
+cmp ax, 7
+jmp back1
+
+
+
 
 
 
@@ -406,9 +428,29 @@ cmp ax, 0
 jmp back3
 
 schuinlo3:
-cmp ax, 0
 cmp dx, 0
+je back3
+cmp ax, 0
 jmp back3
+
+schuinld3:
+cmp dx, 0
+je back3
+cmp ax, 7
+jmp back3
+
+schuinro3:
+cmp dx, 7
+je back3
+cmp ax, 3
+jmp back3
+
+schuinrd3:
+cmp dx, 7
+je back3
+cmp ax, 7
+jmp back3
+
 
 ;----------------------
 setbx14:			;bij verandering vier
