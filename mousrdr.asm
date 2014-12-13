@@ -121,7 +121,9 @@ jmp looped
 
 :calculatevak
 call calcvak			;dan is de pijl in het veld : bereken het vakje
-	
+
+; nu moet er nog gekeken worden of de vakjes clickable zijn
+; functie komt ergens anders te staan maar moet hier ingeladen worden: merci :)
 
 ;-------------------------------
 
