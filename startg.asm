@@ -10,6 +10,7 @@
 
 
 include DRAWR.INC
+include mousrdr.inc
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
 
@@ -21,6 +22,8 @@ SCREENH		equ 200
 .DATA        ; data segment, variables
 PUBLIC speelveld
 oldVideoMode	db ?
+blackcoins 		db 0
+whitecoins 		db 0
 speelveld	dw 64 dub (0) ;in de inc
 palette     db 0, 0, 0, 13, 53, 56    ; defines black and white
 hardOffset	dw 0 ; test variable
@@ -47,6 +50,20 @@ startgame PROC FAR
 ;-------------------------------
 
 call setupvakjes
+
+;zet aantal black coins op 2
+mov ax, 0
+mov al, 2
+mov blackcoins, al
+
+;zet aantal white coins op 2
+mov ax, 0
+mov al, 2
+mov whitecoins al
+
+call mousereader
+
+
 
 	
 ;-------------------------------	
