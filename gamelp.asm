@@ -19,13 +19,15 @@ include DRAWBW.INC
 ; Other constants	
 SCREENW		equ 320
 SCREENH		equ 200
-beurt		equ 2
+
 
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA        ; data segment, variables
+public: richting, beurt
 
 oldVideoMode	db ?
 richting		db 1
+beurt			db 2
 palette     db 0, 0, 0, 13, 53, 56    ; defines black and white
 hardOffset	dw 0 ; test variable
 PLAYFIELD dw 6420
@@ -161,11 +163,15 @@ call berekenpossible
 call countcoins
 call drawcoins
 call switchbeurt
-
+call countpossible
+mov ax, countpossible
+cmp ax, 0
+je endgame
 jmp startloop
 
 
-	
+endgame	:
+call whowon
 ;-------------------------------
 	
 	pop ax
@@ -277,7 +283,15 @@ cmp ax, 2
 je up1
 cmp ax, 3
 je right1
-jmp down1
+cmp ax, 4
+je down1
+cmp ax, 5
+je schuinlo1
+cmp ax, 6
+je shuinld1
+cmp ax, 7
+je schuinro1
+jmp schuinrd1
 
 left1:
 cmp dx, 0	
@@ -288,12 +302,41 @@ cmp ax, 0
 jmp back1
 
 right1:
-cmp dx, 0	
+cmp dx, 7	
 jmp back1
 
 down1:
+cmp ax, 7
+jmp back1
+
+schuinlo1:
+cmp dx, 0
+je back1
 cmp ax, 0
 jmp back1
+
+schuinld1:
+cmp dx, 0
+je back1
+cmp ax, 7
+jmp back1
+
+schuinro1:
+cmp dx, 7
+je back1
+cmp ax, 0
+jmp back1
+
+schuinrd1:
+cmp dx, 7
+je back1
+cmp ax, 7
+jmp back1
+
+
+
+
+
 
 ;----------------------
 setbx12:				;bij verandering twee
@@ -304,7 +347,15 @@ cmp ax, 2
 je up2
 cmp ax, 3
 je right2
-jmp down2
+cmp ax, 4
+je down2
+cmp ax, 5
+je schuinlo2
+cmp ax, 6
+je shuinld2
+cmp ax, 7
+je schuinro2
+jmp schuinrd2
 
 
 left2:
@@ -323,6 +374,24 @@ down2:
 add ax, 8
 jmp down2
 
+schuinlo2:
+sub ax, 9
+jmp down2
+
+schuinld2:
+add ax, 7
+jmp down2
+
+schuinro2:
+sub ax, 7
+jmp down2
+
+schuinrd2:
+add ax, 9
+jmp down2
+
+
+
 ;----------------------
 setbx3:				;bij verandering drie
 mov ax, richting
@@ -332,7 +401,15 @@ cmp ax, 2
 je up3
 cmp ax, 3
 je right3
-jmp down3
+cmp ax, 4
+je down3
+cmp ax, 5
+je schuinlo3
+cmp ax, 6
+je shuinlo3
+cmp ax, 7
+je schuinlo3
+jmp schuinlo3
 
 left3:
 cmp dx, 0	
@@ -350,6 +427,31 @@ down3:
 cmp ax, 0
 jmp back3
 
+schuinlo3:
+cmp dx, 0
+je back3
+cmp ax, 0
+jmp back3
+
+schuinld3:
+cmp dx, 0
+je back3
+cmp ax, 7
+jmp back3
+
+schuinro3:
+cmp dx, 7
+je back3
+cmp ax, 3
+jmp back3
+
+schuinrd3:
+cmp dx, 7
+je back3
+cmp ax, 7
+jmp back3
+
+
 ;----------------------
 setbx14:			;bij verandering vier
 mov ax, richting
@@ -359,7 +461,15 @@ cmp ax, 2
 je up4
 cmp ax, 3
 je right4
-jmp down4
+cmp ax, 4
+je down4
+cmp ax, 5
+je schuinlo4
+cmp ax, 6
+je shuinld4
+cmp ax, 7
+je schuinro4
+jmp schuinrd4
 
 
 left4:
@@ -378,6 +488,22 @@ down4:
 sub ax, 8
 jmp down4
 
+schuinlo4:
+add ax, 9
+jmp down2
+
+schuinld2:
+sub ax, 7
+jmp down2
+
+schuinro2:
+add ax, 7
+jmp down2
+
+schuinrd2:
+sub ax, 9
+jmp down2
+
 ;----------------------
 setbx15:			;bij verandering vijf
 mov ax, richting
@@ -387,7 +513,15 @@ cmp ax, 2
 je up5
 cmp ax, 3
 je right5
-jmp down5
+cmp ax, 4
+je down5
+cmp ax, 5
+je schuinlo5
+cmp ax, 6
+je shuinld5
+cmp ax, 7
+je schuinro1
+jmp schuinrd5
 
 
 left5:
@@ -404,6 +538,22 @@ jmp down5
 
 down5:
 add ax, 8
+jmp down5
+
+schuinlo5:
+sub ax, 9
+jmp down5
+
+schuinld5:
+add ax, 7
+jmp down5
+
+schuinro5:
+sub ax, 7
+jmp down5
+
+schuinrd5:
+add ax, 9
 jmp down5
 ;----------------------
 callup:

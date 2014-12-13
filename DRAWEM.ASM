@@ -62,7 +62,7 @@ screenBuffer	db 64000 dup(?)	; the 64000 bytes for the screen
     mov [thisDrawing + 5], al
 	
 							;zet kleur in thisDrawing
-	mov al, 10 ; kleur
+	mov al, 2 ; kleur
 	mov [thisDrawing + 6], al
 	
 	call printRectangle
@@ -77,5 +77,50 @@ screenBuffer	db 64000 dup(?)	; the 64000 bytes for the screen
 	pop bp
 	ret 0
 	DRAWEM ENDP
+ ;-----------------------------------------------------------------
+   drawpos PROC  FAR
+    push bp
+	mov bp, sp
+	push dx
+	push es
+	push cx
+	push ax 
+	push bx
+	;zet waarde op stack
+	
+	mov ax, [bp+4][0]
+	
+	push ax
+	call calcposition
+	
+	mov ah, [thisDrawing + 0] ;lees locatie uit
+ 	mov al, [thisDrawing + 1] ;lees locatie uit
+ 	
+    						;zet hoogte in thisDrawing
+    mov ax, 20
+    mov [thisDrawing + 2], ah
+    mov [thisDrawing + 3], al
     
+    						;zet lengte in thisDrawing
+	mov ax, 20 ; lengte
+    mov [thisDrawing + 4], ah
+    mov [thisDrawing + 5], al
+	
+							;zet kleur in thisDrawing
+	mov al, 10 ; kleur
+	mov [thisDrawing + 6], al
+	
+	call printRectangle
+	
+	
+	
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
+	drawpos ENDP
+       
  END
