@@ -11,6 +11,7 @@
 include DRAWR.INC
 include DRAWC.INC
 include PRINTG.INC
+include DRAWEM.INC
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
 
