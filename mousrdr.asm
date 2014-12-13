@@ -103,23 +103,23 @@ mov col, cx 			; column position
 
 mov ax, ROW				;kijk of row boven 20 ligt
 cmp ax, 20
-ja comparerowbelow
+jae comparerowbelow
 jmp looped
 
 :comparerowbelow
 cmp ax, 196				;kijk of row onder 196 ligt
-jb comparecolabove
+jbe comparecolabove
 jmp looped
 
 :comparecolabove
 mov ax, COL				;kijk of col boven 20 ligt
 cmp ax, 20
-ja comparecolbelow
+jae comparecolbelow
 jmp looped
 
 :comparecolbelow
 cmp ax, 20				;kijk of col onder 196 ligt
-jb calculatevak
+jbe calculatevak
 jmp looped
 
 
