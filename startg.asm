@@ -24,7 +24,7 @@ PUBLIC speelveld
 oldVideoMode	db ?
 blackcoins 		db 0
 whitecoins 		db 0
-speelveld	dw 64 dub (0) ;in de inc
+speelveld	dw 64 dup (0) ;in de inc
 palette     db 0, 0, 0, 13, 53, 56    ; defines black and white
 hardOffset	dw 0 ; test variable
 PLAYFIELD dw 6420
@@ -200,13 +200,17 @@ mov whitecoins, al
 	push ax 
 
 ;------------------------------- ;push vak op stack
- mov ax, [bp+4][0]
- push bp
- mov bp, ax
+
+;mov si, 2                ;your index
+;mov al, bl               ;bl = byte value from your question
+;mov bx, offset arr
+;mov byte ptr [bx+si], al
+
+ mov si, [bp+4][0]
  mov bx, 0
  mov bl, 3
- mov speelveld[bp], bl
-pop bp
+ mov speelveld[si], bl
+ pop sp
  
 ;-------------------------------	
 	pop ax
@@ -230,13 +234,13 @@ setvakwhite PROC FAR
 	push ax 
 
 ;------------------------------- ;push vak op stack
- mov ax, [bp+4][0]
- push bp
- mov bp, ax
+ ;mov ax, [bp+4][0]
+ ;push bp
+ ;mov bp, ax
  mov bx, 0
  mov bl, 1
-mov speelveld[bp], bl
-pop bp
+mov speelveld[bp+4], bl
+;pop bp
  
 ;-------------------------------	
 	pop ax
@@ -259,13 +263,13 @@ setvakblack PROC FAR
 	push ax 
 
 ;------------------------------- ;push vak op stack
- mov ax, [bp+4][0]
- push bp
- mov bp, ax
+ ;mov ax, [bp+4][0]
+ ;push bp
+ ;mov bp, ax
  mov bx, 0
  mov bl, 2
-mov speelveld[bp], bl
-pop bp
+mov speelveld[bp+4], bl
+;pop bp
  
 ;-------------------------------	
 	pop ax
@@ -289,13 +293,13 @@ setvakpossiblewhite PROC FAR
 	push ax 
 
 ;------------------------------- ;push vak op stack
- mov ax, [bp+4][0]
- push bp
- mov bp, ax
+ ;mov ax, [bp+4][0]
+ ;push bp
+ ;mov bp, ax
  mov bx, 0
  mov bl, 3
-mov speelveld[bp], bl
-pop bp
+mov speelveld[bp+4], bl
+;pop bp
  
 ;-------------------------------	
 	pop ax
@@ -318,10 +322,10 @@ setvakpossibleblack PROC FAR
 	push ax 
 
 ;------------------------------- ;push vak op stack
- mov ax, [bp+4][0]
+ ;mov ax, [bp+4][0]
  mov bx, 0
  mov bl, 4
-mov speelveld[ax], bl
+mov speelveld[bp+4], bl
  
 ;-------------------------------	
 	pop ax
@@ -344,10 +348,10 @@ setvakpossibleboth PROC FAR
 	push ax 
 
 ;------------------------------- ;push vak op stack
- mov ax, [bp+4][0]
+ ;mov ax, [bp+4][0]
  mov bx, 0
  mov bl, 5
-mov speelveld[ax], bl
+mov speelveld[bp+4], bl
  
 ;-------------------------------	
 	pop ax
