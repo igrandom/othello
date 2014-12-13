@@ -10,6 +10,8 @@
 
 include startg.INC
 include drawbw.inc
+include gamelp.inc
+include drawem.inc
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
 
@@ -95,6 +97,63 @@ eindeloop:
 
 ;-------------------------------
 
+mov si, 0                ;your index
+mov al, bl               ;bl = byte value from your question
+mov bx, offset speelveld
+loop:
+cmp si, 64
+je eindeloop
+
+mov ax, byte ptr [bx+si]
+
+cmp ax, 1
+je dleeg
+cmp ax, 1
+je dwhite
+cmp ax, 2
+je dblack
+cmp ax, 3
+je dposwhite
+cmp ax, 4
+je dposblack
+cmp ax, 5
+je dpos
+jmp loop
+
+dleeg:
+push ax
+call  DRAWEM
+jmp loop
+
+dwhite:
+push ax
+call Wcoin
+jmp loop
+
+dblack:
+push ax
+call Bcoin
+jmp loop
+
+dposwhite:
+mov bx, beurt
+cmp bx, 1
+je dpos
+jmp dleeg
+
+dposblack:
+mov bx, beurt
+cmp bx, 2
+je dpos
+jmp dleeg
+
+dpos
+push ax
+call drawpos
+jmp loop
+
+
+eindeloop:
 
 
 ;-------------------------------
