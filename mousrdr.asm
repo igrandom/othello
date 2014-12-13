@@ -2,8 +2,8 @@
 include DRAWR.INC
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
-
-; Other constants	
+PUBLIC COL, ROW, VAK
+Other constants	
 SCREENW		equ 320
 SCREENH		equ 200
 COL 		equ 0 ; in de inc zetten!
