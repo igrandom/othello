@@ -3,12 +3,12 @@
 .STACK 2048
 
 include DRAWBW.INC
+include DRAWC.INC
 include PRINTG.INC
 
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
-PUBLIC COL, ROW, VAK
-Other constants	
+;Other constants	
 SCREENW		equ 320
 SCREENH		equ 200
 

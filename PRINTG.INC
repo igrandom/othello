@@ -4,6 +4,6 @@
 
 ; --- EXPORTS ------------------------------------------------------------------
 
-externdef printGame:FAR
+externdef printGame:FAR, calcposition:NEAR
 externdef thisDrawing:BYTE
 
