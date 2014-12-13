@@ -8,6 +8,7 @@ SCREENW		equ 320
 SCREENH		equ 200
 COL 		equ 0 ; in de inc zetten!
 ROW			equ 0 ; in de inc zetten!
+VAK 		equ 0 ; in de inc zetten!
 
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA        ; data segment, variables
@@ -37,10 +38,20 @@ calcvak PROC FAR
 
 ;-------------------------------
 
+mov ax, ROW
+sub ax, 20
+mov dx, 0
+div ax, 22
+mul 8
+mov ROW, ax
 
-;(row - 20) / 22 * 8
-;(col - 20) / 22 
-; vaknummer = row+col
+mov ax COL
+sub ax, 20
+mov dx, 0
+div ax, 22
+mov bx, ROW
+add ax, bx
+mov VAK, ax
 
 ;-------------------------------
 
