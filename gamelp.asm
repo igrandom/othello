@@ -10,9 +10,9 @@
 
 
 include DRAWR.INC
-include mouserdr.inc
-include gamelp.inc
-include drawbw.inc
+include MOUSRDR.INC
+include GAMELP.INC
+include DRAWBW.INC
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
 

@@ -91,7 +91,7 @@ addblack PROC FAR
 
 ;zet aantal black coins op 2
 mov ax, 0
-mov al blackcoins
+mov al, blackcoins
 add al, 1
 mov blackcoins, al
 	
@@ -120,7 +120,7 @@ mov blackcoins, al
 mov ax, 0
 mov al, whitecoins
 add al, 1
-mov whitecoins al
+mov whitecoins, al
 
 ;-------------------------------	
 	pop ax
@@ -149,7 +149,7 @@ subblack PROC FAR
 
 ;zet aantal black coins op 2
 mov ax, 0
-mov al blackcoins
+mov al, blackcoins
 sub al, 1
 mov blackcoins, al
 	
@@ -178,7 +178,7 @@ mov blackcoins, al
 mov ax, 0
 mov al, whitecoins
 sub al, 1
-mov whitecoins al
+mov whitecoins, al
 
 ;-------------------------------	
 	pop ax
@@ -201,9 +201,12 @@ mov whitecoins al
 
 ;------------------------------- ;push vak op stack
  mov ax, [bp+4][0]
+ push bp
+ mov bp, ax
  mov bx, 0
  mov bl, 3
-mov speelveld[ax], bl
+ mov speelveld[bp], bl
+pop bp
  
 ;-------------------------------	
 	pop ax
@@ -228,9 +231,12 @@ setvakwhite PROC FAR
 
 ;------------------------------- ;push vak op stack
  mov ax, [bp+4][0]
+ push bp
+ mov bp, ax
  mov bx, 0
  mov bl, 1
-mov speelveld[ax], bl
+mov speelveld[bp], bl
+pop bp
  
 ;-------------------------------	
 	pop ax
@@ -254,9 +260,12 @@ setvakblack PROC FAR
 
 ;------------------------------- ;push vak op stack
  mov ax, [bp+4][0]
+ push bp
+ mov bp, ax
  mov bx, 0
  mov bl, 2
-mov speelveld[ax], bl
+mov speelveld[bp], bl
+pop bp
  
 ;-------------------------------	
 	pop ax
@@ -281,9 +290,12 @@ setvakpossiblewhite PROC FAR
 
 ;------------------------------- ;push vak op stack
  mov ax, [bp+4][0]
+ push bp
+ mov bp, ax
  mov bx, 0
  mov bl, 3
-mov speelveld[ax], bl
+mov speelveld[bp], bl
+pop bp
  
 ;-------------------------------	
 	pop ax
@@ -380,7 +392,7 @@ call setvakpossiblewhite
 
 mov ax, 27
 push ax
-call setvakpossiblewblack
+call setvakpossibleblack
 
 mov ax, 28
 push ax
