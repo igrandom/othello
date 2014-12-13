@@ -57,7 +57,7 @@ call addblack
 
 ;zet aantal white coins op 2
 call addwhite
-call addblack
+call addwhite
 
 call mousereader
 
