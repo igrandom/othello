@@ -189,10 +189,166 @@ mov whitecoins al
 	pop bp
 	ret 0
 	subwhite ENDP
-	
+;---------------------------------------------------------------------------	
+	setvakempty PROC FAR
+	push bp
+	mov bp, sp
+	push bx
+	push dx
+	push es
+	push cx
+	push ax 
+
+;------------------------------- ;push vak op stack
+ mov ax, [bp+4][0]
+ mov bx, 0
+ mov bl, 3
+mov speelveld[ax], bl
+ 
+;-------------------------------	
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
+setvakempty ENDP
+    
 ;---------------------------------------------------------------------------
-	
+
+setvakwhite PROC FAR
+	push bp
+	mov bp, sp
+	push bx
+	push dx
+	push es
+	push cx
+	push ax 
+
+;------------------------------- ;push vak op stack
+ mov ax, [bp+4][0]
+ mov bx, 0
+ mov bl, 1
+mov speelveld[ax], bl
+ 
+;-------------------------------	
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
+setvakwhite ENDP
+    
 ;---------------------------------------------------------------------------
+setarrayblack PROC FAR
+	push bp
+	mov bp, sp
+	push bx
+	push dx
+	push es
+	push cx
+	push ax 
+
+;------------------------------- ;push vak op stack
+ mov ax, [bp+4][0]
+ mov bx, 0
+ mov bl, 2
+mov speelveld[ax], bl
+ 
+;-------------------------------	
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
+	setvakblack ENDP
+    
+;---------------------------------------------------------------------------
+
+setvakpossiblewhite PROC FAR
+	push bp
+	mov bp, sp
+	push bx
+	push dx
+	push es
+	push cx
+	push ax 
+
+;------------------------------- ;push vak op stack
+ mov ax, [bp+4][0]
+ mov bx, 0
+ mov bl, 3
+mov speelveld[ax], bl
+ 
+;-------------------------------	
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
+setvakpossiblewhite ENDP
+    
+;---------------------------------------------------------------------------
+setvakpossibleblack PROC FAR
+	push bp
+	mov bp, sp
+	push bx
+	push dx
+	push es
+	push cx
+	push ax 
+
+;------------------------------- ;push vak op stack
+ mov ax, [bp+4][0]
+ mov bx, 0
+ mov bl, 4
+mov speelveld[ax], bl
+ 
+;-------------------------------	
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
+setvakpossibleblack ENDP
+    
+;---------------------------------------------------------------------------
+setarraypossibleboth PROC FAR
+	push bp
+	mov bp, sp
+	push bx
+	push dx
+	push es
+	push cx
+	push ax 
+
+;------------------------------- ;push vak op stack
+ mov ax, [bp+4][0]
+ mov bx, 0
+ mov bl, 5
+mov speelveld[ax], bl
+ 
+;-------------------------------	
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
+setvakpossibleboth ENDP
+    
+;---------------------------------------------------------------------------
+
 setupvakjes PROC FAR
 	push bp
 	mov bp, sp
@@ -214,42 +370,53 @@ setupvakjes PROC FAR
 
 mov ax, 0
 
-mov al, 4
-mov speelveld[20], al
+mov ax, 20
+push ax
+call setvakpossibleblack
 
-mov al, 3
-mov speelveld[21], al
+mov ax, 21
+push ax
+call setvakpossiblewhite
 
-mov al, 4
-mov speelveld[27], al
+mov ax, 27
+push ax
+call setvakpossiblewblack
 
-mov al, 1
-mov speelveld[28], al
+mov ax, 28
+push ax
+call setvakwhite
 
-mov al, 2
-mov speelveld[29], al
+mov ax, 29
+push ax
+call setvakblack
 
-mov al, 3
-mov speelveld[30], al
+mov ax, 30
+push ax
+call setvakpossiblewhite
 
+mov ax, 35
+push ax
+call setvakpossiblewhite
 
-mov al, 3
-mov speelveld[35], al
+mov ax, 36
+push ax
+call setvakblack
 
-mov al, 2
-mov speelveld[36], al
+mov ax, 37
+push ax
+call setvakwhite
 
-mov al, 1
-mov speelveld[37], al
+mov ax, 38
+push ax
+call setvakpossibleblack
 
-mov al, 4
-mov speelveld[38], al
+mov ax, 44
+push ax
+call setvakpossiblewhite
 
-mov al, 3
-mov speelveld[44], al
-
-mov al, 4
-mov speelveld[45], al
+mov ax, 45
+push ax
+call setvakpossibleblack
 
 
 	
