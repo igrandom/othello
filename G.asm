@@ -8,10 +8,10 @@
 
 ; --- INCLUDES -----------------------------------------------------------------
 
-include startg.INC
-include drawbw.inc
-include gamelp.inc
-include drawem.inc
+include S.INC
+include D.INC
+include A.INC
+include M.INC
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
 

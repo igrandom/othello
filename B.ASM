@@ -9,8 +9,8 @@
 
 ; --- INCLUDES -----------------------------------------------------------------
 
-include BACKGR.INC
-include DRAWR.INC
+include B.INC
+include R.INC
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
 

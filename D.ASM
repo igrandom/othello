@@ -2,9 +2,9 @@
     .MODEL large	; multiple data segments and multiple code segments
 .STACK 2048
 
-include DRAWBW.INC
-include DRAWC.INC
-include PRINTG.INC
+include D.INC
+include C.INC
+include P.INC
 
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------

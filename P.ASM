@@ -8,9 +8,9 @@
 
 ; --- INCLUDES -----------------------------------------------------------------
 
-include BACKGR.INC
-include DRAWR.INC
-include PRINTG.INC
+include B.INC
+include R.INC
+include P.INC
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
 
@@ -36,7 +36,7 @@ screenBuffer	db 64000 dup(?)	; the 64000 bytes for the screen
 .CODE
 
 
-calcposition PROC NEAR
+calcposition PROC FAR
     push bp
     mov bp, sp
     push bx

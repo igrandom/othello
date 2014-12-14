@@ -1,10 +1,30 @@
-	ML /c /W3 /WX /FoSTARTG.OBJ /Ta STARTG.ASM
- Assembling: STARTG.ASM
-STARTG.ASM(208): error A2070: invalid instruction operands
-STARTG.ASM(238): error A2070: invalid instruction operands
-STARTG.ASM(267): error A2070: invalid instruction operands
-STARTG.ASM(297): error A2070: invalid instruction operands
-STARTG.ASM(324): error A2031: must be index or base register
-STARTG.ASM(350): error A2031: must be index or base register
-STARTG.ASM(395): error A2006: undefined symbol : setvakpossiblewblack
-STARTG.ASM(27): error A2206: missing operator in expression
+	ML /c /W3 /WX /FoP.OBJ /Ta P.ASM
+ Assembling: P.ASM
+	ML /W3 /WX B.OBJ C.OBJ R.OBJ P.OBJ D.OBJ M.OBJ Q.OBJ L.OBJ S.OBJ N.OBJ /Fe OTHELLO.EXE
+
+Microsoft (R) Segmented Executable Linker  Version 5.60.339 Dec  5 1994
+Copyright (C) Microsoft Corp 1984-1993.  All rights reserved.
+
+LINK : warning L4017: /r : unrecognized option name; option ignored
+Object Modules [.obj]: /r B.OBJ+
+Object Modules [.obj]: "C.OBJ"+
+Object Modules [.obj]: "R.OBJ"+
+Object Modules [.obj]: "P.OBJ"+
+Object Modules [.obj]: "D.OBJ"+
+Object Modules [.obj]: "M.OBJ"+
+Object Modules [.obj]: "Q.OBJ"+
+Object Modules [.obj]: "L.OBJ"+
+Object Modules [.obj]: "S.OBJ"+
+Object Modules [.obj]: "N.OBJ"
+Run File [B.exe]: "OTHELLO.EXE"
+List File [nul.map]: NUL
+Libraries [.lib]: 
+Definitions File [nul.def]: 
+D.OBJ(D.ASM) : warning L4004: possible fixup overflow at D in segment D_TEXT
+ target external 'calcposition'
+D.OBJ(D.ASM) : warning L4004: possible fixup overflow at 34 in segment D_TEXT
+ target external 'calcposition'
+M.OBJ(M.ASM) : warning L4004: possible fixup overflow at D in segment M_TEXT
+ target external 'calcposition'
+M.OBJ(M.ASM) : warning L4004: possible fixup overflow at 48 in segment M_TEXT
+ target external 'calcposition'

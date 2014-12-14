@@ -8,9 +8,9 @@
 
 ; --- INCLUDES -----------------------------------------------------------------
 
-include DRAWR.INC
-include DRAWC.INC
-include PRINTG.INC
+include R.INC
+include C.INC
+include P.INC
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
 

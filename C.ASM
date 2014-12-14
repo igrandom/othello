@@ -8,8 +8,8 @@
 
 ; --- INCLUDES -----------------------------------------------------------------
 
-include DRAWR.INC
-include DRAWC.INC
+include R.INC
+include C.INC
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
 

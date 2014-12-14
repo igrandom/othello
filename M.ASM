@@ -1,4 +1,4 @@
-; ==============================================================================
+	;==============================================================================
 ; Example for buffered drawing in mode 13h.
 ; Example showing palette manipulation via port IO.
 ; Example for a very generic game-loop.
@@ -8,8 +8,10 @@
 
 ; --- INCLUDES -----------------------------------------------------------------
 
-include PRINTLB.INC
-include DRAWR.INC
+include R.INC
+include C.INC
+include P.INC
+include M.INC
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
 
@@ -19,11 +21,8 @@ SCREENH		equ 200
 
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA        ; data segment, variables
-
 oldVideoMode	db ?
 palette     db 0, 0, 0, 13, 53, 56    ; defines black and white
-hardOffset	dw 0 ; test variable
-PLAYFIELD dw 6420
 
 ; --- SCREEN BUFFER ------------------------------------------------------------
 .FARDATA?	; segment that contains the screenBuffer for mode 13h drawing
@@ -32,113 +31,42 @@ screenBuffer	db 64000 dup(?)	; the 64000 bytes for the screen
 
 
 ; ----------------------------- CODE STARTS HERE -------------------------------
-.CODE
+.CODE  
 
-
-printlines PROC FAR
-	push bp
+  DRAWEM PROC FAR
+    push bp
 	mov bp, sp
-	push bx
 	push dx
 	push es
 	push cx
 	push ax 
-
-;-------------------------------
-	;lijn boven
+	push bx
+	;zet waarde op stack
 	
-	call printRectangle
+	mov ax, [bp+4][0]
 	
-	 	mov ax, 6098
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-    
+	push ax
+	call calcposition
+	
+	mov ah, [thisDrawing + 0] ;lees locatie uit
+ 	mov al, [thisDrawing + 1] ;lees locatie uit
+ 	
     						;zet hoogte in thisDrawing
-    mov ax, 2
+    mov ax, 20
     mov [thisDrawing + 2], ah
     mov [thisDrawing + 3], al
     
     						;zet lengte in thisDrawing
-	mov ax, 176 ; lengte
+	mov ax, 20 ; lengte
     mov [thisDrawing + 4], ah
     mov [thisDrawing + 5], al
 	
 							;zet kleur in thisDrawing
-	mov al, 0 ; kleur
+	mov al, 2 ; kleur
 	mov [thisDrawing + 6], al
 	
 	call printRectangle
 	
-	;-------------------------------
-	;lijn links	
-	
- 	mov ax, 6098
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-    
-    						;zet hoogte in thisDrawing
-    mov ax, 176
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
-    
-    						;zet lengte in thisDrawing
-	mov ax, 2 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
-	
-							;zet kleur in thisDrawing
-	mov al, 0 ; kleur
-	mov [thisDrawing + 6], al
-	
-	
-	
-	;-------------------------------
-	;lijn rechts
-	
-		call printRectangle
-	
-	 	mov ax, 6274
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-    
-    						;zet hoogte in thisDrawing
-    mov ax, 176
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
-    
-    						;zet lengte in thisDrawing
-	mov ax, 2 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
-	
-							;zet kleur in thisDrawing
-	mov al, 0 ; kleur
-	mov [thisDrawing + 6], al
-	
-	call printRectangle
-	
-	;--------------------------------
-	;lijn onder
-	
-		 	mov ax, 61460
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-    
-    						;zet hoogte in thisDrawing
-    mov ax, 2
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
-    
-    						;zet lengte in thisDrawing
-	mov ax, 176 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
-	
-							;zet kleur in thisDrawing
-	mov al, 0 ; kleur
-	mov [thisDrawing + 6], al
-	
-	call printRectangle
 	
 	
 	pop ax
@@ -148,6 +76,51 @@ printlines PROC FAR
 	pop bx
 	pop bp
 	ret 0
-	printlines ENDP
+	DRAWEM ENDP
+ ;-----------------------------------------------------------------
+   drawpos PROC  FAR
+    push bp
+	mov bp, sp
+	push dx
+	push es
+	push cx
+	push ax 
+	push bx
+	;zet waarde op stack
+	
+	mov ax, [bp+4][0]
+	
+	push ax
+	call calcposition
+	
+	mov ah, [thisDrawing + 0] ;lees locatie uit
+ 	mov al, [thisDrawing + 1] ;lees locatie uit
+ 	
+    						;zet hoogte in thisDrawing
+    mov ax, 20
+    mov [thisDrawing + 2], ah
+    mov [thisDrawing + 3], al
     
-    END
+    						;zet lengte in thisDrawing
+	mov ax, 20 ; lengte
+    mov [thisDrawing + 4], ah
+    mov [thisDrawing + 5], al
+	
+							;zet kleur in thisDrawing
+	mov al, 10 ; kleur
+	mov [thisDrawing + 6], al
+	
+	call printRectangle
+	
+	
+	
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
+	drawpos ENDP
+       
+ END

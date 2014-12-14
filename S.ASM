@@ -9,8 +9,8 @@
 ; --- INCLUDES -----------------------------------------------------------------
 
 
-include DRAWR.INC
-include mousrdr.inc
+include R.INC
+include Q.INC
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
 
@@ -207,10 +207,14 @@ mov whitecoins, al
 ;mov byte ptr [bx+si], al
 
  mov si, [bp+4][0]
+ push bp
+ mov bp, offset speelveld
  mov bx, 0
  mov bl, 3
- mov speelveld[si], bl
- pop sp
+ mov byte ptr [bp+si], bl
+ pop bp
+ 
+ 
  
 ;-------------------------------	
 	pop ax
@@ -234,13 +238,13 @@ setvakwhite PROC FAR
 	push ax 
 
 ;------------------------------- ;push vak op stack
- ;mov ax, [bp+4][0]
- ;push bp
- ;mov bp, ax
+  mov si, [bp+4][0]
+ push bp
+ mov bp, offset speelveld
  mov bx, 0
  mov bl, 1
-mov speelveld[bp+4], bl
-;pop bp
+ mov byte ptr [bp+si], bl
+ pop bp
  
 ;-------------------------------	
 	pop ax
@@ -263,13 +267,13 @@ setvakblack PROC FAR
 	push ax 
 
 ;------------------------------- ;push vak op stack
- ;mov ax, [bp+4][0]
- ;push bp
- ;mov bp, ax
+ mov si, [bp+4][0]
+ push bp
+ mov bp, offset speelveld
  mov bx, 0
  mov bl, 2
-mov speelveld[bp+4], bl
-;pop bp
+ mov byte ptr [bp+si], bl
+ pop bp
  
 ;-------------------------------	
 	pop ax
@@ -293,13 +297,13 @@ setvakpossiblewhite PROC FAR
 	push ax 
 
 ;------------------------------- ;push vak op stack
- ;mov ax, [bp+4][0]
- ;push bp
- ;mov bp, ax
+ mov si, [bp+4][0]
+ push bp
+ mov bp, offset speelveld
  mov bx, 0
  mov bl, 3
-mov speelveld[bp+4], bl
-;pop bp
+ mov byte ptr [bp+si], bl
+ pop bp
  
 ;-------------------------------	
 	pop ax
@@ -322,10 +326,13 @@ setvakpossibleblack PROC FAR
 	push ax 
 
 ;------------------------------- ;push vak op stack
- ;mov ax, [bp+4][0]
+ mov si, [bp+4][0]
+ push bp
+ mov bp, offset speelveld
  mov bx, 0
  mov bl, 4
-mov speelveld[bp+4], bl
+ mov byte ptr [bp+si], bl
+ pop bp
  
 ;-------------------------------	
 	pop ax
@@ -348,11 +355,13 @@ setvakpossibleboth PROC FAR
 	push ax 
 
 ;------------------------------- ;push vak op stack
- ;mov ax, [bp+4][0]
+  mov si, [bp+4][0]
+ push bp
+ mov bp, offset speelveld
  mov bx, 0
  mov bl, 5
-mov speelveld[bp+4], bl
- 
+ mov byte ptr [bp+si], bl
+ pop bp
 ;-------------------------------	
 	pop ax
 	pop cx

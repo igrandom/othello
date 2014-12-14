@@ -1,8 +1,8 @@
 .MODEL large	; multiple data segments and multiple code segments
 .STACK 2048
 
-include DRAWR.INC
-include MOUSRDR.INC
+include R.INC
+include Q.INC
 
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------

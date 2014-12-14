@@ -9,10 +9,10 @@
 ; --- INCLUDES -----------------------------------------------------------------
 
 
-include DRAWR.INC
-include MOUSRDR.INC
-include GAMELP.INC
-include DRAWBW.INC
+include R.INC
+include Q.INC
+include A.INC
+include D.INC
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
 
