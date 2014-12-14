@@ -13,6 +13,8 @@ include DRAWR.INC
 include MOUSRDR.INC
 include GAMELP.INC
 include DRAWBW.INC
+include gmfin.inc
+include bnpos.inc
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
 
