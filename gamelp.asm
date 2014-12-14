@@ -15,6 +15,7 @@ include GAMELP.INC
 include DRAWBW.INC
 include gmfin.inc
 include bnpos.inc
+include dccoin.inc
 
 ; --- MACROS AND CONSTANTS -----------------------------------------------------
 
