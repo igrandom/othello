@@ -1,5 +1,5 @@
-	ML /c /W3 /WX /FoP.OBJ /Ta P.ASM
- Assembling: P.ASM
+	ML /c /W3 /WX /FoD.OBJ /Ta D.ASM
+ Assembling: D.ASM
 	ML /W3 /WX B.OBJ C.OBJ R.OBJ P.OBJ D.OBJ M.OBJ Q.OBJ L.OBJ S.OBJ N.OBJ /Fe OTHELLO.EXE
 
 Microsoft (R) Segmented Executable Linker  Version 5.60.339 Dec  5 1994
@@ -20,11 +20,3 @@ Run File [B.exe]: "OTHELLO.EXE"
 List File [nul.map]: NUL
 Libraries [.lib]: 
 Definitions File [nul.def]: 
-D.OBJ(D.ASM) : warning L4004: possible fixup overflow at D in segment D_TEXT
- target external 'calcposition'
-D.OBJ(D.ASM) : warning L4004: possible fixup overflow at 34 in segment D_TEXT
- target external 'calcposition'
-M.OBJ(M.ASM) : warning L4004: possible fixup overflow at D in segment M_TEXT
- target external 'calcposition'
-M.OBJ(M.ASM) : warning L4004: possible fixup overflow at 48 in segment M_TEXT
- target external 'calcposition'
