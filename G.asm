@@ -104,6 +104,7 @@ loop:
 cmp si, 64
 je eindeloop
 
+
 mov ax, byte ptr [bx+si]
 
 cmp ax, 1
