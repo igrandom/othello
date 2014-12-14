@@ -249,13 +249,13 @@ mov ax, si				;test of je boven aan bent
 mov bx, 8
 div bx
 cmp dx, 0
-je bleft				;zo ja een omlaag
+je bleft				;zo ja ga door
 
 sub si, 1 				;een naar links
 
-mov dx, bythe ptr[bx+si]
+mov dx, byte ptr[bx+si]
 cmp dx, 1				;is het een witte?
-je placeposwhiteleft		;plaats pos black
+je placeposwhiteleft		;plaats pos white
 jmp loopposwhiteleft	;startloop opnieuw
 
 ;-----
@@ -278,9 +278,20 @@ jmp bleft
 
 ;---------------
 loopposblackdown:
+mov ax, si				;test of je boven aan bent
+mov bx, 8
+div bx
+cmp ax, 7
+je bdown				;zo ja ga door
 
+add si, 8				;een naar beneden
 
-jmp bdown
+mov dx, byte ptr [bx+si]
+cmp dx, 2				;is het een zwarte?
+je placeposblackdown	;plaats pos black
+jmploopposblackdown		;startloop opnieuw
+
+;HIER ZO BEN IK
 
 ;---------------
 loopposwhitedown:
