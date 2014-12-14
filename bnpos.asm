@@ -51,8 +51,8 @@ berekenpossible PROC FAR
 ;-------------------------------
 
 
-mov si, 0                ;your index
-mov al, bl               ;bl = byte value from your question
+mov si, 0                	;your index
+mov al, bl               	;bl = byte value from your question
 mov bx, offset speelveld
 startloop:
 cmp si, 64
@@ -61,10 +61,10 @@ je eindeloop
 mov ax, byte ptr [bx+si]
 mov savesi, si
 
-cmp ax, 1				;witte steen?
-je restartloop			; jump over
-cmp ax, 2				; zwarte steen
-je restartloop			;jump over
+cmp ax, 1					;witte steen?
+je restartloop				; jump over
+cmp ax, 2					; zwarte steen
+je restartloop				;jump over
 
 mov byte ptr [bx+si], 0
 
@@ -73,12 +73,12 @@ mov byte ptr [bx+si], 0
 possibleup:
 mov si, savesi
 
-mov ax, si				;nu kijken of er ergens een steen omheen staat
-mov bx, 8				; delen om te kijken of vakje aan de rand zit
-div bx					; col: dx row: ax
+mov ax, si					;nu kijken of er ergens een steen omheen staat
+mov bx, 8					; delen om te kijken of vakje aan de rand zit
+div bx						; col: dx row: ax
 
-cmp ax, 0				; bovenste rij?
-je possibleleft			;ga naar volgende test			
+cmp ax, 0					; bovenste rij?
+je possibleleft				;ga naar volgende test			
 sub si, 8
 mov dx, byte ptr[bx+si]
 cmp dx, 1
@@ -90,15 +90,15 @@ jmp restartloop
 bup:
 
 ;---------------
-possibleleft
+possibleleft:
 mov si, savesi
 
-mov ax, si				;nu kijken of er ergens een steen omheen staat
-mov bx, 8				; delen om te kijken of vakje aan de rand zit
-div bx					; col: dx row: ax
+mov ax, si					;nu kijken of er ergens een steen omheen staat
+mov bx, 8					; delen om te kijken of vakje aan de rand zit
+div bx						; col: dx row: ax
 
-cmp dx, 0				;meest linkse kolom?
-je possibledown			; ga naar volgende test
+cmp dx, 0					;meest linkse kolom?
+je possibledown				; ga naar volgende test
 sub si, 1
 mov dx, byte ptr[bx+si]
 cmp dx, 1
@@ -112,15 +112,15 @@ bleft:
 
 
 ;---------------
-possibledown
+possibledown:
 mov si, savesi
 
-mov ax, si				;nu kijken of er ergens een steen omheen staat
-mov bx, 8				; delen om te kijken of vakje aan de rand zit
-div bx					; col: dx row: ax
+mov ax, si					;nu kijken of er ergens een steen omheen staat
+mov bx, 8					; delen om te kijken of vakje aan de rand zit
+div bx						; col: dx row: ax
 
-cmp ax, 7				;meest onderste rij?
-je possibleright		; ga naar volgende test
+cmp ax, 7					;meest onderste rij?
+je possibleright			; ga naar volgende test
 add si, 8
 mov dx, byte ptr[bx+si]
 cmp dx, 1
@@ -133,15 +133,15 @@ bdown:
 
 
 ;---------------
-possibleright
+possibleright:
 mov si, savesi
 
-mov ax, si				;nu kijken of er ergens een steen omheen staat
-mov bx, 8				; delen om te kijken of vakje aan de rand zit
-div bx					; col: dx row: ax
-
-cmp dx, 7				;meest rechtse kolom?
-je restartloop			; ga naar volgende test
+mov ax, si					;nu kijken of er ergens een steen omheen staat
+mov bx, 8					; delen om te kijken of vakje aan de rand zit
+div bx						; col: dx row: ax
+	
+cmp dx, 7					;meest rechtse kolom?
+je restartloop				; ga naar volgende test
 add si, 1
 mov dx, byte ptr[bx+si]
 cmp dx, 1
@@ -154,18 +154,20 @@ jmp restartloop
 ;---------------
 loopposblackup:
 			
-mov ax, si				;test of je boven aan bent	  		
+mov ax, si					;test of je boven aan bent	  		
 mov bx, 8
-div bx
+div bx	
 cmp ax, 0
-je bup					; zo ja volgende 
+je bup						; zo ja volgende 
 
-sub si, 8				; een omlaag
+sub si, 8					; een omlaag
 
-mov dx, byte ptr[bx+si]	;lees en zet in dx
-cmp dx, 2				;is het een zwarte?
-je placeposblackup		;plaats posblack
-jmp loopposblackup		;restart loop
+mov dx, byte ptr[bx+si]		;lees en zet in dx
+cmp dx, 2					;is het een zwarte?
+je placeposblackup			;plaats pos black
+cmp dx, 1					;vergelijk dx met 1
+je loopposblackup			;restart loop
+jmp bup
 
 
 ;-----
@@ -173,7 +175,7 @@ placeposblackup:
 mov si, savesi
 
 mov dx, byte ptr[bx+si]
-cmp dx, 3				; staat er al een poswit?
+cmp dx, 3					; staat er al een poswit?
 je placebothup
 push si
 call setvakpossibleblack
@@ -184,18 +186,20 @@ jmp bup
 
 ;---------------
 loopposwhiteup:
-mov ax, si				;test of je boven aan bent	  		
+mov ax, si					;test of je boven aan bent	  		
 mov bx, 8
 div bx
 cmp ax, 0
-je bup					; zo ja volgende 
+je bup						; zo ja volgende 
 
-sub si, 8				; een omlaag
+sub si, 8					; een omlaag
 
-mov dx, byte ptr[bx+si]	;lees en zet in dx
-cmp dx, 1				;is het een witte?
-je placeposwhiteup		;plaats poswhite
-jmp loopposwhiteup		;restart loop
+mov dx, byte ptr[bx+si]		;lees en zet in dx
+cmp dx, 1					;is het een witte?
+je placeposwhiteup			;plaats poswhite
+cmo dx, 2
+je loopposwhiteup			;restart loop
+jmp bup
 
 
 ;-----
@@ -203,8 +207,8 @@ placeposwhiteup:
 mov si, savesi
 
 mov dx, byte ptr[bx+si]
-cmp dx, 4				;staat er al een posblack?
-je placebothup			;set pos both
+cmp dx, 4					;staat er al een posblack?
+je placebothup				;set pos both
 push si
 call setvakpossiblewhite
 jmp bup
@@ -219,54 +223,58 @@ jmp bup
 
 ;---------------
 loopposblackleft:
-mov ax, si				;test of je boven aan bent
+mov ax, si					;test of je boven aan bent
 mov bx, 8
 div bx
 cmp dx, 0
-je bleft				;zo ja een omlaag
+je bleft					;zo ja een omlaag
 
-sub si, 1 				;een naar links
+sub si, 1 					;een naar links
 
 mov dx, bythe ptr[bx+si]
-cmp dx, 2				;is het een zwarte?
+cmp dx, 2					;is het een zwarte?
 je placeposblackleft		;plaats pos black
-jmp loopposblackleft	;startloop opnieuw
+cmo dx, 1
+je loopposblackleft			;startloop opnieuw
+jmp bleft
 
 ;-----
 placeposblackleft:
 mov si, savesi
 
 mov dx, byte ptr [bx+si]
-cmp dx, 3				;staat er al een pos white?		
+cmp dx, 3					;staat er al een pos white?		
 je placebothleft			;set pos both
 push si
-callsetvakpossibleblack
+call setvakpossibleblack
 jmp bleft
 
 ;---------------
 loopposwhiteleft:
-mov ax, si				;test of je boven aan bent
+mov ax, si					;test of je boven aan bent
 mov bx, 8
 div bx
 cmp dx, 0
-je bleft				;zo ja ga door
+je bleft					;zo ja ga door
 
-sub si, 1 				;een naar links
+sub si, 1 					;een naar links
 
 mov dx, byte ptr[bx+si]
-cmp dx, 1				;is het een witte?
+cmp dx, 1					;is het een witte?
 je placeposwhiteleft		;plaats pos white
-jmp loopposwhiteleft	;startloop opnieuw
+cmp dx, 2
+je loopposwhiteleft			;startloop opnieuw
+jmp dleft
 
 ;-----
 placeposwhiteleft:
 mov si, savesi
 
 mov dx, byte ptr [bx+si]
-cmp dx, 4				;staat er al een pos black?		
+cmp dx, 4					;staat er al een pos black?		
 je placebothleft			;set pos both
 push si
-callsetvakpossiblewhite
+call setvakpossiblewhite
 jmp bleft
 
 ;---------------
@@ -278,26 +286,67 @@ jmp bleft
 
 ;---------------
 loopposblackdown:
-mov ax, si				;test of je boven aan bent
+mov ax, si					;test of je onder aan bent
 mov bx, 8
 div bx
 cmp ax, 7
-je bdown				;zo ja ga door
+je bdown					;zo ja ga door
 
-add si, 8				;een naar beneden
+add si, 8					;een naar beneden
 
 mov dx, byte ptr [bx+si]
-cmp dx, 2				;is het een zwarte?
-je placeposblackdown	;plaats pos black
-jmploopposblackdown		;startloop opnieuw
+cmp dx, 2					;is het een zwarte?
+je placeposblackdown		;plaats pos black
+cmp dx, 1
+je loopposblackdown
+jmp bdown
 
-;HIER ZO BEN IK
+;---------------
+placeposblackdown:
+mov si, savesi
+
+mov dx, byte ptr [bt+si]
+cmp dx, 4
+je placeposbothdown
+push si
+call setvakpossibleblack
+jmp bdown
 
 ;---------------
 loopposwhitedown:
+mov ax, si
+mov bx, 8
+div bx
+cmp ax, 7
+je bdown
 
+add si, 8
 
+mov dx, byteptr [bx+si]
+cmp dx, 1
+je placeposwhitedown
+cmp dx, 2
+je loopposblackdown
 jmp bdown
+
+;---------------
+placeposwhitedown:
+mov si, savesi
+
+mov dx, byte ptr [bt+si]
+cmp dx, 3
+je placepsbothdown
+push si
+call setvakpossiblewhite
+jmp bdown
+
+;---------------
+placeposbothdown:
+mov si, savesi
+push si
+call setvakpossibleboth
+jmp bdown
+
 
 ;---------------
 loopposblackright:
