@@ -174,7 +174,7 @@ mov si, savesi
 
 mov dx, byte ptr[bx+si]
 cmp dx, 3				; staat er al een poswit?
-jmp placebothup
+je placebothup
 push si
 call setvakpossibleblack
 jmp bup
@@ -194,8 +194,8 @@ sub si, 8				; een omlaag
 
 mov dx, byte ptr[bx+si]	;lees en zet in dx
 cmp dx, 1				;is het een witte?
-je placeposwhiteup		;plaats posblack
-jmp bup		;restart loop
+je placeposwhiteup		;plaats poswhite
+jmp loopposwhiteup		;restart loop
 
 
 ;-----
@@ -204,7 +204,7 @@ mov si, savesi
 
 mov dx, byte ptr[bx+si]
 cmp dx, 4				;staat er al een posblack?
-jmp placebothup			;set pos both
+je placebothup			;set pos both
 push si
 call setvakpossiblewhite
 jmp bup
@@ -219,15 +219,63 @@ jmp bup
 
 ;---------------
 loopposblackleft:
+mov ax, si				;test of je boven aan bent
+mov bx, 8
+div bx
+cmp dx, 0
+je bleft				;zo ja een omlaag
 
+sub si, 1 				;een naar links
 
+mov dx, bythe ptr[bx+si]
+cmp dx, 2				;is het een zwarte?
+je placeposblackleft		;plaats pos black
+jmp loopposblackleft	;startloop opnieuw
+
+;-----
+placeposblackleft:
+mov si, savesi
+
+mov dx, byte ptr [bx+si]
+cmp dx, 3				;staat er al een pos white?		
+je placebothleft			;set pos both
+push si
+callsetvakpossibleblack
 jmp bleft
 
 ;---------------
 loopposwhiteleft:
+mov ax, si				;test of je boven aan bent
+mov bx, 8
+div bx
+cmp dx, 0
+je bleft				;zo ja een omlaag
 
+sub si, 1 				;een naar links
 
+mov dx, bythe ptr[bx+si]
+cmp dx, 1				;is het een witte?
+je placeposwhiteleft		;plaats pos black
+jmp loopposwhiteleft	;startloop opnieuw
+
+;-----
+placeposwhiteleft:
+mov si, savesi
+
+mov dx, byte ptr [bx+si]
+cmp dx, 4				;staat er al een pos black?		
+je placebothleft			;set pos both
+push si
+callsetvakpossiblewhite
 jmp bleft
+
+;---------------
+placebothleft:
+mov si, savesi
+push si
+call setvakpossibleboth
+jmp bleft
+
 ;---------------
 loopposblackdown:
 
