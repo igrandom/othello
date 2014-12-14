@@ -30,7 +30,7 @@ screenBuffer	db 64000 dup(?)	; the 64000 bytes for the screen
 .CODE
     
     
-    BCoin PROC FAR
+BCoin PROC FAR
     push bp
 	mov bp, sp
 	push dx
@@ -63,7 +63,7 @@ screenBuffer	db 64000 dup(?)	; the 64000 bytes for the screen
 	
 	;------------------------------------------
     
-        WCoin PROC FAR
+WCoin PROC FAR
     push bp
 	mov bp, sp
 	push dx
