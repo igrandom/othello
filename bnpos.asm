@@ -54,6 +54,8 @@ berekenpossible PROC FAR
 mov si, 0                	;your index
 mov al, bl               	;bl = byte value from your question
 mov bx, offset speelveld
+
+;--------------------------------
 startloop:
 cmp si, 64
 je eindeloop
@@ -302,46 +304,47 @@ je loopposblackdown
 jmp bdown
 
 ;---------------
-placeposblackdown:
-mov si, savesi
+placeposblackdown:			;plaats possible black	
+mov si, savesi				;lees plaats uit
 
 mov dx, byte ptr [bt+si]
-cmp dx, 4
-je placeposbothdown
-push si
-call setvakpossibleblack
-jmp bdown
+cmp dx, 4					; staat er al een pw
+je placeposbothdown			; plaats dan een both
+push si	
+call setvakpossibleblack	; anders een pb
+jmp bdown					; ga verder
 
 ;---------------
 loopposwhitedown:
-mov ax, si
+mov ax, si					;test of je op de onderste rij bent?
 mov bx, 8
 div bx
 cmp ax, 7
-je bdown
+je bdown					; zo ja ga naar volgende test
 
-add si, 8
+add si, 8					;zo nee ga naar volgende vak
 
-mov dx, byteptr [bx+si]
-cmp dx, 1
-je placeposwhitedown
-cmp dx, 2
-je loopposblackdown
-jmp bdown
+
+mov dx, byte ptr [bx+si]	;lees uit wat daar staat
+cmp dx, 1					; als dit wit is
+je placeposwhitedown		;ga naar schrijf pw
+cmp dx, 2					; als dit zwart is
+je loopposwhitedown			; ga door met pw loop
+jmp bdown					;anders ga naar volgende test
 
 ;---------------
 placeposwhitedown:
-mov si, savesi
+mov si, savesi				; lees juiste vak uit
 
-mov dx, byte ptr [bt+si]
+mov dx, byte ptr [bt+si]	;kijk of er al een pb staat			
 cmp dx, 3
-je placepsbothdown
+je placeposbothdown			; anders ga naar plaats pa
 push si
-call setvakpossiblewhite
+call setvakpossiblewhite	; anders plaats pw
 jmp bdown
 
 ;---------------
-placeposbothdown:
+placeposbothdown:			; plaats pa
 mov si, savesi
 push si
 call setvakpossibleboth
@@ -350,20 +353,74 @@ jmp bdown
 
 ;---------------
 loopposblackright:
+mov ax, si
+mov bx, 8
+div bx
+cmp dx, 7
+je restartloop
 
+add si, 1
 
+mov dx, byte ptr [bx+si]
+cmp dx, 2
+je placeposblackright
+cmp dx, 1
+je loopposblackright
+jmp restartloop
+
+;---------------
+placeposblackright:
+mov si, savesi
+
+mov dx, byte ptr [bt+si]
+cmp dx, 4
+je placeposbothright
+push si
+call setvakpossibleblack
 jmp restartloop
 
 ;---------------
 loopposwhiteright:
+mov ax, si
+mov bx, 8
+div bx
+cmp dx, 7
+je restartloop
 
+add si, 1
 
+mov dx, byte ptr [bx+si]
+cmp dx, 1
+je placeposwhiteright
+cmp dx, 2
+je loopposwhiteright
 jmp restartloop
 
 ;---------------
-restartloop:
+placeposwhiteright:
 mov si, savesi
-add si, 1
+
+mov dx, byte ptr [bt+si]
+cmp dx, 3
+je placeposbothright
+push si
+call setvakpossiblewhite
+jmp restartloop
+
+
+
+;---------------
+placeposbothdown:
+mov si, savesi
+push si
+call setvakpossibleboth
+jmp restartloop
+
+;---------------
+restartloop:					;restartloop
+mov si, savesi					;haal locatie er uit
+add si, 1						; ga naar volgende vakje
+jmp startloop					; en ga naar de start van de loop
 
 eindeloop:
 
