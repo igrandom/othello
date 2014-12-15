@@ -160,14 +160,15 @@ call swapleft
 mov richting, 4
 call swapleft
 
-call berekenpossible
-call countcoins
-call drawcoins
-call switchbeurt
-call countpossible
-mov ax, countpossible
-cmp ax, 0
-je endgame
+call berekenpossible	;bereken welke possible zijn
+call countcoins			;tel het aantal muntjes
+call drawscore			;teken de score die daar bij hoort	
+call drawcoins			;teken de muntjes op het veld
+call switchbeurt		;verander van beurt
+call countpossible		; tel het aantal possible
+mov ax, countpossible	
+cmp ax, 0				; als nul teken spel opnieuw
+je endgame				
 jmp startloop
 
 
