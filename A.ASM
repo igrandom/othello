@@ -163,8 +163,8 @@ call swapleft
 call berekenpossible	;bereken welke possible zijn
 call countcoins			;tel het aantal muntjes
 call drawscore			;teken de score die daar bij hoort	
-call drawcoins			;teken de muntjes op het veld
 call switchbeurt		;verander van beurt
+call drawcoins			;teken de muntjes op het veld
 call countpossible		; tel het aantal possible
 mov ax, countpossible	
 cmp ax, 0				; als nul teken spel opnieuw
