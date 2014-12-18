@@ -5,6 +5,78 @@
     whitecoins 	   	  db 0
     speelveld	      dw 64 dup (0) ;in de inc
 .CODE
+;------------------MOUSEREADER------------------;
+; Uitleg: locatie van de muis uitlezen          ;
+; Parameters doorgegeven met push:              ;
+;                       geen                    ;
+;-----------------------------------------------;
+mousereader PROC FAR
+	push bp
+	mov bp, sp
+	push bx
+	push dx
+	push es
+	push cx
+	push ax
+    
+    ;----Loopje----
+    loopje:
+        mov ax, 03h
+        int 33h				     ;lees uit
+        cmp bx, 1                ;if bx = 1 ; if left button is down
+            je clicked			 ;true branch
+            jmp loopje           ;false branch
+    ;----end Loopje----
+
+    ;----clicked----
+    clicked: 				     ;als er geklikt is
+        mov ROW, dx 			 ; row position
+        mov COL, cx 			 ; column position
+        mov ax, ROW				 ;kijk of row boven 20 ligt
+        cmp ax, 20               ;if row is more than 20
+            jae comparerowbelow  ;true branch
+            jmp loopje           ;false branch
+    ;----end clicked----
+
+    ;----comparerowbelow----
+    comparerowbelow:
+        cmp ax, 196				 ;kijk of row onder 196 ligt
+            jbe comparecolabove  ;true branch
+            jmp loopje           ;false branch
+    ;----end comparerowbelow----
+
+    ;----comparecolabove----
+    comparecolabove:
+        mov ax, COL				
+        cmp ax, 20               ;kijk of col boven 20 ligt
+            jae comparecolbelow  ;true branch
+            jmp loopje           ;false branch
+    ;----end comparecolabove----
+    
+    ;----comparecolbelow----
+    comparecolbelow:
+        cmp ax, 20				 ;kijk of col onder 196 ligt
+            jbe calculatevak     ;true branch
+            jmp loopje           ;false branch
+    ;----end comparecolbelow----
+
+    ;----calculatevak----
+    calculatevak:
+        call calcvak			;dan is de pijl in het veld : bereken het vakje
+    ;----end calculatevak----
+    ; nu moet er nog gekeken worden of de vakjes clickable zijn
+    ; functie komt ergens anders te staan maar moet hier ingeladen worden: merci :)
+    
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
+mousereader ENDP
+;-----------------------------------------------;
+
 ;-------------------ADD BLACK-------------------;
 ; Uitleg: aantal zwarte coins ophogen           ;
 ; Parameters doorgegeven met push:              ;
@@ -18,10 +90,12 @@ addblack PROC FAR
 	push es
 	push cx
 	push ax
+    
     mov ax, 0
     mov al, blackcoins
     add al, 1
     mov blackcoins, al
+    
 	pop ax
 	pop cx
 	pop es
