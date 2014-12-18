@@ -1,6 +1,6 @@
 .MODEL small	; multiple data segments and multiple code segments
 .STACK 2048  	; stack	
-SCREENW		equ 320
+SCREENW		equ 320 
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA        ; data segment, variables
 oldVideoMode	db ?
