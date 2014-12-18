@@ -272,18 +272,18 @@ printBackground PROC FAR
 	
 	
  	mov ax, 0						;locatie = boven aan
- 	push ax
+ 	push ax							; zet op stack
  	
     mov ax, 200						;hoogte = 200
-    push ax
+    push ax							; zet op stack
     
 	mov ax, 320 					; lengte = 320
-	push ax
+	push ax							; zet op stack
 	
 	mov ax, 6						; kleur = bruin
-	push ax
+	push ax							; zet op stack
 	
-	call printRectangle
+	call printRectangle				; print het vak
 	
 	pop ax
 	pop cx
@@ -465,27 +465,20 @@ printGame ENDP
 	mov ax, [bp+4][2]					;lees locatie van stack
  										;start tekenen
  	
-	sub ax, 4
- 										;add ax, SCREENW
+	sub ax, 4							;add ax, SCREENW
  	add ax, 3
     push ax								; zet op stack
     mov ax, 1
     push ax								; zet op stack
     mov ax, 2
-    
 	mov ax, 12						 	; lengte
     push ax								; zet op stack
-    
     mov ax, [bp+4][0]					;lees kleur uit
     push ax								;zet op stack
-    	call printRectangle
-    	
-	mov ax, [bp+4][2]					;lees locatie van stack
- 										;start tekenen
- 	
-	
-	sub ax, 3
- 										;add ax, SCREENW
+    call printRectangle
+    
+	mov ax, [bp+4][2]					;lees locatie van stack							
+	sub ax, 3							;add ax, SCREENW
  	add ax, 2
     push ax								; zet op stack
     
@@ -619,7 +612,6 @@ printGame ENDP
     	;--
 	
 	sub ax, 3
- 	;add ax, SCREENW
  	add ax, 4
     push ax								; zet op stack
     
@@ -2305,21 +2297,21 @@ printWON PROC FAR
 	push cx
 	push ax
     
-    mov ax [bp+4][2]
-    push ax
-    mov ax [bp+4][0]
-    push ax
-    call printW
-    add ax, 6
+    mov ax [bp+4][2]						; haal locatie van de stack
+    push ax									; en zet hem er opnieuw op
+    mov ax [bp+4][0]						; haal kleur van de stack
+    push ax									; zet hem er opnieuw op
+    call printW								; print de letter W
+    add ax, 6								; ga 6 pixels verder
     push ax									; zet op stack
     mov ax, [bp+4][0]						;haal kleur van stack
     push ax									;zet hem terug op stack
-    call print0
-    add ax, 6
+    call print0								; print de letter N
+    add ax, 6								; ga 6 pixels verder
     push ax									; zet op stack
     mov ax, [bp+4][0]						;haal kleur van stack
     push ax									;zet hem terug op stack
-    call printN
+    call printN								; print de letter N
 
     pop ax
     pop cx
@@ -2347,9 +2339,8 @@ printNumber PROC NEAR
 	push cx
 	push ax
     
-	mov dx, [bp+4][0]	;kleur
-    mov ax, [bp+4][2] ;number
-    mov bx, [bp+4][4] ;location
+    mov ax, [bp+4][2] 						;haal number van stack
+    mov bx, [bp+4][4] 						;haal location van stack
 
     
     mov dx, 0
@@ -2358,145 +2349,150 @@ printNumber PROC NEAR
     div bx
     pop bx
     mov cx, 0
+    push dx
     jmp printsequence
     
     ;----second sequence prepare----
     sseqp:
-    	mov cx, 1
-    	;----second sequence----
-    	sseq:
-   			mov ax, dx
-    		add bx, 6
-    		;----print sequence----
-    		printsequence:
-    			cmp ax, 0
-    				je s0
-    			cmp ax, 1
-    				je s1
-    			cmp ax, 2
-    				je s2
-    			cmp ax, 3
-    				je s3
-    			cmp ax, 4
-    				je s4
-    			cmp ax, 5
-    				je s5
-    			cmp ax, 6
-    				je s6
-    			cmp ax, 7
-    				je s7
-    			cmp ax, 8
-    				je s8
-    			cmp ax, 9
-    				je s9
-    
-    			;----done functie----
-    			donef:
-    				jmp done
-    			;----end done functie----
-    		;----end print sequence----
-    	;----end second sequence----
+    	mov cx, 1							; zet naar tweede cijfer
+    	pop dx								; haal dx terug
+   		mov ax, dx							; pak tweede getal
+    	add bx, 6							; tel 6 pixels op bij locatie
+    	;----print sequence----
+    	printsequence:						;hier in wordt gekeken welk cijfer het is
+    		cmp ax, 0						; en gesprongen naar dat cijfer
+    			je s0
+    		cmp ax, 1
+    			je s1
+    		cmp ax, 2
+				je s2
+			cmp ax, 3
+    			je s3
+    		cmp ax, 4
+    			je s4
+    		cmp ax, 5
+    			je s5
+    		cmp ax, 6
+    			je s6
+    		cmp ax, 7
+    			je s7
+    		cmp ax, 8
+    			je s8
+    		cmp ax, 9
+    			je s9
+    			jmp done
+    	;----end print sequence----
     ;----end second sequence prepare----
     
     
     ;----cijfer 0----
     s0:
-    	cmp cx, 1
-    		jne sseqp
-    		push bx
-    		push dx
-    		call print0
-    		jmp done
+    	cmp cx, 1								; kijk of het het tweede getal is
+    		jne sseqp							; zo niet spring naar second sequence prepare
+    		push bx								; zet locatie op stack 
+    		mov dx, [bp+4][0]					; haal kleur van stack
+    		push dx								; en zet hem er op
+    		call print0							; en print 0
+    		jmp done							; spring naar done
     ;----end cijfer 9----
     
     ;----cijfer 1----
     s1:
-    	push bx
-    	push dx
-    	call print1
-    	cmp cx, 1
-    		je done
-    		jmp sseqp
+    	push bx									; zet locatie op stack
+    	mov dx, [bp+4][0]						; haal kleur van stack
+    	push dx									; en zet hem er op
+    	call print1								; print het getal
+    	cmp cx, 1								; kijk of het het tweede getal is
+    		je done								; indien true: done
+    		jmp sseqp							; indien false: ga naar second sequence prepare
     ;----end cijfer 1----		
     
     ;----cijfer 2----		
     s2:
-    	push bx
-    	push dx
-    	call print2
-    	cmp cx, 1
-    		je done
-    		jmp sseqp
+    	push bx									; zet locatie op stack
+    	mov dx, [bp+4][0]						; haal kleur van stack
+    	push dx									; en zet hem er op
+    	call print2								; print het getal
+    	cmp cx, 1								; kijk of het het tweede getal is
+    		je done								; indien true: done
+    		jmp sseqp							; indien false: ga naar second sequence prepare
     ;----end cijfer 2----
     
     ;----cijfer 3----
     s3:
-    	push bx
-    	push dx
-    	call print3
-    	cmp cx, 1
-    		je done
-    		jmp sseqp
+    	push bx									; zet locatie op stack
+    	mov dx, [bp+4][0]						; haal kleur van stack
+    	push dx									; en zet hem er op
+    	call print3								; print het getal
+    	cmp cx, 1								; kijk of het het tweede getal is
+    		je done								; indien true: done
+    		jmp sseqp							; indien false: ga naar second sequence prepare
     ;----end cijfer 3----
     
     ;----cijfer 4----
     s4:
-    	push bx
-    	push dx
-    	call print4
-    	cmp cx, 1
-    	je done
-    	jmp sseqp
+    	push bx									; zet locatie op stack
+    	mov dx, [bp+4][0]						; haal kleur van stack
+    	push dx									; en zet hem er op
+    	call print4								; print het getal
+    	cmp cx, 1								; kijk of het het tweede getal is
+    		je done								; indien true: done
+    		jmp sseqp							; indien false: ga naar second sequence prepare
    ;----end cijfer 4---- 
     
     ;----cijfer 5----
     s5:
-    	push bx
-    	push dx
-    	call print5
-    	cmp cx, 1
-    		je done
-    		jmp sseqp
+    	push bx									; zet locatie op stack
+    	mov dx, [bp+4][0]						; haal kleur van stack
+    	push dx									; en zet hem er op
+    	call print5								; print het getal
+    	cmp cx, 1								; kijk of het het tweede getal is
+    		je done								; indien true: done
+    		jmp sseqp							; indien false: ga naar second sequence prepare
     ;----end cijfer 5----
     
     ;----cijfer 6----
     s6:
-    	push bx
-    	push dx
-    	call print6
-    	cmp cx, 1
-    		je done
-    		jmp sseqp
+    	push bx									; zet locatie op stack
+    	mov dx, [bp+4][0]						; haal kleur van stack
+    	push dx									; en zet hem er op
+    	call print6								; print het getal
+    	cmp cx, 1								; kijk of het het tweede getal is
+    		je done								; indien true: done
+    		jmp sseqp							; indien false: ga naar second sequence prepare
     ;----end cijfer 6----
     
     ;----cijfer 7----
     s7:
-    	push bx
-    	push dx
-    	call print7
-    	cmp cx, 1
-    		je done
-    		jmp sseqp
+    	push bx									; zet locatie op stack
+    	mov dx, [bp+4][0]						; haal kleur van stack
+    	push dx									; en zet hem er op
+    	call print7								; print het getal
+    	cmp cx, 1								; kijk of het het tweede getal is
+    		je done								; indien true: done
+    		jmp sseqp							; indien false: ga naar second sequence prepare
     ;----end cijfer 7----
     
     ;----cijfer 8----
     s8:
-    	push bx
-    	push dx
-    	call print2
-    	cmp cx, 1
-    	je done
-    	jmp sseqp
+    	push bx									; zet locatie op stack
+    	mov dx, [bp+4][0]						; haal kleur van stack
+    	push dx									; en zet hem er op
+    	call print8								; print het getal
+    	cmp cx, 1								; kijk of het het tweede getal is
+    		je done								; indien true: done
+    		jmp sseqp							; indien false: ga naar second sequence prepare
     ;----end cijfer 8----
     
     ;----cijfer 9----
     s9:
-    push bx
-    push dx
-    call print9
-    cmp cx, 1
-    	je done
-    	jmp sseqp
+    	push bx									; zet locatie op stack
+    	mov dx, [bp+4][0]						; haal kleur van stack
+    	push dx									; en zet hem er op
+    	call print1								; print het getal
+    	cmp cx, 1								; kijk of het het tweede getal is
+    		je done								; indien true: done
+    		jmp sseqp							; indien false: ga naar second sequence prepare
     ;----end cijfer 9----
     
     ;----done----

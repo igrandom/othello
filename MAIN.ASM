@@ -1,7 +1,7 @@
 ;-----------------------------------------------------------;
 ;															;
 ;															;
-;							Main file						;
+;							MAIN FILE						;
 ;			this includes:									;
 ;						- mouse reader						;
 ;						- add black							;
@@ -12,7 +12,9 @@
 ;							(setblack, setvakwhite, 		;
 ;							setvakposwhite, setvakposboth, 	;
 ;							setvakposblack, setvakempty)	;
-;						-									;
+;						- setupvakjes						;
+;						- main functie						;
+;															;
 ;															;
 ;-----------------------------------------------------------;
 
