@@ -39,7 +39,7 @@
 ; Parameters doorgegeven met push:              ;
 ;                       geen                    ;
 ;-----------------------------------------------;
-mousereader PROC FAR
+mousereader PROC NEAR
 	push bp
 	mov bp, sp
 	push bx
@@ -111,7 +111,7 @@ mousereader ENDP
 ; Parameters doorgegeven met push:              ;
 ;                       geen                    ;
 ;-----------------------------------------------;
-addblack PROC FAR
+addblack PROC NEAR
 	push bp
 	mov bp, sp
 	push bx
@@ -140,7 +140,7 @@ addblack ENDP
 ; Parameters doorgegeven met push:              ;
 ;                       geen                    ;
 ;-----------------------------------------------;
-addwhite PROC FAR
+addwhite PROC NEAR
 	push bp
 	mov bp, sp
 	push bx
@@ -167,7 +167,7 @@ addwhite ENDP
 ; Parameters doorgegeven met push:              ;
 ;                       geen                    ;
 ;-----------------------------------------------;
-subblack PROC FAR
+subblack PROC NEAR
 	push bp
 	mov bp, sp
 	push bx
@@ -196,7 +196,7 @@ subblack ENDP
 ; Parameters doorgegeven met push:              ;
 ;                       geen                    ;
 ;-----------------------------------------------;
-subwhite PROC FAR
+subwhite PROC NEAR
 	push bp
 	mov bp, sp
 	push bx
@@ -225,7 +225,7 @@ subwhite ENDP
 ; Parameters doorgegeven met push:              ;
 ;             - locatie (vaknummer) [0]         ;
 ;-----------------------------------------------;
-setvakempty PROC FAR
+setvakempty PROC NEAR
 	push bp
 	mov bp, sp
 	push bx
@@ -257,7 +257,7 @@ setvakempty ENDP
 ; Parameters doorgegeven met push:              ;
 ;             - locatie (vaknummer) [0]         ;
 ;-----------------------------------------------;
-setvakwhite PROC FAR
+setvakwhite PROC NEAR
 	push bp
 	mov bp, sp
 	push bx
@@ -289,7 +289,7 @@ setvakwhite ENDP
 ; Parameters doorgegeven met push:              ;
 ;             - locatie (vaknummer) [0]         ;
 ;-----------------------------------------------;
-setvakblack PROC FAR
+setvakblack PROC NEAR
 	push bp
 	mov bp, sp
 	push bx
@@ -321,7 +321,7 @@ setvakblack ENDP
 ; Parameters doorgegeven met push:              ;
 ;             - locatie (vaknummer) [0]         ;
 ;-----------------------------------------------;
-setvakpossiblewhite PROC FAR
+setvakpossiblewhite PROC NEAR
 	push bp
 	mov bp, sp
 	push bx
@@ -353,7 +353,7 @@ setvakpossiblewhite ENDP
 ; Parameters doorgegeven met push:              ;
 ;             - locatie (vaknummer) [0]         ;
 ;-----------------------------------------------;
-setvakpossibleblack PROC FAR
+setvakpossibleblack PROC NEAR
 	push bp
 	mov bp, sp
 	push bx
@@ -385,7 +385,7 @@ setvakpossibleblack ENDP
 ; Parameters doorgegeven met push:              ;
 ;             - locatie (vaknummer) [0]         ;
 ;-----------------------------------------------;
-setvakpossibleboth PROC FAR
+setvakpossibleboth PROC NEAR
 	push bp
 	mov bp, sp
 	push bx
