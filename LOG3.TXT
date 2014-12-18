@@ -1,0 +1,103 @@
+	ML /c /W3 /WX /FoLOGICA.OBJ /Ta LOGICA.ASM
+ Assembling: LOGICA.ASM
+LOGICA.ASM(28): error A2070: invalid instruction operands
+LOGICA.ASM(35): error A2070: invalid instruction operands
+LOGICA.ASM(36): error A2070: invalid instruction operands
+LOGICA.ASM(41): error A2070: invalid instruction operands
+LOGICA.ASM(43): error A2070: invalid instruction operands
+LOGICA.ASM(69): error A2070: invalid instruction operands
+LOGICA.ASM(110): error A2070: invalid instruction operands
+LOGICA.ASM(118): error A2070: invalid instruction operands
+LOGICA.ASM(126): error A2070: invalid instruction operands
+LOGICA.ASM(133): error A2070: invalid instruction operands
+LOGICA.ASM(148): error A2070: invalid instruction operands
+LOGICA.ASM(151): error A2070: invalid instruction operands
+LOGICA.ASM(159): error A2070: invalid instruction operands
+LOGICA.ASM(162): error A2070: invalid instruction operands
+LOGICA.ASM(221): error A2070: invalid instruction operands
+LOGICA.ASM(228): error A2070: invalid instruction operands
+LOGICA.ASM(254): error A2070: invalid instruction operands
+LOGICA.ASM(263): error A2070: invalid instruction operands
+LOGICA.ASM(273): error A2070: invalid instruction operands
+LOGICA.ASM(276): error A2070: invalid instruction operands
+LOGICA.ASM(301): error A2070: invalid instruction operands
+LOGICA.ASM(365): error A2070: invalid instruction operands
+LOGICA.ASM(419): error A2070: invalid instruction operands
+LOGICA.ASM(479): error A2070: invalid instruction operands
+LOGICA.ASM(517): error A2005: symbol redefinition : schuinld2
+LOGICA.ASM(521): error A2005: symbol redefinition : schuinro2
+LOGICA.ASM(525): error A2005: symbol redefinition : schuinrd2
+LOGICA.ASM(531): error A2070: invalid instruction operands
+LOGICA.ASM(623): error A2070: invalid instruction operands
+LOGICA.ASM(624): error A2070: invalid instruction operands
+LOGICA.ASM(636): error A2070: invalid instruction operands
+LOGICA.ASM(645): error A2070: invalid instruction operands
+LOGICA.ASM(656): error A2070: invalid instruction operands
+LOGICA.ASM(665): error A2070: invalid instruction operands
+LOGICA.ASM(678): error A2070: invalid instruction operands
+LOGICA.ASM(687): error A2070: invalid instruction operands
+LOGICA.ASM(699): error A2070: invalid instruction operands
+LOGICA.ASM(708): error A2070: invalid instruction operands
+LOGICA.ASM(727): error A2070: invalid instruction operands
+LOGICA.ASM(737): error A2070: invalid instruction operands
+LOGICA.ASM(739): error A2070: invalid instruction operands
+LOGICA.ASM(756): error A2070: invalid instruction operands
+LOGICA.ASM(766): error A2070: invalid instruction operands
+LOGICA.ASM(768): error A2070: invalid instruction operands
+LOGICA.ASM(777): error A2070: invalid instruction operands
+LOGICA.ASM(802): error A2070: invalid instruction operands
+LOGICA.ASM(804): error A2070: invalid instruction operands
+LOGICA.ASM(821): error A2070: invalid instruction operands
+LOGICA.ASM(830): error A2070: invalid instruction operands
+LOGICA.ASM(832): error A2070: invalid instruction operands
+LOGICA.ASM(841): error A2070: invalid instruction operands
+LOGICA.ASM(858): error A2070: invalid instruction operands
+LOGICA.ASM(868): error A2070: invalid instruction operands
+LOGICA.ASM(872): error A2070: invalid instruction operands
+LOGICA.ASM(893): error A2070: invalid instruction operands
+LOGICA.ASM(903): error A2070: invalid instruction operands
+LOGICA.ASM(907): error A2070: invalid instruction operands
+LOGICA.ASM(917): error A2070: invalid instruction operands
+LOGICA.ASM(935): error A2070: invalid instruction operands
+LOGICA.ASM(945): error A2070: invalid instruction operands
+LOGICA.ASM(949): error A2070: invalid instruction operands
+LOGICA.ASM(969): error A2070: invalid instruction operands
+LOGICA.ASM(979): error A2070: invalid instruction operands
+LOGICA.ASM(983): error A2070: invalid instruction operands
+LOGICA.ASM(995): error A2070: invalid instruction operands
+LOGICA.ASM(1002): error A2070: invalid instruction operands
+LOGICA.ASM(1046): error A2070: invalid instruction operands
+LOGICA.ASM(1048): error A2070: invalid instruction operands
+LOGICA.ASM(1208): error A2070: invalid instruction operands
+LOGICA.ASM(1262): error A2070: invalid instruction operands
+LOGICA.ASM(1294): error A2070: invalid instruction operands
+LOGICA.ASM(1300): error A2070: invalid instruction operands
+LOGICA.ASM(181): error A2006: undefined symbol : drawscore
+LOGICA.ASM(242): error A2031: must be index or base register
+LOGICA.ASM(252): error A2031: must be index or base register
+LOGICA.ASM(262): error A2031: must be index or base register
+LOGICA.ASM(272): error A2031: must be index or base register
+LOGICA.ASM(313): error A2006: undefined symbol : shuinld1
+LOGICA.ASM(377): error A2006: undefined symbol : shuinld2
+LOGICA.ASM(431): error A2006: undefined symbol : shuinlo3
+LOGICA.ASM(491): error A2006: undefined symbol : shuinld4
+LOGICA.ASM(493): error A2006: undefined symbol : schuinro4
+LOGICA.ASM(494): error A2006: undefined symbol : schuinrd4
+LOGICA.ASM(543): error A2006: undefined symbol : shuinld5
+LOGICA.ASM(793): error A2006: undefined symbol : bythe
+LOGICA.ASM(826): error A2006: undefined symbol : dleft
+LOGICA.ASM(1070): error A2006: undefined symbol : countpos
+LOGICA.ASM(1072): error A2006: undefined symbol : countpos
+LOGICA.ASM(1109): error A2006: undefined symbol : blackcoins
+LOGICA.ASM(1110): error A2006: undefined symbol : whitecoins
+LOGICA.ASM(1120): error A2006: undefined symbol : locatiemunt
+LOGICA.ASM(1122): error A2006: undefined symbol : thisDrawing
+LOGICA.ASM(1123): error A2006: undefined symbol : thisDrawing
+LOGICA.ASM(1126): error A2006: undefined symbol : thisDrawing
+LOGICA.ASM(1127): error A2006: undefined symbol : printCircle
+LOGICA.ASM(1133): error A2006: undefined symbol : locatiemunt
+LOGICA.ASM(1135): error A2006: undefined symbol : thisDrawing
+LOGICA.ASM(1136): error A2006: undefined symbol : thisDrawing
+LOGICA.ASM(1139): error A2006: undefined symbol : thisDrawing
+LOGICA.ASM(1140): error A2006: undefined symbol : printCircle
+LOGICA.ASM(1142): fatal error A1012: error count exceeds 100; stopping assembly
