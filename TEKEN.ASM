@@ -1,21 +1,6 @@
-
-; ==============================================================================
-; Example for buffered drawing in mode 13h.
-; Example showing palette manipulation via port IO.
-; Example for a very generic game-loop.
-; ==============================================================================
 .MODEL small	; multiple data segments and multiple code segments
-.STACK 2048  	; stack
-
-; --- INCLUDES -----------------------------------------------------------------
-
-
-; --- MACROS AND CONSTANTS -----------------------------------------------------
-
-; Other constants	
+.STACK 2048  	; stack	
 SCREENW		equ 320
-SCREENH		equ 200
-
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA        ; data segment, variables
 oldVideoMode	db ?
