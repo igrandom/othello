@@ -1,22 +1,24 @@
-;-----------------------------------------------------------;
-;															;
-;															;
-;							MAIN FILE						;
-;			this includes:									;
-;						- mouse reader						;
-;						- add black							;
-;						- add white							;
-;						- sub black							;
-;						- sub white							;
-;						- alle sets voor vakjes:			;
-;							(setblack, setvakwhite, 		;
-;							setvakposwhite, setvakposboth, 	;
-;							setvakposblack, setvakempty)	;
-;						- setupvakjes						;
-;						- main functie						;
-;															;
-;															;
-;-----------------------------------------------------------;
+;-----------------------------------------------------------------------------------;
+;																					;
+;																					;
+;								----MAIN FILE----									;
+;																					;
+;																					;
+;			this includes:															;
+;						- mouse reader												;
+;						- add black													;
+;						- add white													;
+;						- sub black													;
+;						- sub white													;
+;						- alle sets voor vakjes:									;
+;							(setblack, setvakwhite, 								;
+;							setvakposwhite, setvakposboth, 							;
+;							setvakposblack, setvakempty)							;
+;						- setupvakjes												;
+;						- main functie												;
+;																					;
+;																					;
+;-----------------------------------------------------------------------------------;
 
 .MODEL small	                                   ; multiple data segments and multiple code segments
 .STACK 2048  	                                   ; stack
