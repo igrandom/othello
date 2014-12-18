@@ -100,13 +100,13 @@ switchbeurt PROC NEAR
 		jmp naarwhite						;false: naar white
 	
 	;----naar black----
-	:naarblack
+	naarblack:
 		mov beurt, 2
 		jmp done
 	;----end naar black----
 
 	;----naar white----
-	:naarwhite
+	naarwhite:
 		mov beurt, 1
 		jmp done
 	;-----end naar white----
@@ -140,97 +140,6 @@ gameloop PROC FAR
 	push cx
 	push ax 
 
-<<<<<<< HEAD
-;-------------------------------
-startloop:
-call mousereader
-; nu staat vaknummer in VAK
-
-mov ax, beurt 		;kijk wie er aan de beurt is 
-cmp ax, 1
-je beurtwhite
-jmp beurtblack
-;-----------------
-
-
-beurtwhite: 		;als het vakje een pw is is het possible 
-mov ax, VAK
-cmp ax, 3
-je vakjepossible
-jmp bothcmp			;kijk of het bothcmp is
-;-----------------
-
-
-beurtblack:
-mov ax, VAK			;als het vakje een pb is is het possible 
-cmp ax, 4
-je vakjepossible
-jmp bothcmp			;kijk of het bothcmp is
-;-----------------
-
-bothcmp:
-mov ax, VAK
-cmp ax, 5			;als het vakje een pa is is het possible 
-je vakjepossible
-jmp startloop		;start opnieuw met gameloop
-
-;-----------------
-
-vakjepossible:		; als vakje is possible
-    cmp ax, 1			;kijk wie er aan de beurt is
-        je placewhite
-        jmp placeblack
-
-;-----------------
-
-placewhite:			;plaats wit
-mov ax, VAK			
-push ax
-call Wcoin			;teken white coin
-mov ax, VAK
-push ax
-call setvakwhite	; zet dit in de array
-jmp startswap		; start swappen
-
-;-----------------
-
-placeblack:			;plaats zwart
-mov ax, VAK
-push ax
-call Bcoin			; teken black coin
-mov ax, VAK
-push ax
-call setvakblack	;zet dit in de array
-jmp startswap		;start swappen
-
-;-----------------
-
-startswap:			;start swappen
-mov richting, 1
-call swap
-mov richting, 2
-call swap
-mov richting, 3
-call swap
-mov richting, 4
-call swap
-
-call berekenpossible	;bereken welke possible zijn
-call countcoins			;tel het aantal muntjes
-call drawscore			;teken de score die daar bij hoort	
-call switchbeurt		;verander van beurt
-call drawcoins			;teken de muntjes op het veld
-call countpossible		; tel het aantal possible
-mov ax, countpossible	
-cmp ax, 0				; als nul teken spel opnieuw
-je endgame				
-jmp startloop
-
-
-endgame	:
-call whowon
-
-=======
 	;----start loop----
 	startloop:
     	call mousereader			
@@ -328,8 +237,7 @@ call whowon
     
     endgame	:
     	call whowon
-    
->>>>>>> 7ea1e8f1a2dbffdfbf4992e848b08b20b92d2d05
+
 	pop ax
 	pop cx
 	pop es
