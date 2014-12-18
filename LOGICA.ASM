@@ -2,6 +2,10 @@
 .STACK 2048  	                                   ; stack
 SCREENW		equ 320
 SCREENH		equ 200
+include MAIN.INC
+include LOGICA.INC
+include TEKEN.INC
+
 .DATA
 savesi 			db 0
 richting		db 1

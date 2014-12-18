@@ -22,9 +22,12 @@
 
 .MODEL small	                                   ; multiple data segments and multiple code segments
 .STACK 2048  	                                   ; stack
-
+include MAIN.INC
+include LOGICA.INC
+include TEKEN.INC
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA
+    PUBLIC speelveld
     blackcoins 		  db 0
     whitecoins 	   	  db 0
     speelveld	      dw 64 dup (0) ;in de inc

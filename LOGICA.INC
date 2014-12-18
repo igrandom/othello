@@ -1,0 +1,1 @@
+externdef gameloop:FAR, drawcoins:FAR

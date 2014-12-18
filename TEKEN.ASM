@@ -43,7 +43,6 @@ screenBuffer	db 64000 dup(?)	; the 64000 bytes for the screen
 ;                   - lengte    [2]             ;
 ;                   - kleur     [0]             ;
 ;-----------------------------------------------;
-
 printLine PROC NEAR
 	push bp
 	mov bp, sp
@@ -680,7 +679,6 @@ printCircle PROC NEAR
 	printCircle ENDP
 ;-----------------------------------------------;
 
-
 ;---------------CALC POSITION-------------------;
 ; Uitleg: zet vaknummer om naar pixelpositie    ;
 ; Parameters doorgegeven met push:              ;
@@ -816,12 +814,12 @@ WCoin ENDP
 	push bx
 	;zet waarde op stack
 	
-	mov ax, [bp+4][0]
+	mov ax, [bp+6][0]
 	
 	push ax
 	call calcposition
 	
-	mov ax, [bp+4][0]						;haal locatie in vaknummers van stack
+	mov ax, [bp+6][0]						;haal locatie in vaknummers van stack
  	
     			
     mov ax, 20
@@ -856,7 +854,7 @@ DRAWEM ENDP
 ; Parameters doorgegeven met push:              ;
 ;                   - locatie (vaknummer)   [0] ;
 ;-----------------------------------------------;
-   drawpos PROC  FAR
+drawpos PROC FAR
     push bp
 	mov bp, sp
 	push dx
@@ -866,12 +864,12 @@ DRAWEM ENDP
 	push bx
 	;zet waarde op stack
 	
-	mov ax, [bp+4][0]
+	mov ax, [bp+6][0]
 	
 	push ax
 	call calcposition
 	
-	mov ax, [bp+4][0]						;haal locatie in vaknummers van stack
+	mov ax, [bp+6][0]						;haal locatie in vaknummers van stack
  	
     mov ax, 20
     push ax									; zet op stack
@@ -1059,7 +1057,7 @@ print1 ENDP
 ;                   - locatie   [2]             ;
 ;                   - kleur     [0]             ;
 ;-----------------------------------------------;
-    print2 PROC NEAR
+print2 PROC NEAR
     push bp
 	mov bp, sp
 	push bx
@@ -1691,8 +1689,7 @@ print7 PROC NEAR
     push ax									; zet op stack
     mov ax, [bp+4][0]						;haal kleur van stack
     push ax									;zet hem terug op stack
-    call printRectangle
-    
+    call printRectangle 
     
     mov ax, bx
     add ax, 3
@@ -2349,7 +2346,7 @@ printWON ENDP
 ;                   - getal     [2]             ;
 ;					- kleur 	[0]
 ;-----------------------------------------------;
-printNumber PROC NEAR
+printNumber PROC FAR
     push bp
 	mov bp, sp
 	push bx

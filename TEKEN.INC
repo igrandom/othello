@@ -1,0 +1,1 @@
+externdef printGame:FAR, printNumber:FAR, BCoin:FAR, WCoin:FAR, DRAWEM:FAR, drawpos:FAR
