@@ -26,6 +26,7 @@ include MAIN.INC
 include LOGICA.INC
 include TEKEN.INC
 
+locatiemunt equ 10000
 
 
 ; --- DATA SEGMENT -------------------------------------------------------------
@@ -34,6 +35,10 @@ include TEKEN.INC
 savesi 			db 0								; savesi is om si in op te slaan							
 richting		db 1								; richting is om bij te houden welke richting je uit aan het swappen bent
 beurt			db 2								; beurt is om bij te houden wie er aan de beurt is
+blackcoins		db 0	
+whitecoins		db 0
+countpos		db 0
+
 
 ; ----------------------------- CODE STARTS HERE -------------------------------
 .CODE
@@ -357,7 +362,7 @@ je down1
 cmp ax, 5
 je schuinlo1
 cmp ax, 6
-je shuinld1
+je schuinld1
 cmp ax, 7
 je schuinro1
 jmp schuinrd1
@@ -421,7 +426,7 @@ je down2
 cmp ax, 5
 je schuinlo2
 cmp ax, 6
-je shuinld2
+je schuinld2
 cmp ax, 7
 je schuinro2
 jmp schuinrd2
@@ -475,7 +480,7 @@ je down3
 cmp ax, 5
 je schuinlo3
 cmp ax, 6
-je shuinlo3
+je schuinlo3
 cmp ax, 7
 je schuinlo3
 jmp schuinlo3
@@ -535,7 +540,7 @@ je down4
 cmp ax, 5
 je schuinlo4
 cmp ax, 6
-je shuinld4
+je schuinld4
 cmp ax, 7
 je schuinro4
 jmp schuinrd4
@@ -561,15 +566,15 @@ schuinlo4:
 add ax, 9
 jmp down2
 
-schuinld2:
+schuinld4:
 sub ax, 7
 jmp down2
 
-schuinro2:
+schuinro4:
 add ax, 7
 jmp down2
 
-schuinrd2:
+schuinrd4:
 sub ax, 9
 jmp down2
 
@@ -587,7 +592,7 @@ je down5
 cmp ax, 5
 je schuinlo5
 cmp ax, 6
-je shuinld5
+je schuinld5
 cmp ax, 7
 je schuinro1
 jmp schuinrd5
