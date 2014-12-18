@@ -47,35 +47,36 @@ printLine PROC NEAR
 	push cx
 	push ax
 
-	mov cx, 0 ; zet counter op nul
-	mov ah, [thisDrawing + 4] ; haal lengte uit array
-	mov al, [thisDrawing + 5]
-	add cx, ax ;voeg lengte toe aan counter
-	push ax
-    ;dec cx
-	mov bx, [bp+4][0]
-
-    mov al, [thisDrawing + 6] ;haal de kleur uit de array
-	loopje:
-	mov dx, 0a000h
-    mov es, dx
-    mov dx, 0
-	mov es:[bx], al
-	inc bx
-	dec cx ; decrement CX by 1
-    cmp cx, 0
-	jnz loopje ; jump to loopje if dec cx did not result in 0
+	mov cx, 0 						; zet counter op nul
+	mov ax, [bp+6][2]					;haal lengte van de stack
+	add cx, ax 						;voeg de lengte toe aan de counter
+	push ax							
 	
+	mov bx, [bp+6][4]				;haal de locatie van de stack
+
+    mov ax, [bp+6][0]				;haal de kleur van de stack
+    
+    ;----loopje----
+	loopje:
+		mov dx, 0a000h				;roep de juiste functie op om te tekenen			
+    	mov es, dx
+    	mov dx, 0
+		mov es:[bx], ax				;zet de juiste kleur er in
+		inc bx
+		dec cx 						; decrement CX by 1
+    	cmp cx, 0
+			jnz loopje 					; jump to loopje if dec cx did not result in 0
+	;----end loopje----
+		
 	pop ax
 	sub bx, ax
 	
-pop ax
-pop cx
-pop es
-pop dx
-pop bp
-
-ret 0
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bp
+	ret 0
 
 printLine ENDP
 
@@ -105,39 +106,42 @@ printRectangle PROC NEAR
 	
     mov bx, 0
 	
-	mov ah, [thisDrawing + 0] ; haal pixel locatie uit array
-	mov al, [thisDrawing + 1] 
+	mov ax, [bp+6][6]					;haal locatie van de stack
 	mov bx, ax
 	
-	mov cx, 0 ; zet counter op nul
-	mov al, [thisDrawing + 3]
-	mov ah, [thisDrawing + 2] ; haal lengte uit array
-	mov cx, ax ;voeg lengte toe aan counter
+	mov cx, 0 							; zet counter op nul
+	mov ax, [bp+6][4]					; haal hoogte van de stack
+	mov cx, ax 							;voeg lengte toe aan counter
 	
-loopje:
-	push cx
 	
-	push bx
+	;----loopje----
+	loopje:
+		push cx
 	
-  	call printLine ;teken lijn
-	add bx, SCREENW
+		push bx							; zet locatie op de stack
+		mov dx, [bp+6][2]				;haal lengte op de stack
+		push dx							; en zet deze er op nieuwe op
+		mov dx, [bp+6][0]				; haal kleur van de stack
+		push dx							; en zet deze er op nieuw op
+		
+		
+  		call printLine 					;roep teken teken lijn op
+		add bx, SCREENW
 	
-    pop cx
-    pop cx ; restore CX from the stack
-    dec cx ; decrement CX by 1
-    cmp cx, 0 
-    jnz loopje ; jump to loopje if dec cx did not result in 0
-	
-mov [thisDrawing + 0], bh
-mov [thisDrawing + 1], bl		
+    	pop cx
+    	pop cx 							; restore CX from the stack
+   	 	dec cx 							; decrement CX by 1
+    	cmp cx, 0 
+    		jnz loopje 					; jump to loopje if dec cx did not result in 0
+    ;----end loopje----		
 
-pop ax
-pop cx
-pop es
-pop dx
-pop bx
-pop bp
-ret 0
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
 printRectangle ENDP
 ;----------------------------------------------;
 
@@ -156,29 +160,29 @@ printTile PROC NEAR
 	push es
 	push cx
 	push ax
-    mov ax, 20                      ;zet hoogte in thisDrawing
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+	
+	mov ax, [bp+6][0]					; haal locatie van de stack
+	push ax								; zet deze er opnieuw op
+	
+    mov ax, 20                      	; vakje = 20
+    push ax								; zet dit op de stack
     
-    						;zet lengte in thisDrawing
-	mov ax, 20 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+
+	mov ax, 20 							; lengte = 20
+    push ax								; zet dit op de stack
 	
-							;zet kleur in thisDrawing
-	mov al, 2 ; kleur
-	mov [thisDrawing + 6], al
+	mov ax, 2 							; kleur = donkergroen 
+	push ax								; zet op stack
 	
+	call printRectangle					; roep print rechthoek op
 	
-	
-	call printRectangle
-pop ax
-pop cx
-pop es
-pop dx
-pop bx
-pop bp
-ret 0
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0
 printTile ENDP
     
 ;-----------------------------------------------;
@@ -200,25 +204,21 @@ printFieldLine PROC NEAR
 	
 	mov cx, 8
 	
-	; zet in ax start van lijn
-    mov ah, [thisDrawing + 0]
-    mov al, [thisDrawing + 1]
+										; zet in ax start van lijn
+    mov ax, [bp+6][0]					
 	
+	;----lineloop----
 	lineloop:
-	push cx
-	
-	call printTile
-	
-	add ax, 22
-	
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-	
-	
-  	pop cx ; restore CX from the stack
-  	dec cx ; decrement CX by 1
-	jnz lineloop ; jump to loopje if dec cx did not result in 0
-   
+		push cx
+		
+		push ax							;zet de startpixel op stack
+		call printTile					;print vakje
+		add ax, 22						;zet de startpixel een vakje verder
+    
+  		pop cx 							; restore CX from the stack
+  		dec cx 							; decrement CX by 1
+		jnz lineloop 					; jump to loopje if dec cx did not result in 0
+   	;----end lineloop----
 	
 	pop ax
 	pop cx
@@ -244,24 +244,22 @@ printPlayField PROC NEAR
 	push cx
 	push ax 
 	
-    mov ah, [thisDrawing + 0]
-    mov al, [thisDrawing + 1]
+    mov ax, [bp+6][0]					;haal pixel positie van stack
     
-	mov cx, 8
+	mov cx, 8							; zet counter op 8
 	
+	;----fieldloop----
 	fieldloop:
-	push cx
+		push cx
+		
+		push ax							; zet pixel positie op stack
+		call printFieldLine
+		add ax, 7040					; zet de pixel waarde een vak verder
 	
-	call printFieldLine
-	
-	add ax, 7040
-	
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-	
-  	pop cx ; restore CX from the stack
-  	dec cx ; decrement CX by 1
-	jnz fieldloop; jump to loopje if dec cx did not result in 0
+  		pop cx 							; restore CX from the stack
+  		dec cx 							; decrement CX by 1
+		jnz fieldloop					; jump to loopje if dec cx did not result in 0
+	;----end fieldloop----
 	
 	pop ax
 	pop cx
@@ -287,24 +285,19 @@ printBackground PROC FAR
 	push es
 	push cx
 	push ax 
-							;zet begin locatie in thisDrawing
- 	mov ax, 0
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-    
-    						;zet hoogte in thisDrawing
-    mov ax, 200
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
-    
-    						;zet lengte in thisDrawing
-	mov ax, 320 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
 	
-							;zet kleur in thisDrawing
-	mov al, 6 ; kleur
-	mov [thisDrawing + 6], al
+	
+ 	mov ax, 0						;locatie = boven aan
+ 	push ax
+ 	
+    mov ax, 200						;hoogte = 200
+    push ax
+    
+	mov ax, 320 					; lengte = 320
+	push ax
+	
+	mov ax, 6						; kleur = bruin
+	push ax
 	
 	call printRectangle
 	
@@ -315,7 +308,7 @@ printBackground PROC FAR
 	pop bx
 	pop bp
 	ret 0
-	printBackground ENDP
+printBackground ENDP
 ;-----------------------------------------------;
 
 ;---------------PRINT FRAME---------------------;
@@ -341,94 +334,83 @@ printlines PROC FAR
     mov [thisDrawing + 0], ah
     mov [thisDrawing + 1], al
     
-    						;zet hoogte in thisDrawing
+    								;zet hoogte in thisDrawing
     mov ax, 2
     mov [thisDrawing + 2], ah
     mov [thisDrawing + 3], al
     
-    						;zet lengte in thisDrawing
+    								;zet lengte in thisDrawing
 	mov ax, 176 ; lengte
     mov [thisDrawing + 4], ah
     mov [thisDrawing + 5], al
 	
-							;zet kleur in thisDrawing
+									;zet kleur in thisDrawing
 	mov al, 0 ; kleur
 	mov [thisDrawing + 6], al
 	
 	call printRectangle
-	
-	;-------------------------------
-	;lijn links	
+									;lijn links:	
 	
  	mov ax, 6098
     mov [thisDrawing + 0], ah
     mov [thisDrawing + 1], al
     
-    						;zet hoogte in thisDrawing
+    								;zet hoogte in thisDrawing
     mov ax, 176
     mov [thisDrawing + 2], ah
     mov [thisDrawing + 3], al
     
-    						;zet lengte in thisDrawing
+    								;zet lengte in thisDrawing
 	mov ax, 2 ; lengte
     mov [thisDrawing + 4], ah
     mov [thisDrawing + 5], al
 	
-							;zet kleur in thisDrawing
+									;zet kleur in thisDrawing
 	mov al, 0 ; kleur
 	mov [thisDrawing + 6], al
-	
-	
-	
-	;-------------------------------
-	;lijn rechts
-	
-		call printRectangle
-	
-	 	mov ax, 6274
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-    
-    						;zet hoogte in thisDrawing
-    mov ax, 176
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
-    
-    						;zet lengte in thisDrawing
-	mov ax, 2 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
-	
-							;zet kleur in thisDrawing
-	mov al, 0 ; kleur
-	mov [thisDrawing + 6], al
+									;lijn rechts:
 	
 	call printRectangle
 	
-	;--------------------------------
-	;lijn onder
-	
-		 	mov ax, 61460
+	mov ax, 6274
     mov [thisDrawing + 0], ah
     mov [thisDrawing + 1], al
     
-    						;zet hoogte in thisDrawing
+    								;zet hoogte in thisDrawing
+    mov ax, 176
+    mov [thisDrawing + 2], ah
+    mov [thisDrawing + 3], al
+    
+    								;zet lengte in thisDrawing
+	mov ax, 2 						; lengte
+    mov [thisDrawing + 4], ah
+    mov [thisDrawing + 5], al
+									;zet kleur in thisDrawing
+	mov al, 0 						; kleur
+	mov [thisDrawing + 6], al
+	
+	call printRectangle
+									;lijn onder
+	
+	mov ax, 61460
+    mov [thisDrawing + 0], ah
+    mov [thisDrawing + 1], al
+    
+    								;zet hoogte in thisDrawing
     mov ax, 2
     mov [thisDrawing + 2], ah
     mov [thisDrawing + 3], al
     
-    						;zet lengte in thisDrawing
-	mov ax, 176 ; lengte
+    								;zet lengte in thisDrawing
+	mov ax, 176 					; lengte
     mov [thisDrawing + 4], ah
     mov [thisDrawing + 5], al
 	
-							;zet kleur in thisDrawing
-	mov al, 0 ; kleur
+									;zet kleur in thisDrawing
+	mov al, 0 						; kleur
 	mov [thisDrawing + 6], al
 	
 	call printRectangle
-	
-	
 	pop ax
 	pop cx
 	pop es
@@ -487,85 +469,71 @@ printGame ENDP
 	push es
 	push cx
 	push ax 
-	
-	;zet locatie in ax
-	;zet kleur in kleur klaar
-	
-	
-							;zet begin locatie in thisDrawing
+										;zet begin locatie in thisDrawing
 							
- 	mov ah, [thisDrawing + 0] ;lees locatie uit
- 	mov al, [thisDrawing + 1] ;lees locatie uit
- 	;start tekenen
- 	
- 								;locatie lijn
+ 	mov ah, [thisDrawing + 0] 			;lees locatie uit
+ 	mov al, [thisDrawing + 1] 			;lees locatie uit
+ 										;start tekenen
+ 										;locatie lijn
  	
  	add ax, 6
     mov [thisDrawing + 0], ah
     mov [thisDrawing + 1], al
-    
-    						;zet hoogte in thisDrawing
+    									;zet hoogte in thisDrawing
     mov ax, 1
     mov [thisDrawing + 2], ah
     mov [thisDrawing + 3], al
     
-    						;zet lengte in thisDrawing
-	mov ax, 6 ; lengte
+    									;zet lengte in thisDrawing
+	mov ax, 6 							; lengte
     mov [thisDrawing + 4], ah
     mov [thisDrawing + 5], al
 	
 	call printRectangle
-	mov ah, [thisDrawing + 0] ;lees locatie uit
+	mov ah, [thisDrawing + 0] 			;lees locatie uit
  	mov al, [thisDrawing + 1]
  	
- 	;--							
- 	
  	sub ax, 6
- 	;add ax, SCREENW
+ 										;add ax, SCREENW
  	add ax, 4
     mov [thisDrawing + 0], ah
     mov [thisDrawing + 1], al
-    
-    						;zet hoogte in thisDrawing
+    									;zet hoogte in thisDrawing
     mov ax, 1
     mov [thisDrawing + 2], ah
     mov [thisDrawing + 3], al
     
-    						;zet lengte in thisDrawing
-	mov ax, 10 ; lengte
+    									;zet lengte in thisDrawing
+	mov ax, 10 							; lengte
     mov [thisDrawing + 4], ah
     mov [thisDrawing + 5], al
     	call printRectangle
     	
-	mov ah, [thisDrawing + 0] ;lees locatie uit
+	mov ah, [thisDrawing + 0] 			;lees locatie uit
  	mov al, [thisDrawing + 1]
 	
-	;--
 	sub ax, 4
- 	;add ax, SCREENW
+ 										;add ax, SCREENW
  	add ax, 3
     mov [thisDrawing + 0], ah
     mov [thisDrawing + 1], al
-    
-    						;zet hoogte in thisDrawing
+    									;zet hoogte in thisDrawing
     mov ax, 1
     mov [thisDrawing + 2], ah
     mov [thisDrawing + 3], al
     mov ax, 2
     
-    						;zet lengte in thisDrawing
-	mov ax, 12 ; lengte
+    									;zet lengte in thisDrawing
+	mov ax, 12						 	; lengte
     mov [thisDrawing + 4], ah
     mov [thisDrawing + 5], al
     	call printRectangle
     	
-	mov ah, [thisDrawing + 0] ;lees locatie uit
+	mov ah, [thisDrawing + 0] 			;lees locatie uit
  	mov al, [thisDrawing + 1]
 	
-	;--
-	
 	sub ax, 3
- 	;add ax, SCREENW
+ 										;add ax, SCREENW
  	add ax, 2
     mov [thisDrawing + 0], ah
     mov [thisDrawing + 1], al
