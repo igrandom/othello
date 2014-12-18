@@ -19,7 +19,8 @@ SCREENH		equ 200
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA        ; data segment, variables
 oldVideoMode	db ?
-palette     db 0, 0, 0, 13, 53, 56    ; defines black and white
+palette         db 0, 0, 0, 13, 53, 56    ; defines black and white
+PLAYFIELD       db 6420
 
 ; --- SCREEN BUFFER ------------------------------------------------------------
 .FARDATA?	; segment that contains the screenBuffer for mode 13h drawing
