@@ -1,3 +1,23 @@
+;-----------------------------------------------------------------------------------;
+;																					;
+;																					;
+;								----LOGICA FILE----									;
+;																					;
+;																					;
+;			this includes:															;
+;						- 															;
+;						- 															;
+;						- 															;
+;						- 															;
+;						- 															;
+;						- 															;
+;						- 															;
+;						- 															;
+;						- 															;
+;																					;
+;																					;
+;-----------------------------------------------------------------------------------;
+
 .MODEL small	                                   ; multiple data segments and multiple code segments
 .STACK 2048  	                                   ; stack
 SCREENW		equ 320
@@ -6,13 +26,20 @@ include MAIN.INC
 include LOGICA.INC
 include TEKEN.INC
 
+
+
+; --- DATA SEGMENT -------------------------------------------------------------
+
 .DATA
-savesi 			db 0
-richting		db 1
-beurt			db 2
+savesi 			db 0								; savesi is om si in op te slaan							
+richting		db 1								; richting is om bij te houden welke richting je uit aan het swappen bent
+beurt			db 2								; beurt is om bij te houden wie er aan de beurt is
+
+; ----------------------------- CODE STARTS HERE -------------------------------
 .CODE
 ;---------------------CALCVAK-------------------;
-; Uitleg: een vakje mogelijk zwart maken        ;
+; Uitleg: bereken van col en row van een vak    ;
+;		van uit pixel locatie (COL en ROW)		;
 ; Parameters doorgegeven met push:              ;
 ;             - locatie (vaknummer) [0]         ;
 ;-----------------------------------------------;
@@ -66,16 +93,25 @@ switchbeurt PROC NEAR
 	push cx
 	push ax 
 
-    mov ax, beurt
-cmp beurt 1
-je naarblack
-jmp naarwhite
+    mov ax, beurt							;zet je beurt in ax
+	cmp ax, 1								;vergelijk beurt met 1
+		je naarblack						;true: naar black
+		jmp naarwhite						;false: naar white
+	
+	;----naar black----
+	:naarblack
+		mov beurt, 2
+		jmp done
+	;----end naar black----
 
-:naarblack
-mov beurt, 2
-
-:naarwhite
-mov beurt, 1
+	;----naar white----
+	:naarwhite
+		mov beurt, 1
+		jmp done
+	;-----end naar white----
+	
+	;----done----
+	done:
 
 	pop ax
 	pop cx
@@ -102,95 +138,104 @@ gameloop PROC FAR
 	push cx
 	push ax 
 
-;-------------------------------
-startloop:
-call mousereader
-; nu staat vaknummer in VAK
+	;----start loop----
+	startloop:
+    	call mousereader			
+    
+    	mov ax, beurt 					;kijk wie er aan de beurt is 
+    	cmp ax, 1
+    		je beurtwhite
+    		jmp beurtblack
+	;----end startloop
 
-mov ax, beurt 		;kijk wie er aan de beurt is 
-cmp ax, 1
-je beurtwhite
-jmp beurtblack
-;-----------------
+	;----beurt wit----
+	beurtwhite: 						;kijk of het vakje een pw is, is het possible? 
+		mov ax, VAK
+		cmp ax, 3						
+			je vakjepossible			;True: ga naar vakje possible
+			jmp bothcmp					;False: kijk of het bothcmp is
+	;----end beurt wit-----
 
+	;----beurt zwart----
+	beurtblack:
+		mov ax, VAK						;kijk of het vakje een pb is, is het possible? 
+		cmp ax, 4
+			je vakjepossible			;True: ga naar vakje possible
+			jmp bothcmp					;False: kijk of het bothcmp is
+	;----end beurt zwart----
+	
+	;----both compare----
+	bothcmp:
+		mov ax, VAK
+		cmp ax, 5						;kijk of het vakje pa, is het possible?
+			je vakjepossible			;True: ga naar: vakje possible
+			jmp startloop				;False: start opnieuw met gameloop
+	;----eind both compare----
 
-beurtwhite: 		;als het vakje een pw is is het possible 
-mov ax, VAK
-cmp ax, 3
-je vakjepossible
-jmp bothcmp			;kijk of het bothcmp is
-;-----------------
+	;----vak possible----
+	vakjepossible:						; als vakje is possible
+		cmp ax 1						;kijk wie er aan de beurt is
+			je placewhite
+			jmp placeblack
+	;----end vak possible----
 
-
-beurtblack:
-mov ax, VAK			;als het vakje een pb is is het possible 
-cmp ax, 4
-je vakjepossible
-jmp bothcmp			;kijk of het bothcmp is
-;-----------------
-
-bothcmp:
-mov ax, VAK
-cmp ax, 5			;als het vakje een pa is is het possible 
-je vakjepossible
-jmp startloop		;start opnieuw met gameloop
-
-;-----------------
-
-vakjepossible:		; als vakje is possible
-cmp ax 1			;kijk wie er aan de beurt is
-je placewhite
-jmp placeblack
-
-;-----------------
-
-placewhite:			;plaats wit
-mov ax, VAK			
-push ax
-call Wcoin			;teken white coin
-mov ax, VAK
-push ax
-call setvakwhite	; zet dit in de array
-jmp startswap		; start swappen
-
-;-----------------
-
-placeblack:			;plaats zwart
-mov ax, VAK
-push ax
-call Bcoin			; teken black coin
-mov ax, VAK
-push ax
-call setvakblack	;zet dit in de array
-jmp startswap		;start swappen
-
-;-----------------
-
-startswap:			;start swappen
-mov richting, 1
-call swap
-mov richting, 2
-call swap
-mov richting, 3
-call swap
-mov richting, 4
-call swap
-
-call berekenpossible	;bereken welke possible zijn
-call countcoins			;tel het aantal muntjes
-call drawscore			;teken de score die daar bij hoort	
-call switchbeurt		;verander van beurt
-call drawcoins			;teken de muntjes op het veld
-call countpossible		; tel het aantal possible
-mov ax, countpossible	
-cmp ax, 0				; als nul teken spel opnieuw
-je endgame				
-jmp startloop
-
-
-endgame	:
-call whowon
-
+	;----plaats wit----
+	placewhite:							;plaats wit
+		mov ax, VAK			
+    	push ax
+    	call Wcoin						;teken white coin
+    	mov ax, VAK
+    	push ax
+   	 	call setvakwhite				; zet dit in de array
+   	 	jmp startswap					; start swappen
+   	 ;----eind plaats wit----
+   	 
+    ;----plaats zwart----
+    placeblack:							;plaats zwart
+        mov ax, VAK
+        push ax
+        call Bcoin						; teken black coin
+        mov ax, VAK
+        push ax
+        call setvakblack				;zet dit in de array
+        jmp startswap					;start swappen
+	;----end plaats zwart-----
+    
+    ;----start swap----
+    startswap:							;start swappen
+        mov richting, 1
+        call swap
+        mov richting, 2
+        call swap
+        mov richting, 3
+        call swap
+        mov richting, 4
+        call swap
+        mov richting, 5
+        call swap
+        mov richting, 6
+        call swap
+        mov richting, 7
+        call swap
+        mov richting, 8
+        call swap
+        
+        call berekenpossible			;bereken welke possible zijn
+        call countcoins					;tel het aantal muntjes
+        call drawscore					;teken de score die daar bij hoort	
+        call switchbeurt				;verander van beurt
+        call drawcoins					;teken de muntjes op het veld
+        call countpossible				; tel het aantal possible
+        mov ax, countpossible	
+        cmp ax, 0						; als nul teken spel opnieuw
+        	je endgame				
+        	jmp startloop
+    ;----end start swap----
+    
+    
+    endgame	:
+    	call whowon
+    
 	pop ax
 	pop cx
 	pop es
@@ -599,7 +644,7 @@ swap ENDP
 ; Parameters doorgegeven met push:              ;
 ;             geen                              ;
 ;-----------------------------------------------;
-berekenpossible PROC FAR
+berekenpossible PROC NEAR
 	push bp
 	mov bp, sp
 	push bx
@@ -1001,7 +1046,7 @@ berekenpossible ENDP
 ; Parameters doorgegeven met push:              ;
 ;             geen                              ;
 ;-----------------------------------------------;
-countpossible PROC FAR
+countpossible PROC NEAR
     push bp
 	mov bp, sp
 	push dx
@@ -1071,7 +1116,7 @@ countpossible ENDP
 ; Parameters doorgegeven met push:              ;
 ;             geen                              ;
 ;-----------------------------------------------;
-whowon PROC FAR
+whowon PROC NEAR
     push bp
 	mov bp, sp
 	push dx
@@ -1163,7 +1208,7 @@ whowon ENDP
 ; Parameters doorgegeven met push:              ;
 ;             geen                              ;
 ;-----------------------------------------------;
-countcoins PROC FAR
+countcoins PROC NEAR
 	push bp
 	mov bp, sp
 	push bx

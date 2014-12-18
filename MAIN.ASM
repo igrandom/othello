@@ -22,12 +22,9 @@
 
 .MODEL small	                                   ; multiple data segments and multiple code segments
 .STACK 2048  	                                   ; stack
-include MAIN.INC
-include LOGICA.INC
-include TEKEN.INC
+
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA
-    PUBLIC speelveld, COL, ROW, VAK
     blackcoins 		  db 0
     whitecoins 	   	  db 0
     speelveld	      dw 64 dup (0) ;in de inc
@@ -228,7 +225,7 @@ subwhite ENDP
 ; Parameters doorgegeven met push:              ;
 ;             - locatie (vaknummer) [0]         ;
 ;-----------------------------------------------;
-setvakempty PROC NEAR
+setvakempty PROC FAR
 	push bp
 	mov bp, sp
 	push bx
@@ -260,7 +257,7 @@ setvakempty ENDP
 ; Parameters doorgegeven met push:              ;
 ;             - locatie (vaknummer) [0]         ;
 ;-----------------------------------------------;
-setvakwhite PROC NEAR
+setvakwhite PROC FAR
 	push bp
 	mov bp, sp
 	push bx
@@ -292,7 +289,7 @@ setvakwhite ENDP
 ; Parameters doorgegeven met push:              ;
 ;             - locatie (vaknummer) [0]         ;
 ;-----------------------------------------------;
-setvakblack PROC NEAR
+setvakblack PROC FAR
 	push bp
 	mov bp, sp
 	push bx
@@ -324,7 +321,7 @@ setvakblack ENDP
 ; Parameters doorgegeven met push:              ;
 ;             - locatie (vaknummer) [0]         ;
 ;-----------------------------------------------;
-setvakpossiblewhite PROC NEAR
+setvakpossiblewhite PROC FAR
 	push bp
 	mov bp, sp
 	push bx
@@ -356,7 +353,7 @@ setvakpossiblewhite ENDP
 ; Parameters doorgegeven met push:              ;
 ;             - locatie (vaknummer) [0]         ;
 ;-----------------------------------------------;
-setvakpossibleblack PROC NEAR
+setvakpossibleblack PROC FAR
 	push bp
 	mov bp, sp
 	push bx
@@ -388,7 +385,7 @@ setvakpossibleblack ENDP
 ; Parameters doorgegeven met push:              ;
 ;             - locatie (vaknummer) [0]         ;
 ;-----------------------------------------------;
-setvakpossibleboth PROC NEAR
+setvakpossibleboth PROC FAR
 	push bp
 	mov bp, sp
 	push bx
