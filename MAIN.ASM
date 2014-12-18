@@ -1,9 +1,32 @@
+;-----------------------------------------------------------;
+;															;
+;															;
+;							Main file						;
+;			this includes:									;
+;						- mouse reader						;
+;						- add black							;
+;						- add white							;
+;						- sub black							;
+;						- sub white							;
+;						- alle sets voor vakjes:			;
+;							(setblack, setvakwhite, 		;
+;							setvakposwhite, setvakposboth, 	;
+;							setvakposblack, setvakempty)	;
+;						-									;
+;															;
+;-----------------------------------------------------------;
+
 .MODEL small	                                   ; multiple data segments and multiple code segments
 .STACK 2048  	                                   ; stack
+
+; --- DATA SEGMENT -------------------------------------------------------------
 .DATA
     blackcoins 		  db 0
     whitecoins 	   	  db 0
     speelveld	      dw 64 dup (0) ;in de inc
+    
+    
+; ----------------------------- CODE STARTS HERE -------------------------------
 .CODE
 ;------------------MOUSEREADER------------------;
 ; Uitleg: locatie van de muis uitlezen          ;
@@ -175,10 +198,12 @@ subwhite PROC FAR
 	push es
 	push cx
 	push ax 
+	
     mov ax, 0
     mov al, whitecoins
     sub al, 1
     mov whitecoins, al
+    
     pop ax
 	pop cx
 	pop es
@@ -209,6 +234,7 @@ setvakempty PROC FAR
     mov bx, 0
     mov bl, 3
     mov byte ptr [bp+si], bl
+    
     pop bp
     pop ax
 	pop cx
@@ -233,12 +259,14 @@ setvakwhite PROC FAR
 	push es
 	push cx
 	push ax
+	
     mov si, [bp+4][0]
     push bp
     mov bp, offset speelveld
     mov bx, 0
     mov bl, 1
     mov byte ptr [bp+si], bl
+    
     pop bp
     pop ax
 	pop cx
@@ -262,13 +290,15 @@ setvakblack PROC FAR
 	push dx
 	push es
 	push cx
-	push ax 
+	push ax
+	 
     mov si, [bp+4][0]
     push bp
     mov bp, offset speelveld
     mov bx, 0
     mov bl, 2
     mov byte ptr [bp+si], bl
+    
     pop bp
     pop ax
 	pop cx
@@ -293,12 +323,14 @@ setvakpossiblewhite PROC FAR
 	push es
 	push cx
 	push ax 
+	
     mov si, [bp+4][0]
     push bp
     mov bp, offset speelveld
     mov bx, 0
     mov bl, 3
     mov byte ptr [bp+si], bl
+    
     pop bp	
 	pop ax
 	pop cx
@@ -323,12 +355,14 @@ setvakpossibleblack PROC FAR
 	push es
 	push cx
 	push ax 
+	
     mov si, [bp+4][0]
     push bp
     mov bp, offset speelveld
     mov bx, 0
     mov bl, 4
     mov byte ptr [bp+si], bl
+    
     pop bp
     pop ax
 	pop cx
@@ -353,12 +387,14 @@ setvakpossibleboth PROC FAR
 	push es
 	push cx
 	push ax 
+	
     mov si, [bp+4][0]
     push bp
     mov bp, offset speelveld
     mov bx, 0
     mov bl, 5
     mov byte ptr [bp+si], bl
+    
     pop bp
     pop ax
 	pop cx
@@ -460,12 +496,16 @@ setupvakjes ENDP
 ;   YP  YP  YP YP   YP Y888888P VP   V8P        ;                          ;
 ;-----------------------------------------------;
 main:
-    call setupvakjes
-    ;zet aantal black coins op 2
+	
+	call printgame							;teken spel
+    call setupvakjes						;zet de vakjes
+    call drawcoins							; teken de munten
+    
+    call addblack							;zet aantal black coins op 2
     call addblack
-    call addblack
-    ;zet aantal white coins op 2
+    
+    call addwhite							;zet aantal white coins op 2
     call addwhite
-    call addwhite
-    call gameloop
+    
+    call gameloop							; start gameloop
 END main
