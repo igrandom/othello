@@ -1,6 +1,9 @@
-.MODEL small	; multiple data segments and multiple code segments
-.STACK 2048  	; stack
-
+.MODEL small	                                   ; multiple data segments and multiple code segments
+.STACK 2048  	                                   ; stack
+.DATA
+    blackcoins 		  db 0
+    whitecoins 	   	  db 0
+    speelveld	      dw 64 dup (0) ;in de inc
 .CODE
 ;-------------------ADD BLACK-------------------;
 ; Uitleg: aantal zwarte coins ophogen           ;
