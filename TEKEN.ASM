@@ -55,7 +55,6 @@ printLine PROC NEAR
 		
 	pop ax
 	sub bx, ax
-	
 	pop ax
 	pop cx
 	pop es
