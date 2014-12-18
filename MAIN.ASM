@@ -4,6 +4,9 @@
     blackcoins 		  db 0
     whitecoins 	   	  db 0
     speelveld	      dw 64 dup (0) ;in de inc
+    COL               db 0
+    ROW               db 0
+    VAK               db 0
 .CODE
 ;------------------MOUSEREADER------------------;
 ; Uitleg: locatie van de muis uitlezen          ;
