@@ -27,7 +27,8 @@ include LOGICA.INC
 include TEKEN.INC
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA
-    PUBLIC speelveld, COL, ROW, VAK
+    PUBLIC speelveld
+    PUBLIC COL, ROW, VAK
     blackcoins 		  db 0
     whitecoins 	   	  db 0
     speelveld	      dw 64 dup (0) ;in de inc
@@ -42,7 +43,7 @@ include TEKEN.INC
 ; Parameters doorgegeven met push:              ;
 ;                       geen                    ;
 ;-----------------------------------------------;
-mousereader PROC NEAR
+mousereader PROC FAR
 	push bp
 	mov bp, sp
 	push bx
