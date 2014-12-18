@@ -1,1 +1,0 @@
-externdef BCoin:FAR, WCoin:FAR

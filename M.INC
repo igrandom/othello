@@ -1,4 +1,0 @@
-
-
-
-externdef DRAWEM:FAR
