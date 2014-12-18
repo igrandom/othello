@@ -308,91 +308,67 @@ printlines PROC FAR
 	push es
 	push cx
 	push ax 
-
-;-------------------------------
-	;lijn boven
 	
-	call printRectangle
-	
-	 	mov ax, 6098
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
+									;lijn van boven
+	mov ax, 6098					;startpixel = 6098
+	push ax							;push op stack		
     
-    								;zet hoogte in thisDrawing
-    mov ax, 2
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    mov ax, 2						;hoogte = 2
+    push ax							; zet op stack
     
-    								;zet lengte in thisDrawing
-	mov ax, 176 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+	mov ax, 176 					; lengte = 176
+	push ax							; zet op stack
 	
-									;zet kleur in thisDrawing
-	mov al, 0 ; kleur
-	mov [thisDrawing + 6], al
+	mov ax, 0 						; kleur = zwart
+	push ax							; zet op stack
 	
-	call printRectangle
+	call printRectangle				; teken dit vak
+	
 									;lijn links:	
-	
- 	mov ax, 6098
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
+ 	mov ax, 6098					;startpixel = 6098
+ 	push ax							; zet op stack
     
-    								;zet hoogte in thisDrawing
-    mov ax, 176
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    mov ax, 176						;hoogte = 176
+   	push ax							; zet op stack
     
-    								;zet lengte in thisDrawing
-	mov ax, 2 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+	mov ax, 2 						; lengte = 2
+	push ax							; zet op stack	
+					
+	mov ax, 0						;kleur is zwart
+	push ax							;zet op stack
+									
+	call printRectangle				;teken dit vak
 	
-									;zet kleur in thisDrawing
-	mov al, 0 ; kleur
-	mov [thisDrawing + 6], al
 									;lijn rechts:
-	
-	call printRectangle
-	
-	mov ax, 6274
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
+	mov ax, 6274					;locatie
+    push ax							; zet op stack
     
-    								;zet hoogte in thisDrawing
-    mov ax, 176
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    mov ax, 176						;hoogte
+    push ax							; zet op stack
     
-    								;zet lengte in thisDrawing
 	mov ax, 2 						; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
-									;zet kleur in thisDrawing
+    push ax							; zet op stack
 	mov al, 0 						; kleur
-	mov [thisDrawing + 6], al
+	mov ah, 0						
+    push ax							; zet op stack
+    
 	
 	call printRectangle
 									;lijn onder
 	
-	mov ax, 61460
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
+	mov ax, 61460					; locatie
+    push ax							; zet op stack
     
-    								;zet hoogte in thisDrawing
-    mov ax, 2
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    mov ax, 2						; hoogte
+    push ax							; zet op stack
     
-    								;zet lengte in thisDrawing
 	mov ax, 176 					; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+    push ax							; zet op stack
 	
-									;zet kleur in thisDrawing
 	mov al, 0 						; kleur
-	mov [thisDrawing + 6], al
+	 mov ah, 0
+    push ax							; zet op stack
+    
 	
 	call printRectangle
 	pop ax
@@ -419,14 +395,12 @@ printGame PROC FAR
 	push cx
 	push ax 
 	
-	call printBackground
+	call printBackground			;print de achtergrond
 	
-	mov ax, 6420
-	
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
+	mov ax, 6420					;pixellocatie van speelveld
+    push ax							; zet op stack
     
-    call printPlayField
+    call printPlayField				;print het speelveld uit
     
 	pop ax
 	pop cx
@@ -453,174 +427,168 @@ printGame ENDP
 	push es
 	push cx
 	push ax 
-										;zet begin locatie in thisDrawing
-							
- 	mov ah, [thisDrawing + 0] 			;lees locatie uit
- 	mov al, [thisDrawing + 1] 			;lees locatie uit
+
+	mov ax, [bp+4][2]					;lees locatie van stack
  										;start tekenen
- 										;locatie lijn
  	
- 	add ax, 6
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-    									;zet hoogte in thisDrawing
-    mov ax, 1
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+ 	add ax, 6							;lengte lijn
+    push ax								; zet op stack
+    mov ax, 1							;hoogte	
+    push ax								; zet op stack
     
-    									;zet lengte in thisDrawing
 	mov ax, 6 							; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+    push ax								; zet op stack
+    
+    mov ax, [bp+4][0]					;lees kleur uit
+    push ax								;zet op stack
 	
 	call printRectangle
-	mov ah, [thisDrawing + 0] 			;lees locatie uit
- 	mov al, [thisDrawing + 1]
+	
+	mov ax, [bp+4][2]					;lees locatie van stack
+ 										;start tekenen
+ 	
  	
  	sub ax, 6
  										;add ax, SCREENW
  	add ax, 4
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-    									;zet hoogte in thisDrawing
+    push ax								; zet op stack
     mov ax, 1
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    push ax								; zet op stack
     
-    									;zet lengte in thisDrawing
 	mov ax, 10 							; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+    push ax								; zet op stack
+    
+    mov ax, [bp+4][0]					;lees kleur uit
+    push ax								;zet op stack
     	call printRectangle
     	
-	mov ah, [thisDrawing + 0] 			;lees locatie uit
- 	mov al, [thisDrawing + 1]
-	
+	mov ax, [bp+4][2]					;lees locatie van stack
+ 										;start tekenen
+ 	
 	sub ax, 4
  										;add ax, SCREENW
  	add ax, 3
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-    									;zet hoogte in thisDrawing
+    push ax								; zet op stack
     mov ax, 1
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    push ax								; zet op stack
     mov ax, 2
     
-    									;zet lengte in thisDrawing
 	mov ax, 12						 	; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+    push ax								; zet op stack
+    
+    mov ax, [bp+4][0]					;lees kleur uit
+    push ax								;zet op stack
     	call printRectangle
     	
-	mov ah, [thisDrawing + 0] 			;lees locatie uit
- 	mov al, [thisDrawing + 1]
+	mov ax, [bp+4][2]					;lees locatie van stack
+ 										;start tekenen
+ 	
 	
 	sub ax, 3
  										;add ax, SCREENW
  	add ax, 2
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
+    push ax								; zet op stack
     
-    						;zet hoogte in thisDrawing
     mov ax, 1
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    push ax								; zet op stack
     
-    						;zet lengte in thisDrawing
+    						
 	mov ax, 14 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+    push ax								; zet op stack
+    
+    mov ax, [bp+4][0]					;lees kleur uit
+    push ax								;zet op stack
     	call printRectangle
     	
-	mov ah, [thisDrawing + 0] ;lees locatie uit
- 	mov al, [thisDrawing + 1]
+	mov ax, [bp+4][2]					;lees locatie van stack
+ 										;start tekenen
+ 	
     	
     ;--
 	
 	sub ax, 2
  	;add ax, SCREENW
  	add ax, 1
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
+    push ax								; zet op stack
     
-    						;zet hoogte in thisDrawing
     mov ax, 2
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    push ax								; zet op stack
     
-    						;zet lengte in thisDrawing
 	mov ax, 16 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+    push ax								; zet op stack
+    
+    mov ax, [bp+4][0]					;lees kleur uit
+    push ax								;zet op stack
     	call printRectangle
     	
-	mov ah, [thisDrawing + 0] ;lees locatie uit
- 	mov al, [thisDrawing + 1]
+	mov ax, [bp+4][2]					;lees locatie van stack
+ 										;start tekenen
+ 	
     	
 	;--
 	
 	sub ax, 1
  	;add ax, SCREENW
  	;add ax, SCREENW
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
+    push ax								; zet op stack
     
-    						;zet hoogte in thisDrawing
     mov ax, 5
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    push ax								; zet op stack
     
-    						;zet lengte in thisDrawing
 	mov ax, 18 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+    push ax								; zet op stack
+    
+    mov ax, [bp+4][0]					;lees kleur uit
+    push ax								;zet op stack
     call printRectangle
     
-	mov ah, [thisDrawing + 0] ;lees locatie uit
- 	mov al, [thisDrawing + 1]
+	mov ax, [bp+4][2]					;lees locatie van stack
+ 										;start tekenen
+ 	
 	
 	;--
 	
  	add ax, 1
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
+    push ax								; zet op stack
     
-    						;zet hoogte in thisDrawing
+    									;zet hoogte in thisDrawing
     mov ax, 2
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    push ax								; zet op stack
     
-    						;zet lengte in thisDrawing
+    									;zet lengte in thisDrawing
 	mov ax, 16 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+    push ax								; zet op stack
+    
+    mov ax, [bp+4][0]					;lees kleur uit
+    push ax								;zet op stack
     call printRectangle
     
-	mov ah, [thisDrawing + 0] ;lees locatie uit
- 	mov al, [thisDrawing + 1]
+	mov ax, [bp+4][2]					;lees locatie van stack
+ 										;start tekenen
+ 	
 	;--
 	
 	sub ax, 1
  	;add ax, SCREENW
  	;add ax, SCREENW
  	add ax, 2
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
+    push ax								; zet op stack
     
-    						;zet hoogte in thisDrawing
+    									;zet hoogte in thisDrawing
     mov ax, 1
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    push ax								; zet op stack
     
-    						;zet lengte in thisDrawing
+    									;zet lengte in thisDrawing
 	mov ax, 14 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+    push ax								; zet op stack
+    
+    mov ax, [bp+4][0]					;lees kleur uit
+    push ax								;zet op stack
     call printRectangle
     
-	mov ah, [thisDrawing + 0] ;lees locatie uit
- 	mov al, [thisDrawing + 1]
+	mov ax, [bp+4][2]					;lees locatie van stack
+ 										;start tekenen
+ 	
     ;--
 	
 	
@@ -630,71 +598,65 @@ printGame ENDP
 	sub ax, 2
  	;add ax, SCREENW
  	add ax, 3
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
+    push ax								; zet op stack
     
-    						;zet hoogte in thisDrawing
+    									;zet hoogte in thisDrawing
     mov ax, 1
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    push ax								; zet op stack
     mov ax, 2
     
-    						;zet lengte in thisDrawing
+    									;zet lengte in thisDrawing
 	mov ax, 12 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
-    	call printRectangle
+    push ax								; zet op stack
+    
+    mov ax, [bp+4][0]					;lees kleur uit
+    push ax								;zet op stack
+    call printRectangle
     	
-	mov ah, [thisDrawing + 0] ;lees locatie uit
- 	mov al, [thisDrawing + 1]
+	mov ax, [bp+4][2]					;lees locatie van stack
+ 										;start tekenen
+ 	
     	;--
 	
 	sub ax, 3
  	;add ax, SCREENW
  	add ax, 4
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
+    push ax								; zet op stack
     
-    						;zet hoogte in thisDrawing
+    									;zet hoogte in thisDrawing
     mov ax, 1
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
-    
-    						;zet lengte in thisDrawing
+    push ax								; zet op stack
+    	
+    									;zet lengte in thisDrawing
 	mov ax, 10 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+    push ax								; zet op stack
+    
+    mov ax, [bp+4][0]					;lees kleur uit
+    push ax								;zet op stack
     	call printRectangle
     	
-	mov ah, [thisDrawing + 0] ;lees locatie uit
- 	mov al, [thisDrawing + 1]
-	 ;--
- 								;locatie lijn
- 	
- 	
- 	
-   
+	mov ax, [bp+4][2]					;lees locatie van stack
+ 										;start tekenen
+
  	;add ax, SCREENW
  	sub ax, 4
  	add ax, 6
  	
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
+    push ax								; zet op stack
  	mov ax, 1
  	
    
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    push ax								; zet op stack
     
-    						;zet lengte in thisDrawing
+    							
 	mov ax, 6 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+    push ax								; zet op stack
+    
+    mov ax, [bp+4][0]					;lees kleur uit
+    push ax								;zet op stack
 	
 	call printRectangle
 	
-	mov ah, [thisDrawing + 0] ;lees locatie uit
- 	mov al, [thisDrawing + 1]
 	;--							
  	
 	pop ax
@@ -720,25 +682,26 @@ calcposition PROC NEAR
     push cx
     push dx
     push es
-    mov ax, [bp+4][0]
-    mov dx, 0
-    mov bx, 8
-    div bx; DX = rest, AX = quotient
-    mov bx, dx
-    mov dx, 0
-    mov cx, 6400
-    mul cx;   - mul quotitent with 6400
-    mov cx, ax
     
-    mov ax, bx
-    mov bx, 20
-    mul bx
+    mov ax, [bp+4][0]						;haal locatie van de stack
+    mov dx, 0								; zet dx op 0
+    mov bx, 8								; zet bx naar 8
+    div bx									; deel door bx: in DX = rest,  en in AX = quotient		
+    mov bx, dx								
+    mov dx, 0
+    mov cx, 6400							; vermenigvuldig met het aantal pixels voor een rijvakken							
+    mul cx									;  mul quotitent with 6400
+    mov cx, ax								; zet dit in cx
+    
+    mov ax, bx								; reken nu uit waar je precies in de rij bent
+    mov bx, 22								; vermenigvuldig dit met breedte van een vak+2
+    mul bx									
     
     mov dx, ax
     mov ax, cx
     
-    add ax, PLAYFIELD
-    add ax, dx
+    add ax, PLAYFIELD						; tel start van playfield op bij ax
+    add ax, dx								; tel daar de locatie in de lijn bij op
     
     pop es
     pop dx
@@ -763,19 +726,19 @@ BCoin PROC FAR
 	push cx
 	push ax 
 	push bx
-	;zet waarde op stack
 	
-		mov ax, [bp+4][0]
-		push ax
-	call calcposition
+	mov ax, [bp+4][0]						;haal locatie in vaknummers van stack
+	push ax									; zet dit op de stack
+	call calcposition						; bereken dit in pixels
 	
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-							;zet kleur in thisDrawing
+    push ax									; zet op stack
+							
 	mov al, 0 ; kleur
-	mov [thisDrawing + 6], al
+	mov ah, 0
+    push ax									; zet op stack
+    
 	
-	call printCircle
+	call printCircle						; print de circel
 	
 	pop ax
 	pop cx
@@ -803,15 +766,16 @@ WCoin PROC FAR
 	push bx
 	;zet waarde op stack
 	
-		mov ax, [bp+4][0]
-		push ax
-	call calcposition
+	mov ax, [bp+4][0]						;haal locatie in vaknummers van stack
+	push ax									; zet dit op de stack
+	call calcposition						; bereken dit in pixels
 	
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-							;zet kleur in thisDrawing
+    push ax									; zet op stack
+											;zet kleur in thisDrawing
 	mov al, 15 ; kleur
-	mov [thisDrawing + 6], al
+	mov ah, 0
+    push ax									; zet op stack
+    
 	
 	call printCircle
 	
@@ -846,22 +810,21 @@ WCoin ENDP
 	push ax
 	call calcposition
 	
-	mov ah, [thisDrawing + 0] ;lees locatie uit
- 	mov al, [thisDrawing + 1] ;lees locatie uit
+	mov ax, [bp+4][0]						;haal locatie in vaknummers van stack
  	
-    						;zet hoogte in thisDrawing
+    			
     mov ax, 20
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    push ax									; zet op stack
     
-    						;zet lengte in thisDrawing
-	mov ax, 20 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+    						
+	mov ax, 20 								; lengte
+    push ax									; zet op stack
 	
-							;zet kleur in thisDrawing
-	mov al, 2 ; kleur
-	mov [thisDrawing + 6], al
+							
+	mov al, 2 								; kleur
+	 mov ah, 0
+    push ax									; zet op stack
+    
 	
 	call printRectangle
 	
@@ -897,22 +860,18 @@ DRAWEM ENDP
 	push ax
 	call calcposition
 	
-	mov ah, [thisDrawing + 0] ;lees locatie uit
- 	mov al, [thisDrawing + 1] ;lees locatie uit
+	mov ax, [bp+4][0]						;haal locatie in vaknummers van stack
  	
-    						;zet hoogte in thisDrawing
     mov ax, 20
-    mov [thisDrawing + 2], ah
-    mov [thisDrawing + 3], al
+    push ax									; zet op stack
     
-    						;zet lengte in thisDrawing
-	mov ax, 20 ; lengte
-    mov [thisDrawing + 4], ah
-    mov [thisDrawing + 5], al
+	mov ax, 20 								; lengte
+    push ax									; zet op stack
 	
-							;zet kleur in thisDrawing
-	mov al, 10 ; kleur
-	mov [thisDrawing + 6], al
+	mov al, 10 								; kleur
+	 mov ah, 0
+    push ax									; zet op stack
+    
 	
 	call printRectangle
 	
@@ -943,48 +902,45 @@ print0 PROC NEAR
 	push cx
 	push ax
 
-    mov bl, [thisdrawing + 1]
-    mov bh, [thisdrawing + 0]
+    mov bx [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 2
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 3
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 1
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 5
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 5
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 5
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -995,15 +951,14 @@ print0 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 3
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
 
     pop ax
@@ -1031,33 +986,30 @@ print1 PROC NEAR
 	push cx
 	push ax
 
-    mov bl, [thisdrawing + 1]
-    mov bh, [thisdrawing + 0]
+    mov bx [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 1
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 2
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 3
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 6
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1068,15 +1020,14 @@ print1 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 5
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     
@@ -1106,48 +1057,44 @@ print1 ENDP
 	push cx
 	push ax
 
-    mov bl, [thisdrawing + 1]
-    mov bh, [thisdrawing + 0]
+    mov bx [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 2
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 3
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 1
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 2
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 5
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 2
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1155,15 +1102,14 @@ print1 ENDP
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1172,15 +1118,14 @@ print1 ENDP
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     
@@ -1191,15 +1136,14 @@ print1 ENDP
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1210,15 +1154,14 @@ print1 ENDP
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 5
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     
@@ -1250,48 +1193,44 @@ print3 PROC NEAR
 	push cx
 	push ax
 
-    mov bl, [thisdrawing + 1]
-    mov bh, [thisdrawing + 0]
+    mov bx [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 2
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 3
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 1
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 5
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 2
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1299,15 +1238,14 @@ print3 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 2
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1316,15 +1254,14 @@ print3 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 2
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     
@@ -1335,15 +1272,14 @@ print3 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1354,15 +1290,14 @@ print3 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 3
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     pop ax
@@ -1390,49 +1325,45 @@ print4 PROC NEAR
 	push cx
 	push ax
 
-    mov bl, [thisdrawing + 1]
-    mov bh, [thisdrawing + 0]
+    mov bx [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 4
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 7
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 3
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 2
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1440,15 +1371,14 @@ print4 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1457,15 +1387,14 @@ print4 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 5
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
 
     pop ax
@@ -1493,49 +1422,45 @@ print5 PROC NEAR
 	push cx
 	push ax
 
-    mov bl, [thisdrawing + 1]
-    mov bh, [thisdrawing + 0]
+    mov bx [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 1
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 5
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 1
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 1
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 4
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1543,15 +1468,14 @@ print5 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 3
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1561,15 +1485,14 @@ print5 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1580,15 +1503,14 @@ print5 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 3
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     pop ax
@@ -1616,34 +1538,31 @@ print6 PROC NEAR
 	push cx
 	push ax
 
-    mov bl, [thisdrawing + 1]
-    mov bh, [thisdrawing + 0]
+    mov bx [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 2
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 3
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 1
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 5
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1651,15 +1570,14 @@ print6 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 4
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     
@@ -1669,15 +1587,14 @@ print6 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 2
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1688,15 +1605,14 @@ print6 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 3
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     pop ax
@@ -1724,34 +1640,31 @@ print7 PROC NEAR
 	push cx
 	push ax
 
-    mov bl, [thisdrawing + 1]
-    mov bh, [thisdrawing + 0]
+    mov bx [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 1
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 5
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 5
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 2
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1759,15 +1672,14 @@ print7 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     
@@ -1777,15 +1689,14 @@ print7 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 3
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     pop ax
@@ -1813,48 +1724,44 @@ print8 PROC NEAR
 	push cx
 	push ax
 
-    mov bl, [thisdrawing + 1]
-    mov bh, [thisdrawing + 0]
+    mov bx [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 2
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 3
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 1
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 2
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 5
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 2
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1862,15 +1769,14 @@ print8 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 3
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1879,15 +1785,14 @@ print8 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 2
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1896,15 +1801,14 @@ print8 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 2
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -1915,15 +1819,14 @@ print8 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 3
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     pop ax
@@ -1951,48 +1854,44 @@ print9 PROC NEAR
 	push cx
 	push ax
 
-    mov bl, [thisdrawing + 1]
-    mov bh, [thisdrawing + 0]
+    mov bx [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 2
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 3
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 1
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 2
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 5
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 2
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     
@@ -2001,15 +1900,14 @@ print9 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 3
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -2018,15 +1916,14 @@ print9 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 2
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     
@@ -2038,15 +1935,14 @@ print9 PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 3
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
 
     pop ax
@@ -2074,49 +1970,45 @@ printarrow PROC NEAR
 	push cx
 	push ax
 
-    mov bl, [thisdrawing + 1]
-    mov bh, [thisdrawing + 0]
+    mov bx [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 21
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 2
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 21
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 5
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 21
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 8
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     
@@ -2124,15 +2016,14 @@ printarrow PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 2
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 30
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -2142,15 +2033,14 @@ printarrow PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 8
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -2161,15 +2051,14 @@ printarrow PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 5
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     
@@ -2182,15 +2071,14 @@ printarrow PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 2
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     pop ax
@@ -2218,48 +2106,44 @@ printN PROC NEAR
 	push cx
 	push ax
 
-    mov bl, [thisdrawing + 1]
-    mov bh, [thisdrawing + 0]
+    mov bx [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 1
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 7
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 5
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 7
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 2
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -2267,15 +2151,14 @@ printN PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -2284,15 +2167,14 @@ printN PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     pop ax
@@ -2320,33 +2202,30 @@ printW PROC NEAR
 	push cx
 	push ax
 
-    mov bl, [thisdrawing + 1]
-    mov bh, [thisdrawing + 0]
+    mov bx [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 1
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 6
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
     add ax, 5
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 6
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -2355,15 +2234,14 @@ printW PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 3
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -2374,15 +2252,14 @@ printW PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     mov ax, bx
@@ -2393,15 +2270,14 @@ printW PROC NEAR
     add ax, SCREENW
     add ax, SCREENW
     add ax, SCREENW
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
     
     mov ax, 1
-    mov [thisdrawing + 3], al
-    mov [thisdrawing + 2], ah
+    push ax									; zet op stack
     mov ax, 1
-    mov [thisdrawing + 5], al
-    mov [thisdrawing + 4], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printRectangle
     
     pop ax
@@ -2429,16 +2305,20 @@ printWON PROC FAR
 	push cx
 	push ax
     
-    mov al, [thisdrawing + 1]
-    mov ah, [thisdrawing + 0]
+    mov ax [bp+4][2]
+    push ax
+    mov ax [bp+4][0]
+    push ax
     call printW
     add ax, 6
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call print0
     add ax, 6
-    mov [thisdrawing + 1], al
-    mov [thisdrawing + 0], ah
+    push ax									; zet op stack
+    mov ax, [bp+4][0]						;haal kleur van stack
+    push ax									;zet hem terug op stack
     call printN
 
     pop ax
@@ -2454,8 +2334,9 @@ printWON ENDP
 ;-------------------PRINT Number----------------;
 ; Uitleg: printen van een getal                 ;
 ; Parameters doorgegeven met push:              ;
-;                   - locatie   [2]             ;
-;                   - getal     [0]             ;
+;                   - locatie   [4]             ;
+;                   - getal     [2]             ;
+;					- kleur 	[0]
 ;-----------------------------------------------;
 printNumber PROC NEAR
     push bp
@@ -2466,11 +2347,11 @@ printNumber PROC NEAR
 	push cx
 	push ax
     
-    mov ax, [bp+4][0] ;number
-    mov bx, [bp+4][2] ;location
+	mov dx, [bp+4][0]	;kleur
+    mov ax, [bp+4][2] ;number
+    mov bx, [bp+4][4] ;location
+
     
-    mov [thisdrawing + 1], bl
-    mov [thisdrawing + 0], bh
     mov dx, 0
     push bx
     mov bx, 10
@@ -2483,9 +2364,6 @@ printNumber PROC NEAR
     sseq:
     mov ax, dx
     add bx, 6
-    mov [thisdrawing + 1], bl
-    mov [thisdrawing + 0], bh
-    
     printsequence:
     cmp ax, 0
     je s0
@@ -2514,49 +2392,72 @@ printNumber PROC NEAR
     s0:
     cmp cx, 1
     jne sseqp
+    push bx
+    push dx
     call print0
     jmp done
     s1:
+    
+    push bx
+    push dx
     call print1
     cmp cx, 1
     je done
     jmp sseqp
     s2:
+    
+    push bx
+    push dx
     call print2
     cmp cx, 1
     je done
     jmp sseqp
     s3:
+    
+    push bx
+    push dx
     call print3
     cmp cx, 1
     je done
     jmp sseqp
     s4:
+    push bx
+    push dx
     call print4
     cmp cx, 1
     je done
     jmp sseqp
     s5:
+    push bx
+    push dx
     call print5
     cmp cx, 1
     je done
     jmp sseqp
     s6:
+    push bx
+    push dx
     call print6
     cmp cx, 1
     je done
     jmp sseqp
     s7:
+    push bx
+    push dx
     call print7
     cmp cx, 1
     je done
     jmp sseqp
     s8:
+    push bx
+    push dx
     call print2
     cmp cx, 1
     je done
     jmp sseqp
     s9:
+    push bx
+    push dx
     call print9
     cmp cx, 1
     je done
