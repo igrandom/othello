@@ -60,7 +60,7 @@ printLine PROC NEAR
 	pop es
 	pop dx
 	pop bp
-	ret 0
+	ret 6
 
 printLine ENDP
 
@@ -125,7 +125,7 @@ printRectangle PROC NEAR
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 8
 printRectangle ENDP
 ;----------------------------------------------;
 
@@ -166,7 +166,7 @@ printTile PROC NEAR
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 2
 printTile ENDP
     
 ;-----------------------------------------------;
@@ -210,7 +210,7 @@ printFieldLine PROC NEAR
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 2
 printFieldLine ENDP
 ;-----------------------------------------------;
 
@@ -251,7 +251,7 @@ printPlayField PROC NEAR
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 2
 printPlayField ENDP
 ;-----------------------------------------------;
 
@@ -665,7 +665,7 @@ printGame ENDP
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 4
 	printCircle ENDP
 ;-----------------------------------------------;
 
@@ -708,7 +708,7 @@ calcposition PROC NEAR
     pop cx
     pop bx
     pop bp
-    ret 0
+    ret 2
 calcposition ENDP
 ;-----------------------------------------------;
 
@@ -746,7 +746,7 @@ BCoin PROC FAR
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 2
 BCoin ENDP
 ;-----------------------------------------------;
 
@@ -785,7 +785,7 @@ WCoin PROC FAR
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 2
 WCoin ENDP
 
 ;-----------------------------------------------;
@@ -836,7 +836,7 @@ WCoin ENDP
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 2
 DRAWEM ENDP
 ;-----------------------------------------------;
 
@@ -883,7 +883,7 @@ DRAWEM ENDP
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 2
 drawpos ENDP
 ;-----------------------------------------------;
 
@@ -967,7 +967,7 @@ print0 PROC NEAR
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 4
 print0 ENDP
 ;-----------------------------------------------;
 
@@ -1038,7 +1038,7 @@ print1 PROC NEAR
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 4
 print1 ENDP
 ;-----------------------------------------------;
 
@@ -1174,7 +1174,7 @@ print1 ENDP
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 4
 print2 ENDP
 ;-----------------------------------------------;
 
@@ -1306,7 +1306,7 @@ print3 PROC NEAR
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 4
 print3 ENDP
 ;-----------------------------------------------;
 
@@ -1403,7 +1403,7 @@ print4 PROC NEAR
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 4
 print4 ENDP
 ;-----------------------------------------------;
 
@@ -1519,7 +1519,7 @@ print5 PROC NEAR
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 4
 print5 ENDP
 ;-----------------------------------------------;
 
@@ -1621,7 +1621,7 @@ print6 PROC NEAR
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 4
 print6 ENDP
 ;-----------------------------------------------;
 
@@ -1705,7 +1705,7 @@ print7 PROC NEAR
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 4
 print7 ENDP
 ;-----------------------------------------------;
 
@@ -1835,7 +1835,7 @@ print8 PROC NEAR
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 4
 print8 ENDP
 ;-----------------------------------------------;
 
@@ -1951,7 +1951,7 @@ print9 PROC NEAR
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 4
 print9 ENDP
 ;-----------------------------------------------;
 
@@ -2087,7 +2087,7 @@ printarrow PROC NEAR
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 4
 printArrow ENDP
 ;-----------------------------------------------;
 
@@ -2183,7 +2183,7 @@ printN PROC NEAR
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 4
 printN ENDP
 ;-----------------------------------------------;
 
@@ -2286,7 +2286,7 @@ printW PROC NEAR
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 4
 printW ENDP
 ;-----------------------------------------------;
 
@@ -2327,7 +2327,7 @@ printWON PROC FAR
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 4
 printWON ENDP
 ;-----------------------------------------------;
 
@@ -2359,110 +2359,147 @@ printNumber PROC NEAR
     pop bx
     mov cx, 0
     jmp printsequence
+    
+    ;----second sequence prepare----
     sseqp:
-    mov cx, 1
-    sseq:
-    mov ax, dx
-    add bx, 6
-    printsequence:
-    cmp ax, 0
-    je s0
-    cmp ax, 1
-    je s1
-    cmp ax, 2
-    je s2
-    cmp ax, 3
-    je s3
-    cmp ax, 4
-    je s4
-    cmp ax, 5
-    je s5
-    cmp ax, 6
-    je s6
-    cmp ax, 7
-    je s7
-    cmp ax, 8
-    je s8
-    cmp ax, 9
-    je s9
+    	mov cx, 1
+    	;----second sequence----
+    	sseq:
+   			mov ax, dx
+    		add bx, 6
+    		;----print sequence----
+    		printsequence:
+    			cmp ax, 0
+    				je s0
+    			cmp ax, 1
+    				je s1
+    			cmp ax, 2
+    				je s2
+    			cmp ax, 3
+    				je s3
+    			cmp ax, 4
+    				je s4
+    			cmp ax, 5
+    				je s5
+    			cmp ax, 6
+    				je s6
+    			cmp ax, 7
+    				je s7
+    			cmp ax, 8
+    				je s8
+    			cmp ax, 9
+    				je s9
     
-    donef:
-    jmp done
+    			;----done functie----
+    			donef:
+    				jmp done
+    			;----end done functie----
+    		;----end print sequence----
+    	;----end second sequence----
+    ;----end second sequence prepare----
     
+    
+    ;----cijfer 0----
     s0:
-    cmp cx, 1
-    jne sseqp
-    push bx
-    push dx
-    call print0
-    jmp done
+    	cmp cx, 1
+    		jne sseqp
+    		push bx
+    		push dx
+    		call print0
+    		jmp done
+    ;----end cijfer 9----
+    
+    ;----cijfer 1----
     s1:
+    	push bx
+    	push dx
+    	call print1
+    	cmp cx, 1
+    		je done
+    		jmp sseqp
+    ;----end cijfer 1----		
     
-    push bx
-    push dx
-    call print1
-    cmp cx, 1
-    je done
-    jmp sseqp
+    ;----cijfer 2----		
     s2:
+    	push bx
+    	push dx
+    	call print2
+    	cmp cx, 1
+    		je done
+    		jmp sseqp
+    ;----end cijfer 2----
     
-    push bx
-    push dx
-    call print2
-    cmp cx, 1
-    je done
-    jmp sseqp
+    ;----cijfer 3----
     s3:
+    	push bx
+    	push dx
+    	call print3
+    	cmp cx, 1
+    		je done
+    		jmp sseqp
+    ;----end cijfer 3----
     
-    push bx
-    push dx
-    call print3
-    cmp cx, 1
-    je done
-    jmp sseqp
+    ;----cijfer 4----
     s4:
-    push bx
-    push dx
-    call print4
-    cmp cx, 1
-    je done
-    jmp sseqp
+    	push bx
+    	push dx
+    	call print4
+    	cmp cx, 1
+    	je done
+    	jmp sseqp
+   ;----end cijfer 4---- 
+    
+    ;----cijfer 5----
     s5:
-    push bx
-    push dx
-    call print5
-    cmp cx, 1
-    je done
-    jmp sseqp
+    	push bx
+    	push dx
+    	call print5
+    	cmp cx, 1
+    		je done
+    		jmp sseqp
+    ;----end cijfer 5----
+    
+    ;----cijfer 6----
     s6:
-    push bx
-    push dx
-    call print6
-    cmp cx, 1
-    je done
-    jmp sseqp
+    	push bx
+    	push dx
+    	call print6
+    	cmp cx, 1
+    		je done
+    		jmp sseqp
+    ;----end cijfer 6----
+    
+    ;----cijfer 7----
     s7:
-    push bx
-    push dx
-    call print7
-    cmp cx, 1
-    je done
-    jmp sseqp
+    	push bx
+    	push dx
+    	call print7
+    	cmp cx, 1
+    		je done
+    		jmp sseqp
+    ;----end cijfer 7----
+    
+    ;----cijfer 8----
     s8:
-    push bx
-    push dx
-    call print2
-    cmp cx, 1
-    je done
-    jmp sseqp
+    	push bx
+    	push dx
+    	call print2
+    	cmp cx, 1
+    	je done
+    	jmp sseqp
+    ;----end cijfer 8----
+    
+    ;----cijfer 9----
     s9:
     push bx
     push dx
     call print9
     cmp cx, 1
-    je done
-    jmp sseqp
+    	je done
+    	jmp sseqp
+    ;----end cijfer 9----
     
+    ;----done----
     done:
     pop ax
     pop cx
@@ -2470,17 +2507,8 @@ printNumber PROC NEAR
     pop dx
     pop bx
     pop bp
-    ret 0
+    ret 6
 printNumber ENDP
 ;-----------------------------------------------;
-
-
-
-
-
-
-
-
-
 
 END
