@@ -1,2 +1,2 @@
-externdef setvakempty:FAR, setvakwhite:FAR, setvakblack:FAR, setvakpossiblewhite:FAR, setvakpossibleblack:FAR, setvakpossibleboth:FAR, mousereader:FAR
-externdef speelveld:WORD, COL:BYTE, ROW:BYTE, VAK:BYTE
+externdef setvakempty:FAR, setvakwhite:FAR, setvakblack:FAR, setvakpossiblewhite:FAR, setvakpossibleblack:FAR, setvakpossibleboth:FAR, mousereader:FAR, addwhite:FAR, addblack:FAR
+externdef speelveld:WORD, COL:WORD, ROW:WORD, VAK:WORD
