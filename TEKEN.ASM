@@ -437,7 +437,7 @@ printGame ENDP
 ;                   - locatie   [2]             ;
 ;                   - kleur     [0]             ;
 ;-----------------------------------------------;
-printCircle PROC NEAR
+printCircle PROC FAR
 	push bp
 	mov bp, sp
 	push bx

@@ -32,12 +32,12 @@ locatiemunt equ 10000
 ; --- DATA SEGMENT -------------------------------------------------------------
 
 .DATA
-savesi 			db 0								; savesi is om si in op te slaan							
-richting		db 1								; richting is om bij te houden welke richting je uit aan het swappen bent
-beurt			db 2								; beurt is om bij te houden wie er aan de beurt is
-blackcoins		db 0	
-whitecoins		db 0
-countpos		db 0
+savesi dw 0								; savesi is om si in op te slaan							
+richting dw 1								; richting is om bij te houden welke richting je uit aan het swappen bent
+beurt dw 2								; beurt is om bij te houden wie er aan de beurt is
+blackcoins dw 0	
+whitecoins dw 0
+countpos dw 0
 
 
 ; ----------------------------- CODE STARTS HERE -------------------------------
@@ -181,7 +181,7 @@ gameloop PROC FAR
 
 	;----vak possible----
 	vakjepossible:						; als vakje is possible
-		cmp ax 1						;kijk wie er aan de beurt is
+		cmp ax, 1						;kijk wie er aan de beurt is
 			je placewhite
 			jmp placeblack
 	;----end vak possible----
@@ -229,7 +229,7 @@ gameloop PROC FAR
         
         call berekenpossible			;bereken welke possible zijn
         call countcoins					;tel het aantal muntjes
-        call drawscore					;teken de score die daar bij hoort	
+        ;   call drawscore					;teken de score die daar bij hoort	
         call switchbeurt				;verander van beurt
         call drawcoins					;teken de muntjes op het veld
         call countpossible				; tel het aantal possible
@@ -259,7 +259,7 @@ gameloop ENDP
 ;             geen                              ;
 ;   VAK OMZETTEN !!!                            ;
 ;-----------------------------------------------;
-swap PROC NEAR
+swap PROC FAR
 	push bp
 	mov bp, sp
 	push bx
@@ -274,9 +274,9 @@ mov ax, VAK
 mov bx, 8
 div bx
 jmp setbx1
-back1:					;dit veranderd
-je callup
-
+;back1:					;dit veranderd
+;je callup
+back1f:
 mov ax, VAK
 jmp setbx12
 back2:					;dit veranderd
@@ -291,64 +291,72 @@ jmp setbx3
 back3:						; voor up en down cmp ax voor left right cmp dx
 mov ax, bx
 je laststepback
-mov bx, speelveld[ax]
+push bp
+mov bp, ax
+mov bx, speelveld[bp]
+pop bp
 cmp bx, 0
-je callup
+je z
 cmp bx, 3
-je callup
+je z
 cmp bx, 4
-je callup
+je z
 cmp bx, 5
-je callup
+je z
 
-mov bx, speelveld[ax]
+push bp
+mov bp, ax
+mov bx, speelveld[bp]
+pop bp
 
 cmp bx, beurt
 je loopleftback
 jmp setbx14
+z:
+jmp e
 back4:					;dit veranderd per righting
 jmp loopleft
 
 ;----------------------
 laststepback:
-mov bx, speelveld[ax]
+push bp
+mov bp, ax
+mov bx, speelveld[bp]
+pop bp
 cmp bx, beurt
-jne callup
+jne e
 jmp loopleftback
 
-
-;----------------------
 loopleftback:
 jmp setbx15
 back5:					;dit veranderd per richting
-mov bx, speelveld[ax]
+push bp
+mov bp, ax
+mov bx, speelveld[bp]
+pop bp
 cmp bx, beurt
-je callup
+je e
 
 mov dx, beurt
 cmp dx, 1
 je witup
 jmp zwartup
 
-;----------------------
 witup:
 push ax
 call setvakwhite
 push ax
 call Wcoin
-jmp callup
+jmp e
 
-;----------------------
 zwartup:
 push ax
 call setvakblack
 push ax
 call Bcoin
-jmp callup
+jmp e
 
 
-
-;----------------------
 setbx1:						;bij verandering een
 mov ax, richting
 cmp ax, 1
@@ -368,51 +376,55 @@ je schuinro1
 jmp schuinrd1
 
 left1:
-cmp dx, 0	
-jmp back1
-
+cmp dx, 0
+je t
+jmp back1f
+e:
+jmp t
 up1:
 cmp ax, 0
-jmp back1
+je t
+jmp back1f
 
 right1:
-cmp dx, 7	
-jmp back1
+cmp dx, 7
+je t
+jmp back1f
 
 down1:
 cmp ax, 7
-jmp back1
+je t
+jmp back1f
 
 schuinlo1:
 cmp dx, 0
-je back1
+je t
 cmp ax, 0
-jmp back1
+je t
+jmp back1f
 
 schuinld1:
 cmp dx, 0
-je back1
+je t
 cmp ax, 7
-jmp back1
+je t
+jmp back1f
 
 schuinro1:
 cmp dx, 7
-je back1
+je t
 cmp ax, 0
-jmp back1
+je t
+jmp back1f
 
 schuinrd1:
 cmp dx, 7
-je back1
+je t
 cmp ax, 7
-jmp back1
-
-
-
-
-
-
-;----------------------
+je callup
+jmp back1f
+t:
+jmp callup
 setbx12:				;bij verandering twee
 mov ax, richting
 cmp ax, 1
@@ -484,46 +496,48 @@ je schuinlo3
 cmp ax, 7
 je schuinlo3
 jmp schuinlo3
-
+callup:
+jmp done
 left3:
 cmp dx, 0	
 jmp back3
-
+b3:
+jmp back3
 up3:
 cmp ax, 0
-jmp back3
+jmp b3
 
 right3:
 cmp dx, 0	
-jmp back3
+jmp b3
 
 down3:
 cmp ax, 0
-jmp back3
+jmp b3
 
 schuinlo3:
 cmp dx, 0
-je back3
+je b3
 cmp ax, 0
-jmp back3
+jmp b3
 
 schuinld3:
 cmp dx, 0
-je back3
+je b3
 cmp ax, 7
-jmp back3
+jmp b3
 
 schuinro3:
 cmp dx, 7
-je back3
+je b3
 cmp ax, 3
 jmp back3
 
 schuinrd3:
 cmp dx, 7
-je back3
+je b3
 cmp ax, 7
-jmp back3
+jmp b3
 
 
 ;----------------------
@@ -577,7 +591,8 @@ jmp down2
 schuinrd4:
 sub ax, 9
 jmp down2
-
+d:
+jmp schuinro1
 ;----------------------
 setbx15:			;bij verandering vijf
 mov ax, richting
@@ -594,7 +609,7 @@ je schuinlo5
 cmp ax, 6
 je schuinld5
 cmp ax, 7
-je schuinro1
+je d
 jmp schuinrd5
 
 
@@ -629,11 +644,7 @@ jmp down5
 schuinrd5:
 add ax, 9
 jmp down5
-;----------------------
-callup:
-
-	
-;-------------------------------
+done:
 	
 	pop ax
 	pop cx
@@ -670,9 +681,14 @@ mov bx, offset speelveld
 ;--------------------------------
 startloop:
 cmp si, 64
-je eindeloop
+jne @F
+jmp eindeloop
+@@:
 
-mov ax, byte ptr [bx+si]
+push bp
+mov bp, bx
+mov ax, speelveld[bp+si]
+pop bp
 mov savesi, si
 
 cmp ax, 1					;witte steen?
@@ -680,7 +696,10 @@ je restartloop				; jump over
 cmp ax, 2					; zwarte steen
 je restartloop				;jump over
 
-mov byte ptr [bx+si], 0
+push bp
+mov bp, bx
+mov byte ptr [bp+si], 0
+pop bp
 
 
 ;---------------
@@ -694,13 +713,17 @@ div bx						; col: dx row: ax
 cmp ax, 0					; bovenste rij?
 je possibleleft				;ga naar volgende test			
 sub si, 8
-mov dx, byte ptr[bx+si]
+push bp
+mov bp, bx
+mov dx, speelveld[bp+si]
+pop bp
 cmp dx, 1
 je loopposblackup
 cmp dx, 2
 je loopposwhiteup
 jmp restartloop
-
+eindeloopfff:
+jmp eindeloopff
 bup:
 
 ;---------------
@@ -714,7 +737,10 @@ div bx						; col: dx row: ax
 cmp dx, 0					;meest linkse kolom?
 je possibledown				; ga naar volgende test
 sub si, 1
-mov dx, byte ptr[bx+si]
+push bp
+mov bp, bx
+mov dx, speelveld[bp+si]
+pop bp
 cmp dx, 1
 je loopposblackleft
 cmp dx, 2
@@ -736,7 +762,10 @@ div bx						; col: dx row: ax
 cmp ax, 7					;meest onderste rij?
 je possibleright			; ga naar volgende test
 add si, 8
-mov dx, byte ptr[bx+si]
+push bp
+mov bp, bx
+mov dx, speelveld[bp+si]
+pop bp
 cmp dx, 1
 je loopposblackdown
 cmp dx, 2
@@ -744,9 +773,6 @@ je loopposwhitedown
 jmp restartloop
 
 bdown:
-
-
-;---------------
 possibleright:
 mov si, savesi
 
@@ -755,9 +781,14 @@ mov bx, 8					; delen om te kijken of vakje aan de rand zit
 div bx						; col: dx row: ax
 	
 cmp dx, 7					;meest rechtse kolom?
-je restartloop				; ga naar volgende test
+jne @F      				; ga naar volgende test
+jmp restartloop
+@@:
 add si, 1
-mov dx, byte ptr[bx+si]
+push bp
+mov bp, bx
+mov dx, speelveld[bp+si]
+pop bp
 cmp dx, 1
 je loopposblackright
 cmp dx, 2
@@ -776,7 +807,10 @@ je bup						; zo ja volgende
 
 sub si, 8					; een omlaag
 
-mov dx, byte ptr[bx+si]		;lees en zet in dx
+push bp
+mov bp, bx
+mov dx, speelveld[bp+si]
+pop bp		;lees en zet in dx
 cmp dx, 2					;is het een zwarte?
 je placeposblackup			;plaats pos black
 cmp dx, 1					;vergelijk dx met 1
@@ -784,11 +818,13 @@ je loopposblackup			;restart loop
 jmp bup
 
 
-;-----
 placeposblackup:
 mov si, savesi
 
-mov dx, byte ptr[bx+si]
+push bp
+mov bp, bx
+mov dx, speelveld[bp+si]
+pop bp
 cmp dx, 3					; staat er al een poswit?
 je placebothup
 push si
@@ -805,7 +841,10 @@ je bup						; zo ja volgende
 
 sub si, 8					; een omlaag
 
-mov dx, byte ptr[bx+si]		;lees en zet in dx
+push bp
+mov bp, bx
+mov dx, speelveld[bp+si]
+pop bp		;lees en zet in dx
 cmp dx, 1					;is het een witte?
 je placeposwhiteup			;plaats poswhite
 cmp dx, 2
@@ -817,7 +856,10 @@ jmp bup
 placeposwhiteup:
 mov si, savesi
 
-mov dx, byte ptr[bx+si]
+push bp
+mov bp, bx
+mov dx, speelveld[bp+si]
+pop bp
 cmp dx, 4					;staat er al een posblack?
 je placebothup				;set pos both
 push si
@@ -832,7 +874,6 @@ call setvakpossibleboth
 jmp bup
 
 
-;---------------
 loopposblackleft:
 mov ax, si					;test of je boven aan bent
 mov bx, 8
@@ -842,18 +883,25 @@ je bleft					;zo ja een omlaag
 
 sub si, 1 					;een naar links
 
-mov dx, bythe ptr[bx+si]
+push bp
+mov bp, bx
+mov dx, speelveld[bp+si]
+pop bp
 cmp dx, 2					;is het een zwarte?
 je placeposblackleft		;plaats pos black
 cmp dx, 1
 je loopposblackleft			;startloop opnieuw
 jmp bleft
-
+eindeloopff:
+jmp eindeloopf
 ;-----
 placeposblackleft:
 mov si, savesi
 
-mov dx, byte ptr [bx+si]
+push bp
+mov bp, bx
+mov dx, speelveld[bp+si]
+pop bp
 cmp dx, 3					;staat er al een pos white?		
 je placebothleft			;set pos both
 push si
@@ -870,18 +918,24 @@ je bleft					;zo ja ga door
 
 sub si, 1 					;een naar links
 
-mov dx, byte ptr[bx+si]
+push bp
+mov bp, bx
+mov dx, speelveld[bp+si]
+pop bp
 cmp dx, 1					;is het een witte?
 je placeposwhiteleft		;plaats pos white
 cmp dx, 2
 je loopposwhiteleft			;startloop opnieuw
-jmp dleft
+jmp bleft
 
 ;-----
 placeposwhiteleft:
 mov si, savesi
 
-mov dx, byte ptr [bx+si]
+push bp
+mov bp, bx
+mov dx, speelveld[bp+si]
+pop bp
 cmp dx, 4					;staat er al een pos black?		
 je placebothleft			;set pos both
 push si
@@ -901,27 +955,28 @@ mov ax, si					;test of je onder aan bent
 mov bx, 8
 div bx
 cmp ax, 7
-je bdown					;zo ja ga door
-
+je cont
+jmp next
+cont:
+jmp bdown					;zo ja ga door
+next:   
 add si, 8					;een naar beneden
 
 push bp
 mov bp, bx
-mov dx, byte ptr [bp+si]
+mov dx, speelveld[bp+si]
 pop bp
 cmp dx, 2					;is het een zwarte?
 je placeposblackdown		;plaats pos black
 cmp dx, 1
 je loopposblackdown
 jmp bdown
-
-;---------------
 placeposblackdown:			;plaats possible black	
 mov si, savesi				;lees plaats uit
 
 push bp
 mov bp, bx
-mov dx, byte ptr [bp+si]
+mov dx, speelveld[bp+si]
 pop bp
 cmp dx, 4					; staat er al een pw
 je placeposbothdown			; plaats dan een both
@@ -935,28 +990,31 @@ mov ax, si					;test of je op de onderste rij bent?
 mov bx, 8
 div bx
 cmp ax, 7
-je bdown					; zo ja ga naar volgende test
+jne @F
+jmp bdown                   ; zo ja ga naar volgende test
+@@:
 
 add si, 8					;zo nee ga naar volgende vak
 
 
 push bp
 mov bp, bx
-mov dx, byte ptr [bp+si]
+mov dx, speelveld[bp+si]
 pop bp	;lees uit wat daar staat
 cmp dx, 1					; als dit wit is
 je placeposwhitedown		;ga naar schrijf pw
 cmp dx, 2					; als dit zwart is
 je loopposwhitedown			; ga door met pw loop
 jmp bdown					;anders ga naar volgende test
-
+eindeloopf:
+jmp eindeloop
 ;---------------
 placeposwhitedown:
 mov si, savesi				; lees juiste vak uit
 
 push bp
 mov bp, bx
-mov dx, byte ptr [bp+si]
+mov dx, speelveld[bp+si]
 pop bp	;kijk of er al een pb staat			
 cmp dx, 3
 je placeposbothdown			; anders ga naar plaats pa
@@ -984,7 +1042,7 @@ add si, 1
 
 push bp
 mov bp, bx
-mov dx, byte ptr [bp+si]
+mov dx, speelveld[bp+si]
 pop bp
 cmp dx, 2
 je placeposblackright
@@ -998,7 +1056,7 @@ mov si, savesi
 
 push bp
 mov bp, bx
-mov dx, byte ptr [bp+si]
+mov dx, speelveld[bp+si]
 pop bp
 cmp dx, 4
 je placeposbothright
@@ -1018,7 +1076,7 @@ add si, 1
 
 push bp
 mov bp, bx
-mov dx, byte ptr [bp+si]
+mov dx, speelveld[bp+si]
 pop bp
 cmp dx, 1
 je placeposwhiteright
@@ -1032,7 +1090,7 @@ mov si, savesi
 
 push bp
 mov bp, bx
-mov dx, byte ptr [bp+si]
+mov dx, speelveld[bp+si]
 pop bp
 cmp dx, 3
 je placeposbothright
@@ -1095,7 +1153,7 @@ je eindeloop				; ga naar eindeloop
 
 push bp
 mov bp, bx
-mov ax, byte ptr [bp+si]
+mov ax, speelveld[bp+si]
 pop bp
 mov bx, beurt
 cmp bx, 1					;beurt is wit
@@ -1169,13 +1227,10 @@ whowon PROC NEAR
     ;--------------
     
     blackwon:					;zwart heeft gewonnen
-    mov ax, locatiemunt
-    
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-								;zet kleur in thisDrawing
-	mov al, 0 ; kleur
-	mov [thisDrawing + 6], al
+    mov ax, locatiemunt         ;zet locatie in ax
+    push ax
+	mov ax, 0                   ;zet kleur in ax
+    push ax
 	call printCircle
     
     jmp einde
@@ -1184,20 +1239,17 @@ whowon PROC NEAR
     bothwon:
     mov ax, locatiemunt
     sub ax, 25
-     mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-								;zet kleur in thisDrawing
-	mov al, 0 ; kleur
-	mov [thisDrawing + 6], al
+    push ax
+								
+	mov ax, 0 ; kleur
+	push ax
 	call printCircle
 	
     mov ax, locatiemunt
     
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-								;zet kleur in thisDrawing
-	mov al, 15 ; kleur
-	mov [thisDrawing + 6], al
+    push ax
+	mov ax, 15 ; kleur
+	push ax
 	call printCircle							
     
     jmp einde
@@ -1206,11 +1258,9 @@ whowon PROC NEAR
     whitewon:					;wit heeft gewonnen
     mov ax, locatiemunt
     
-    mov [thisDrawing + 0], ah
-    mov [thisDrawing + 1], al
-								;zet kleur in thisDrawing
-	mov al, 15 ; kleur
-	mov [thisDrawing + 6], al
+    push ax
+	mov ax, 15 ; kleur
+	push ax
 	call printCircle
      
      jmp einde
@@ -1222,7 +1272,7 @@ whowon PROC NEAR
 	mov ax, locatiemunt			;won plaatsen
 	add ax, 25					; 25 px from coin
 	push ax					
-	call wonmessage				; call it
+	call printWON				; call it
     
 	pop ax
 	pop cx
@@ -1257,7 +1307,7 @@ looper2:
 cmp si, 64
 je eindeloop
 
-mov ax, byte ptr [bx+si]
+mov ax, speelveld[bx+si]
 
 cmp ax, 1
 je pluswhite
@@ -1311,7 +1361,7 @@ cmp si, 64
 je eindeloop
 
 
-mov ax, byte ptr [bx+si]
+mov ax, speelveld[bx+si]
 
 cmp ax, 1
 je dleeg

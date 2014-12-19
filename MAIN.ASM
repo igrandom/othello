@@ -20,19 +20,19 @@
 ;																					;
 ;-----------------------------------------------------------------------------------;
 
-.MODEL small	                                   ; multiple data segments and multiple code segments
+.MODEL large	                                   ; multiple data segments and multiple code segments
 .STACK 2048  	                                   ; stack
 
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA
     PUBLIC speelveld
     PUBLIC COL, ROW, VAK
-    blackcoins 		  db 0
-    whitecoins 	   	  db 0
+    blackcoins 		  dw 0
+    whitecoins 	   	  dw 0
     speelveld	      dw 64 dup (0) ;in de inc
-    COL               db 0
-    ROW               db 0
-    VAK               db 0  
+    COL               dw 0
+    ROW               dw 0
+    VAK               dw 0  
 ; ----------------------------- CODE STARTS HERE -------------------------------
 
 .CODE
@@ -113,7 +113,7 @@ mousereader ENDP
 ; Parameters doorgegeven met push:              ;
 ;                       geen                    ;
 ;-----------------------------------------------;
-addblack PROC NEAR
+addblack PROC FAR
 	push bp
 	mov bp, sp
 	push bx
@@ -142,7 +142,7 @@ addblack ENDP
 ; Parameters doorgegeven met push:              ;
 ;                       geen                    ;
 ;-----------------------------------------------;
-addwhite PROC NEAR
+addwhite PROC FAR
 	push bp
 	mov bp, sp
 	push bx
