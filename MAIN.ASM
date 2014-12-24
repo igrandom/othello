@@ -20,7 +20,7 @@
 ;																					;
 ;-----------------------------------------------------------------------------------;
 
-.MODEL small	                                   ; multiple data segments and multiple code segments
+.MODEL large	                                   ; multiple data segments and multiple code segments
 .STACK 2048  	                                   ; stack
 include LOGICA.INC
 include TEKEN.INC
@@ -29,13 +29,17 @@ include TEKEN.INC
 .DATA
     PUBLIC speelveld
     PUBLIC COL, ROW, VAK
-    blackcoins 		  db 0
-    whitecoins 	   	  db 0
+    blackcoins 		  dw 0
+    whitecoins 	   	  dw 0
     speelveld	      dw 64 dup (0) ;in de inc
     COL               dw 0
     ROW               dw 0
+<<<<<<< HEAD
     VAK               dw 0
     palette     	  db 0, 0, 0, 13, 53, 56   
+=======
+    VAK               dw 0  
+>>>>>>> FETCH_HEAD
 ; ----------------------------- CODE STARTS HERE -------------------------------
 
 .CODE
