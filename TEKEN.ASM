@@ -25,7 +25,7 @@ SCREENW		equ 320
 .DATA        ; data segment, variables
 oldVideoMode	db ?
 palette         db 0, 0, 0, 13, 53, 56    ; defines black and white
-PLAYFIELD       db 6420
+PLAYFIELD       dw 6420
 
 ; --- SCREEN BUFFER ------------------------------------------------------------
 .FARDATA?	; segment that contains the screenBuffer for mode 13h drawing
@@ -35,7 +35,53 @@ screenBuffer	db 64000 dup(?)	; the 64000 bytes for the screen
 
 ; ----------------------------- CODE STARTS HERE -------------------------------
 .CODE        ; code segment
+updateScreen PROC FAR
+	push	ax
+	push	cx
+	push	dx
+	push	si
+	push	di
+	push	ds
+	push	es
+	
+	mov	ax, @DATA
+	mov	ds, ax
+	mov es, ax
+	
+					; call Video BIOS
+	mov  ah, 0 				; function 0 (set video mode)
+	mov  al, 13h 			; argument 13h (mode 13h to be set)
+	int  10h 
 
+	mov  dx, offset palette ; set the palette (DAC) (offset relative to es)
+    xor  bx, bx             ; set bx to zero (start at color index 0)
+    mov  cx, 2             ; set color 0 and 1 (2 indexes in total)
+
+	mov  ax, 1012h          ; function 1012h of int 10h (set DAC palette)
+    int  10h  
+	
+	; setup source and dest segments
+	;mov		ax, seg screenBuffer
+	;mov		ds, ax
+	;mov		si, offset screenBuffer
+	;mov		ax, 0a000h	; video memory
+	;mov		es, ax
+	;xor		di, di	; start at pixel 0
+	
+	;cld
+	;mov		cx, 64000 / 2
+	;waitVBlank	; wait for a VB (modifies AX and DX)
+	;rep		movsw	; blit to screen	
+	
+	pop		es
+	pop		ds
+	pop		di
+	pop		si
+	pop		dx
+	pop		cx
+	pop		ax
+	ret		0
+updateScreen ENDP
 ;---------------PRINT LINE----------------------;
 ; Uitleg: printen van lijntjes                  ;
 ; Parameters doorgegeven met push:              ;
@@ -52,20 +98,20 @@ printLine PROC NEAR
 	push ax
 
 	mov cx, 0 						; zet counter op nul
-	mov ax, [bp+6][2]					;haal lengte van de stack
+	mov ax, [bp+4][2]					;haal lengte van de stack
 	add cx, ax 						;voeg de lengte toe aan de counter
 	push ax							
 	
-	mov bx, [bp+6][4]				;haal de locatie van de stack
+	mov bx, [bp+4][4]				;haal de locatie van de stack
 
-    mov ax, [bp+6][0]				;haal de kleur van de stack
+    mov ax, [bp+4][0]				;haal de kleur van de stack
     
     ;----loopje----
 	loopje:
 		mov dx, 0a000h				;roep de juiste functie op om te tekenen			
     	mov es, dx
     	mov dx, 0
-		mov es:[bx], ax				;zet de juiste kleur er in
+		mov es:[bx], al				;zet de juiste kleur er in
 		inc bx
 		dec cx 						; decrement CX by 1
     	cmp cx, 0
@@ -74,6 +120,7 @@ printLine PROC NEAR
 		
 	pop ax
 	sub bx, ax
+	
 	pop ax
 	pop cx
 	pop es
@@ -97,7 +144,7 @@ printLine ENDP
 ;                   - kleur     [0]             ;
 ;-----------------------------------------------;
 
-printRectangle PROC NEAR
+printRectangle PROC FAR
 	
 	push bp
 	mov bp, sp
@@ -106,6 +153,8 @@ printRectangle PROC NEAR
 	push es
 	push cx
 	push ax
+	
+	;call updateScreen
 	
     mov bx, 0
 	
@@ -119,8 +168,8 @@ printRectangle PROC NEAR
 	
 	;----loopje----
 	loopje:
-		push cx
 	
+		
 		push bx							; zet locatie op de stack
 		mov dx, [bp+6][2]				;haal lengte op de stack
 		push dx							; en zet deze er op nieuwe op
@@ -130,14 +179,13 @@ printRectangle PROC NEAR
 		
   		call printLine 					;roep teken teken lijn op
 		add bx, SCREENW
-	
-    	pop cx
-    	pop cx 							; restore CX from the stack
+	 							; restore CX from the stack
    	 	dec cx 							; decrement CX by 1
     	cmp cx, 0 
     		jnz loopje 					; jump to loopje if dec cx did not result in 0
     ;----end loopje----		
-
+	
+	
 	pop ax
 	pop cx
 	pop es
@@ -164,7 +212,7 @@ printTile PROC NEAR
 	push cx
 	push ax
 	
-	mov ax, [bp+6][0]					; haal locatie van de stack
+	mov ax, [bp+4][0]					; haal locatie van de stack
 	push ax								; zet deze er opnieuw op
 	
     mov ax, 20                      	; vakje = 20
@@ -208,17 +256,15 @@ printFieldLine PROC NEAR
 	mov cx, 8
 	
 										; zet in ax start van lijn
-    mov ax, [bp+6][0]					
+    mov ax, [bp+4][0]					
 	
 	;----lineloop----
 	lineloop:
-		push cx
 		
 		push ax							;zet de startpixel op stack
 		call printTile					;print vakje
 		add ax, 22						;zet de startpixel een vakje verder
-    
-  		pop cx 							; restore CX from the stack
+		
   		dec cx 							; decrement CX by 1
 		jnz lineloop 					; jump to loopje if dec cx did not result in 0
    	;----end lineloop----
@@ -247,19 +293,17 @@ printPlayField PROC NEAR
 	push cx
 	push ax 
 	
-    mov ax, [bp+6][0]					;haal pixel positie van stack
+    mov ax, [bp+4][0]					;haal pixel positie van stack
     
 	mov cx, 8							; zet counter op 8
 	
 	;----fieldloop----
 	fieldloop:
-		push cx
 		
 		push ax							; zet pixel positie op stack
 		call printFieldLine
 		add ax, 7040					; zet de pixel waarde een vak verder
-	
-  		pop cx 							; restore CX from the stack
+		
   		dec cx 							; decrement CX by 1
 		jnz fieldloop					; jump to loopje if dec cx did not result in 0
 	;----end fieldloop----
@@ -417,9 +461,9 @@ printGame PROC FAR
 	call printBackground			;print de achtergrond
 	
 	mov ax, 6420					;pixellocatie van speelveld
-    push ax							; zet op stack
+    ;push ax							; zet op stack
     
-    call printPlayField				;print het speelveld uit
+    ;call printPlayField				;print het speelveld uit
     
 	pop ax
 	pop cx
@@ -437,7 +481,7 @@ printGame ENDP
 ;                   - locatie   [2]             ;
 ;                   - kleur     [0]             ;
 ;-----------------------------------------------;
-printCircle PROC NEAR
+printCircle PROC FAR
 	push bp
 	mov bp, sp
 	push bx
@@ -446,59 +490,50 @@ printCircle PROC NEAR
 	push cx
 	push ax 
 
-	mov ax, [bp+4][2]					;lees locatie van stack
+	mov cx, [bp+6][2]					;lees locatie van stack
  										;start tekenen
  	
- 	add ax, 6							;lengte lijn
-    push ax								; zet op stack
+ 	add cx, 6							;locatie
+    push cx								; zet op stack
     mov ax, 1							;hoogte	
     push ax								; zet op stack
     
 	mov ax, 6 							; lengte
     push ax								; zet op stack
     
-    mov ax, [bp+4][0]					;lees kleur uit
-    push ax								;zet op stack
+    					;lees kleur uit
+    push cx								;zet op stack
 	
 	call printRectangle
-	
-	mov ax, [bp+4][2]					;lees locatie van stack
- 										;start tekenen
- 	
- 	
- 	sub ax, 6
- 										;add ax, SCREENW
- 	add ax, 4
-    push ax								; zet op stack
+ 	sub cx, 2 ;4
+ 	add cx, SCREENW
+    push cx								; zet op stack
     mov ax, 1
     push ax								; zet op stack
     
 	mov ax, 10 							; lengte
     push ax								; zet op stack
     
-    mov ax, [bp+4][0]					;lees kleur uit
+    mov ax, [bp+6][0]					;lees kleur uit
     push ax								;zet op stack
-    	call printRectangle
-    	
-	mov ax, [bp+4][2]					;lees locatie van stack
+    call printRectangle
+    						;lees locatie van stack
  										;start tekenen
- 	
-	sub ax, 4							;add ax, SCREENW
- 	add ax, 3
-    push ax								; zet op stack
+ 	sub cx, 1 ;3
+	add cx, SCREENW
+    push cx								; zet op stack
     mov ax, 1
-    push ax								; zet op stack
-    mov ax, 2
-	mov ax, 12						 	; lengte
-    push ax								; zet op stack
-    mov ax, [bp+4][0]					;lees kleur uit
+    push ax	
+    
+	mov ax, 12						 	;lengte
+    push ax								;zet op stack
+    mov ax, [bp+6][0]					;lees kleur uit
     push ax								;zet op stack
     call printRectangle
     
-	mov ax, [bp+4][2]					;lees locatie van stack							
-	sub ax, 3							;add ax, SCREENW
- 	add ax, 2
-    push ax								; zet op stack
+	sub cx 1 ;2					;lees locatie van stack							
+	add cx, SCREENW
+    push cx								; zet op stack
     
     mov ax, 1
     push ax								; zet op stack
@@ -507,20 +542,16 @@ printCircle PROC NEAR
 	mov ax, 14 ; lengte
     push ax								; zet op stack
     
-    mov ax, [bp+4][0]					;lees kleur uit
+    mov ax, [bp+6][0]					;lees kleur uit
     push ax								;zet op stack
-    	call printRectangle
+    call printRectangle
     	
-	mov ax, [bp+4][2]					;lees locatie van stack
- 										;start tekenen
- 	
     	
     ;--
-	
-	sub ax, 2
- 	;add ax, SCREENW
- 	add ax, 1
-    push ax								; zet op stack
+						;lees locatie van stack
+ 	sub cx, 2 ;1									;start tekenen
+ 	add cx, SCREENW
+    push cx								; zet op stack
     
     mov ax, 2
     push ax								; zet op stack
@@ -528,19 +559,20 @@ printCircle PROC NEAR
 	mov ax, 16 ; lengte
     push ax								; zet op stack
     
-    mov ax, [bp+4][0]					;lees kleur uit
+    mov ax, [bp+6][0]					;lees kleur uit
     push ax								;zet op stack
-    	call printRectangle
+    call printRectangle
     	
-	mov ax, [bp+4][2]					;lees locatie van stack
+    	
+    ;--	
+	mov ax, [bp+6][2]					;lees locatie van stack
  										;start tekenen
- 	
-    	
-	;--
-	
-	sub ax, 1
- 	;add ax, SCREENW
- 	;add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
     push ax								; zet op stack
     
     mov ax, 5
@@ -549,16 +581,26 @@ printCircle PROC NEAR
 	mov ax, 18 ; lengte
     push ax								; zet op stack
     
-    mov ax, [bp+4][0]					;lees kleur uit
+    mov ax, [bp+6][0]					;lees kleur uit
     push ax								;zet op stack
     call printRectangle
     
-	mov ax, [bp+4][2]					;lees locatie van stack
+    ;--
+    
+	mov ax, [bp+6][2]					;lees locatie van stack
  										;start tekenen
- 	
-	
-	;--
-	
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
  	add ax, 1
     push ax								; zet op stack
     
@@ -570,18 +612,29 @@ printCircle PROC NEAR
 	mov ax, 16 ; lengte
     push ax								; zet op stack
     
-    mov ax, [bp+4][0]					;lees kleur uit
+    mov ax, [bp+6][0]					;lees kleur uit
     push ax								;zet op stack
     call printRectangle
+    ;--
     
-	mov ax, [bp+4][2]					;lees locatie van stack
+    
+	mov ax, [bp+6][2]					;lees locatie van stack
  										;start tekenen
  	
-	;--
-	
-	sub ax, 1
- 	;add ax, SCREENW
- 	;add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
  	add ax, 2
     push ax								; zet op stack
     
@@ -593,21 +646,29 @@ printCircle PROC NEAR
 	mov ax, 14 ; lengte
     push ax								; zet op stack
     
-    mov ax, [bp+4][0]					;lees kleur uit
+    mov ax, [bp+6][0]					;lees kleur uit
     push ax								;zet op stack
     call printRectangle
     
-	mov ax, [bp+4][2]					;lees locatie van stack
- 										;start tekenen
- 	
+    
     ;--
-	
-	
-	
- 
-	;--
-	sub ax, 2
- 	;add ax, SCREENW
+	mov ax, [bp+6][2]					;lees locatie van stack
+ 										;start tekenen
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
  	add ax, 3
     push ax								; zet op stack
     
@@ -620,16 +681,31 @@ printCircle PROC NEAR
 	mov ax, 12 ; lengte
     push ax								; zet op stack
     
-    mov ax, [bp+4][0]					;lees kleur uit
+    mov ax, [bp+6][0]					;lees kleur uit
     push ax								;zet op stack
     call printRectangle
-    	
-	mov ax, [bp+4][2]					;lees locatie van stack
+    
+    
+    ;--	
+	mov ax, [bp+6][2]					;lees locatie van stack
  										;start tekenen
  	
-    	;--
-	
-	sub ax, 3
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
  	add ax, 4
     push ax								; zet op stack
     
@@ -641,17 +717,33 @@ printCircle PROC NEAR
 	mov ax, 10 ; lengte
     push ax								; zet op stack
     
-    mov ax, [bp+4][0]					;lees kleur uit
+    mov ax, [bp+6][0]					;lees kleur uit
     push ax								;zet op stack
-    	call printRectangle
-    	
-	mov ax, [bp+4][2]					;lees locatie van stack
+    call printRectangle
+    
+    
+    ;--
+	mov ax, [bp+6][2]					;lees locatie van stack
  										;start tekenen
 
- 	;add ax, SCREENW
- 	sub ax, 4
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
+ 	add ax, SCREENW
  	add ax, 6
- 	
     push ax								; zet op stack
  	mov ax, 1
  	
@@ -662,7 +754,7 @@ printCircle PROC NEAR
 	mov ax, 6 ; lengte
     push ax								; zet op stack
     
-    mov ax, [bp+4][0]					;lees kleur uit
+    mov ax, [bp+6][0]					;lees kleur uit
     push ax								;zet op stack
 	
 	call printRectangle
@@ -698,7 +790,7 @@ calcposition PROC NEAR
     div bx									; deel door bx: in DX = rest,  en in AX = quotient		
     mov bx, dx								
     mov dx, 0
-    mov cx, 6400							; vermenigvuldig met het aantal pixels voor een rijvakken							
+    mov cx, 7040							; vermenigvuldig met het aantal pixels voor een rijvakken							
     mul cx									;  mul quotitent with 6400
     mov cx, ax								; zet dit in cx
     
@@ -736,14 +828,13 @@ BCoin PROC FAR
 	push ax 
 	push bx
 	
-	mov ax, [bp+4][0]						;haal locatie in vaknummers van stack
+	mov ax, [bp+6][0]						;haal locatie in vaknummers van stack
 	push ax									; zet dit op de stack
 	call calcposition						; bereken dit in pixels
 	
     push ax									; zet op stack
 							
-	mov al, 0 ; kleur
-	mov ah, 0
+	mov ax, 0
     push ax									; zet op stack
     
 	
@@ -775,7 +866,7 @@ WCoin PROC FAR
 	push bx
 	;zet waarde op stack
 	
-	mov ax, [bp+4][0]						;haal locatie in vaknummers van stack
+	mov ax, [bp+6][0]						;haal locatie in vaknummers van stack
 	push ax									; zet dit op de stack
 	call calcposition						; bereken dit in pixels
 	
@@ -819,25 +910,14 @@ WCoin ENDP
 	push ax
 	call calcposition
 	
-	mov ax, [bp+6][0]						;haal locatie in vaknummers van stack
- 	
-    			
+	push ax
     mov ax, 20
     push ax									; zet op stack
-    
-    						
 	mov ax, 20 								; lengte
     push ax									; zet op stack
-	
-							
-	mov al, 2 								; kleur
-	 mov ah, 0
+	mov ax, 2
     push ax									; zet op stack
-    
-	
 	call printRectangle
-	
-	
 	
 	pop ax
 	pop cx
@@ -869,7 +949,7 @@ drawpos PROC FAR
 	push ax
 	call calcposition
 	
-	mov ax, [bp+6][0]						;haal locatie in vaknummers van stack
+	push ax
  	
     mov ax, 20
     push ax									; zet op stack
@@ -911,7 +991,7 @@ print0 PROC NEAR
 	push cx
 	push ax
 
-    mov bx [bp+4][2]
+    mov bx, [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 2
@@ -995,7 +1075,7 @@ print1 PROC NEAR
 	push cx
 	push ax
 
-    mov bx [bp+4][2]
+    mov bx, [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 1
@@ -1066,7 +1146,7 @@ print2 PROC NEAR
 	push cx
 	push ax
 
-    mov bx [bp+4][2]
+    mov bx, [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 2
@@ -1202,7 +1282,7 @@ print3 PROC NEAR
 	push cx
 	push ax
 
-    mov bx [bp+4][2]
+    mov bx, [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 2
@@ -1334,7 +1414,7 @@ print4 PROC NEAR
 	push cx
 	push ax
 
-    mov bx [bp+4][2]
+    mov bx, [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 4
@@ -1431,7 +1511,7 @@ print5 PROC NEAR
 	push cx
 	push ax
 
-    mov bx [bp+4][2]
+    mov bx, [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 1
@@ -1547,7 +1627,7 @@ print6 PROC NEAR
 	push cx
 	push ax
 
-    mov bx [bp+4][2]
+    mov bx, [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 2
@@ -1649,7 +1729,7 @@ print7 PROC NEAR
 	push cx
 	push ax
 
-    mov bx [bp+4][2]
+    mov bx, [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 1
@@ -1732,7 +1812,7 @@ print8 PROC NEAR
 	push cx
 	push ax
 
-    mov bx [bp+4][2]
+    mov bx, [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 2
@@ -1862,7 +1942,7 @@ print9 PROC NEAR
 	push cx
 	push ax
 
-    mov bx [bp+4][2]
+    mov bx, [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 2
@@ -1978,7 +2058,7 @@ printarrow PROC NEAR
 	push cx
 	push ax
 
-    mov bx [bp+4][2]
+    mov bx, [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 21
@@ -2114,7 +2194,7 @@ printN PROC NEAR
 	push cx
 	push ax
 
-    mov bx [bp+4][2]
+    mov bx, [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 1
@@ -2210,7 +2290,7 @@ printW PROC NEAR
 	push cx
 	push ax
 
-    mov bx [bp+4][2]
+    mov bx, [bp+4][2]
     ;Letter
     mov ax, bx
     add ax, 1
@@ -2313,9 +2393,9 @@ printWON PROC FAR
 	push cx
 	push ax
     
-    mov ax [bp+4][2]						; haal locatie van de stack
+    mov ax, [bp+4][2]						; haal locatie van de stack
     push ax									; en zet hem er opnieuw op
-    mov ax [bp+4][0]						; haal kleur van de stack
+    mov ax, [bp+4][0]						; haal kleur van de stack
     push ax									; zet hem er opnieuw op
     call printW								; print de letter W
     add ax, 6								; ga 6 pixels verder
@@ -2391,11 +2471,17 @@ printNumber PROC FAR
     		cmp ax, 6
     			je s6
     		cmp ax, 7
-    			je s7
+    			jne @F
+    			jmp s7
+    			@@:
     		cmp ax, 8
-    			je s8
+    			jne @F
+    			jmp s8
+    			@@:
     		cmp ax, 9
-    			je s9
+    			jne @F
+    			jmp s9
+    			@@:
     			jmp done
     	;----end print sequence----
     ;----end second sequence prepare----
@@ -2419,7 +2505,9 @@ printNumber PROC FAR
     	push dx									; en zet hem er op
     	call print1								; print het getal
     	cmp cx, 1								; kijk of het het tweede getal is
-    		je done								; indien true: done
+    		    jne @F
+    			jmp done
+    			@@:								; indien true: done
     		jmp sseqp							; indien false: ga naar second sequence prepare
     ;----end cijfer 1----		
     

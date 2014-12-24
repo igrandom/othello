@@ -22,6 +22,8 @@
 
 .MODEL small	                                   ; multiple data segments and multiple code segments
 .STACK 2048  	                                   ; stack
+include LOGICA.INC
+include TEKEN.INC
 
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA
@@ -30,9 +32,10 @@
     blackcoins 		  db 0
     whitecoins 	   	  db 0
     speelveld	      dw 64 dup (0) ;in de inc
-    COL               db 0
-    ROW               db 0
-    VAK               db 0  
+    COL               dw 0
+    ROW               dw 0
+    VAK               dw 0
+    palette     	  db 0, 0, 0, 13, 53, 56   
 ; ----------------------------- CODE STARTS HERE -------------------------------
 
 .CODE
@@ -93,7 +96,7 @@ mousereader PROC FAR
 
     ;----calculatevak----
     calculatevak:
-        call calcvak			;dan is de pijl in het veld : bereken het vakje
+    	call calcvak			;dan is de pijl in het veld : bereken het vakje
     ;----end calculatevak----
     ; nu moet er nog gekeken worden of de vakjes clickable zijn
     ; functie komt ergens anders te staan maar moet hier ingeladen worden: merci :)
@@ -113,7 +116,7 @@ mousereader ENDP
 ; Parameters doorgegeven met push:              ;
 ;                       geen                    ;
 ;-----------------------------------------------;
-addblack PROC NEAR
+addblack PROC FAR
 	push bp
 	mov bp, sp
 	push bx
@@ -142,7 +145,7 @@ addblack ENDP
 ; Parameters doorgegeven met push:              ;
 ;                       geen                    ;
 ;-----------------------------------------------;
-addwhite PROC NEAR
+addwhite PROC FAR
 	push bp
 	mov bp, sp
 	push bx
@@ -236,7 +239,7 @@ setvakempty PROC FAR
 	push cx
 	push ax 
 
-    mov si, [bp+4][0]
+    mov si, [bp+6][0]
     push bp
     mov bp, offset speelveld
     mov bx, 0
@@ -250,7 +253,7 @@ setvakempty PROC FAR
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 2
 setvakempty ENDP
 ;-----------------------------------------------;
 
@@ -268,7 +271,7 @@ setvakwhite PROC FAR
 	push cx
 	push ax
 	
-    mov si, [bp+4][0]
+    mov si, [bp+6][0]
     push bp
     mov bp, offset speelveld
     mov bx, 0
@@ -282,7 +285,7 @@ setvakwhite PROC FAR
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 2
 setvakwhite ENDP
 ;-----------------------------------------------;
 
@@ -300,7 +303,7 @@ setvakblack PROC FAR
 	push cx
 	push ax
 	 
-    mov si, [bp+4][0]
+    mov si, [bp+6][0]
     push bp
     mov bp, offset speelveld
     mov bx, 0
@@ -314,7 +317,7 @@ setvakblack PROC FAR
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 2
 setvakblack ENDP
 ;-----------------------------------------------;
 
@@ -332,7 +335,7 @@ setvakpossiblewhite PROC FAR
 	push cx
 	push ax 
 	
-    mov si, [bp+4][0]
+    mov si, [bp+6][0]
     push bp
     mov bp, offset speelveld
     mov bx, 0
@@ -346,7 +349,7 @@ setvakpossiblewhite PROC FAR
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 2
 setvakpossiblewhite ENDP
 ;-----------------------------------------------;
 
@@ -364,7 +367,7 @@ setvakpossibleblack PROC FAR
 	push cx
 	push ax 
 	
-    mov si, [bp+4][0]
+    mov si, [bp+6][0]
     push bp
     mov bp, offset speelveld
     mov bx, 0
@@ -378,7 +381,7 @@ setvakpossibleblack PROC FAR
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 2
 setvakpossibleblack ENDP
 ;-----------------------------------------------;
 
@@ -396,7 +399,7 @@ setvakpossibleboth PROC FAR
 	push cx
 	push ax 
 	
-    mov si, [bp+4][0]
+    mov si, [bp+6][0]
     push bp
     mov bp, offset speelveld
     mov bx, 0
@@ -410,7 +413,7 @@ setvakpossibleboth PROC FAR
 	pop dx
 	pop bx
 	pop bp
-	ret 0
+	ret 2
 setvakpossibleboth ENDP
 ;-----------------------------------------------;
 
@@ -501,19 +504,44 @@ setupvakjes ENDP
 ;   88  88  88 88ooo88    88    88V8o 88        ;
 ;   88  88  88 88~~~88    88    88 V8o88        ;
 ;   88  88  88 88   88   .88.   88  V888        ;
-;   YP  YP  YP YP   YP Y888888P VP   V8P        ;                          ;
+;   YP  YP  YP YP   YP Y888888P VP   V8P        ;                          
 ;-----------------------------------------------;
 main:
+	mov  ah, 0 				; function 0 (set video mode)
+	mov  al, 13h 			; argument 13h (mode 13h to be set)
+	int  10h 
+
+	mov  dx, offset palette ; set the palette (DAC) (offset relative to es)
+    xor  bx, bx             ; set bx to zero (start at color index 0)
+    mov  cx, 2             ; set color 0 and 1 (2 indexes in total)
+
+	mov  ax, 1012h          ; function 1012h of int 10h (set DAC palette)
+    int  10h  
+	
+	
+
 	
 	call printgame							;teken spel
     call setupvakjes						;zet de vakjes
-    call drawcoins							; teken de munten
+    ;mov ax, 0
+	;push ax
+	;mov ax, 10
+	;push ax
+	;mov ax, 20
+	;push ax
+	;mov ax, 10
+	;push ax
+    ;call printCircle
+    call drawcoins							;teken de munten
     
-    call addblack							;zet aantal black coins op 2
-    call addblack
+    ;call addblack							;zet aantal black coins op 2
+    ;call addblack
     
-    call addwhite							;zet aantal white coins op 2
-    call addwhite
+    ;call addwhite							;zet aantal white coins op 2
+    ;call addwhite
     
-    call gameloop							; start gameloop
+    ;call gameloop							; start gameloop
+    
+    mov	ax, 4c00h
+	int	21h
 END main

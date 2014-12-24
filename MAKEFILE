@@ -28,4 +28,4 @@ clean:
 	del *.OBJ
 
 cv: debug
-	cv /s /43 ND.EXE
+	cv /s /43 OTHELLOD.EXE

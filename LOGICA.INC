@@ -1,1 +1,1 @@
-externdef gameloop:FAR, drawcoins:FAR
+externdef gameloop:FAR, drawcoins:FAR, calcvak:FAR

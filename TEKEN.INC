@@ -1,1 +1,1 @@
-externdef printGame:FAR, printNumber:FAR, BCoin:FAR, WCoin:FAR, DRAWEM:FAR, drawpos:FAR
+externdef printGame:FAR, printNumber:FAR, BCoin:FAR, WCoin:FAR, DRAWEM:FAR, drawpos:FAR, printCircle:FAR, printWON:FAR, updateScreen:FAR, printRectangle:FAR
