@@ -29,19 +29,13 @@ include TEKEN.INC
 .DATA
     PUBLIC speelveld
     PUBLIC COL, ROW, VAK
-    blackcoins 		  dw 0
-    whitecoins 	   	  dw 0
-    speelveld	      dw 64 dup (0) ;in de inc
+    blackcoins 		  db 0
+    whitecoins 	   	  db 0
+    speelveld	      db 64 dup(0)
     COL               dw 0
     ROW               dw 0
-<<<<<<< HEAD
     VAK               dw 0
-    palette     	  db 0, 0, 0, 13, 53, 56   
-=======
-    VAK               dw 0  
->>>>>>> FETCH_HEAD
 ; ----------------------------- CODE STARTS HERE -------------------------------
-
 .CODE
 ;------------------MOUSEREADER------------------;
 ; Uitleg: locatie van de muis uitlezen          ;
@@ -241,16 +235,12 @@ setvakempty PROC FAR
 	push dx
 	push es
 	push cx
-	push ax 
+	push ax
 
     mov si, [bp+6][0]
-    push bp
-    mov bp, offset speelveld
-    mov bx, 0
-    mov bl, 3
-    mov byte ptr [bp+si], bl
+    mov bl, 0
+    mov [speelveld+si], bl
     
-    pop bp
     pop ax
 	pop cx
 	pop es
@@ -276,13 +266,9 @@ setvakwhite PROC FAR
 	push ax
 	
     mov si, [bp+6][0]
-    push bp
-    mov bp, offset speelveld
-    mov bx, 0
     mov bl, 1
-    mov byte ptr [bp+si], bl
+    mov [speelveld+si], bl
     
-    pop bp
     pop ax
 	pop cx
 	pop es
@@ -308,13 +294,9 @@ setvakblack PROC FAR
 	push ax
 	 
     mov si, [bp+6][0]
-    push bp
-    mov bp, offset speelveld
-    mov bx, 0
     mov bl, 2
-    mov byte ptr [bp+si], bl
+    mov [speelveld+si], bl
     
-    pop bp
     pop ax
 	pop cx
 	pop es
@@ -340,13 +322,9 @@ setvakpossiblewhite PROC FAR
 	push ax 
 	
     mov si, [bp+6][0]
-    push bp
-    mov bp, offset speelveld
-    mov bx, 0
     mov bl, 3
-    mov byte ptr [bp+si], bl
+    mov [speelveld+si], bl	
     
-    pop bp	
 	pop ax
 	pop cx
 	pop es
@@ -372,13 +350,9 @@ setvakpossibleblack PROC FAR
 	push ax 
 	
     mov si, [bp+6][0]
-    push bp
-    mov bp, offset speelveld
-    mov bx, 0
     mov bl, 4
-    mov byte ptr [bp+si], bl
-    
-    pop bp
+    mov [speelveld+si], bl
+
     pop ax
 	pop cx
 	pop es
@@ -404,13 +378,9 @@ setvakpossibleboth PROC FAR
 	push ax 
 	
     mov si, [bp+6][0]
-    push bp
-    mov bp, offset speelveld
-    mov bx, 0
     mov bl, 5
-    mov byte ptr [bp+si], bl
+    mov [speelveld+si], bl
     
-    pop bp
     pop ax
 	pop cx
 	pop es
@@ -429,11 +399,12 @@ setvakpossibleboth ENDP
 setupvakjes PROC NEAR
 	push bp
 	mov bp, sp
-	push bx
-	push dx
-	push es
-	push cx
-	push ax 
+	push ax
+    push bx
+    push cx
+    push dx
+    push es
+    push si
 
     ;-------------------------------
     ; in de array komt te staan wat het vakje kan zijn:
@@ -444,59 +415,72 @@ setupvakjes PROC NEAR
     ; een vakje kan een pb: 4 ; possible black
     ; een vakje kan een pa: 5 ; possible both
     ;------------------------------- 
+    
+    cleanarray:
+        mov si, 0
+        cleanloop:
+            cmp si, 64
+                je @F
+            mov [speelveld+si], 0
+            inc si
+            jmp cleanloop
+            
+    
+    @@:
+    mov ax, 19
+    push ax
+    call setvakpossibleblack
 
     mov ax, 20
     push ax
-    call setvakpossibleblack
-
-    mov ax, 21
-    push ax
     call setvakpossiblewhite
+
+    mov ax, 26
+    push ax
+    call setvakpossibleblack
 
     mov ax, 27
     push ax
-    call setvakpossibleblack
+    call setvakwhite
 
     mov ax, 28
     push ax
-    call setvakwhite
+    call setvakblack
 
     mov ax, 29
     push ax
-    call setvakblack
+    call setvakpossiblewhite
 
-    mov ax, 30
+    mov ax, 34
     push ax
     call setvakpossiblewhite
 
     mov ax, 35
     push ax
-    call setvakpossiblewhite
+    call setvakblack
 
     mov ax, 36
     push ax
-    call setvakblack
+    call setvakwhite
 
     mov ax, 37
     push ax
-    call setvakwhite
-
-    mov ax, 38
-    push ax
     call setvakpossibleblack
 
-    mov ax, 44
+    mov ax, 43
     push ax
     call setvakpossiblewhite
 
-    mov ax, 45
+    mov ax, 44
     push ax
-    call setvakpossibleblack		
-	pop ax
-	pop cx
-	pop es
-	pop dx
-	pop bx
+    call setvakpossibleblack
+
+    pop si
+    pop es
+    pop dx
+    pop cx
+    pop bx
+    pop ax
 	pop bp
 	ret 0
 setupvakjes ENDP
@@ -517,26 +501,21 @@ main:
 
 	mov  dx, offset palette ; set the palette (DAC) (offset relative to es)
     xor  bx, bx             ; set bx to zero (start at color index 0)
-    mov  cx, 2             ; set color 0 and 1 (2 indexes in total)
+    mov  cx, 0             ; set color 0 and 1 (2 indexes in total)
 
 	mov  ax, 1012h          ; function 1012h of int 10h (set DAC palette)
     int  10h  
 	
 	
-
+    push ax
+    push bx
+    push cx
+    push dx
 	
 	call printgame							;teken spel
     call setupvakjes						;zet de vakjes
-    ;mov ax, 0
-	;push ax
-	;mov ax, 10
-	;push ax
-	;mov ax, 20
-	;push ax
-	;mov ax, 10
-	;push ax
-    ;call printCircle
     call drawcoins							;teken de munten
+    
     
     ;call addblack							;zet aantal black coins op 2
     ;call addblack
@@ -545,6 +524,12 @@ main:
     ;call addwhite
     
     ;call gameloop							; start gameloop
+    
+    
+    pop dx
+    pop cx
+    pop bx
+    pop ax
     
     mov	ax, 4c00h
 	int	21h
