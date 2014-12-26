@@ -50,10 +50,11 @@ mousereader PROC FAR
 	push es
 	push cx
 	push ax
-    
+    mov ax, 01h ;ACTIVEER MUIS
+    int 33h	
     ;----Loopje----
     loopje:
-        mov ax, 03h
+        mov ax, 05h
         int 33h				     ;lees uit
         cmp bx, 1                ;if bx = 1 ; if left button is down
             je clicked			 ;true branch
@@ -62,6 +63,11 @@ mousereader PROC FAR
 
     ;----clicked----
     clicked: 				     ;als er geklikt is
+        mov ax, 03h
+        int 33h
+        cmp cx, 600
+            jae pclose
+        contclicked:
         mov ROW, dx 			 ; row position
         mov COL, cx 			 ; column position
         mov ax, ROW				 ;kijk of row boven 20 ligt
@@ -69,6 +75,11 @@ mousereader PROC FAR
             jae comparerowbelow  ;true branch
             jmp loopje           ;false branch
     ;----end clicked----
+    
+    pclose:
+        cmp dx, 20
+            jbe close
+            jmp contclicked
 
     ;----comparerowbelow----
     comparerowbelow:
@@ -87,7 +98,7 @@ mousereader PROC FAR
     
     ;----comparecolbelow----
     comparecolbelow:
-        cmp ax, 20				 ;kijk of col onder 196 ligt
+        cmp ax, 196				 ;kijk of col onder 196 ligt
             jbe calculatevak     ;true branch
             jmp loopje           ;false branch
     ;----end comparecolbelow----
@@ -95,9 +106,27 @@ mousereader PROC FAR
     ;----calculatevak----
     calculatevak:
     	call calcvak			;dan is de pijl in het veld : bereken het vakje
+        mov ax, VAK
+        call WCoin
+        jmp loopje
     ;----end calculatevak----
     ; nu moet er nog gekeken worden of de vakjes clickable zijn
     ; functie komt ergens anders te staan maar moet hier ingeladen worden: merci :)
+    
+    close:
+    mov ax, 02h ;DEACTIVEER MUIS
+    int 33h
+    mov ax, 0
+    push ax
+    mov ax, 200
+    push ax
+    mov ax, 320
+    push ax
+    mov ax, 0
+    push ax
+    call printRectangle
+    mov	ax, 4c00h
+    int	21h
     
 	pop ax
 	pop cx
@@ -511,19 +540,21 @@ main:
     push bx
     push cx
     push dx
+    
+    mov beurt, 1
 	
 	call printgame							;teken spel
     call setupvakjes						;zet de vakjes
     call drawcoins							;teken de munten
     
     
-    ;call addblack							;zet aantal black coins op 2
-    ;call addblack
+    call addblack							;zet aantal black coins op 2
+    call addblack
     
-    ;call addwhite							;zet aantal white coins op 2
-    ;call addwhite
+    call addwhite							;zet aantal white coins op 2
+    call addwhite
     
-    ;call gameloop							; start gameloop
+    call gameloop							; start gameloop
     
     
     pop dx

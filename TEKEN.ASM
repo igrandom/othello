@@ -400,6 +400,15 @@ printGame PROC FAR
 	push ax 
 	
 	call printBackground			;print de achtergrond
+    mov ax, 300
+    push ax
+    mov ax, 20
+    push ax
+    mov ax, 20
+    push ax
+    mov ax, 12
+    push ax
+    call printRectangle
 	
 	;mov ax, 6420					;pixellocatie van speelveld
     ;push ax							; zet op stack
@@ -434,6 +443,8 @@ printCircle PROC FAR
     
     mov dx, [bp+6][0]                   ;kleur
 	mov cx, [bp+6][2]					;lees locatie van stack
+    add cx, 1
+    add cx, SCREENW
  	
  	add cx, 6							;locatie
     push cx								; zet op stack

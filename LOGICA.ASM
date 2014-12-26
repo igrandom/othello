@@ -27,6 +27,7 @@ include TEKEN.INC
 locatiemunt equ 10000
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA
+PUBLIC beurt
 savesi 			dw 0								; savesi is om si in op te slaan							
 richting		dw 1								; richting is om bij te houden welke richting je uit aan het swappen bent
 beurt			db 2								; beurt is om bij te houden wie er aan de beurt is
@@ -39,7 +40,7 @@ countpos		dw 0
 ; Uitleg: bereken van col en row van een vak    ;
 ;		van uit pixel locatie (COL en ROW)		;
 ; Parameters doorgegeven met push:              ;
-;             - locatie (vaknummer) [0]         ;
+;                                               ;
 ;-----------------------------------------------;
 calcvak PROC FAR
 	push bp
@@ -1369,13 +1370,13 @@ drawcoins PROC FAR
 
     dposwhite:
         mov bl, beurt
-        cmp bl, 1
+        cmp beurt, 1
             je dpos
-            jmp dleeg
+            jmp dleeg                   ;!!!!!!!!!!!!!!!!!!!!!
 
     dposblack:
         mov bl, beurt
-        cmp bl, 2
+        cmp beurt, 2
             je dpos
             jmp dleeg
 
