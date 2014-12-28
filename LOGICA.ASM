@@ -262,63 +262,60 @@ swap PROC FAR
 	push cx
 	push ax 
 
-;-------------------------------
+	mov ax, VAK
+	mov bx, 8
+	div bx
+	jmp setbx1
+	back1:	
+		jne @F				;dit veranderd
+		jmp callup
+	@@:
+		mov ax, VAK
+		jmp setbx12
+	back2:					;dit veranderd
 
-mov ax, VAK
-mov bx, 8
-div bx
-jmp setbx1
-back1:	
-jne @F				;dit veranderd
-jmp callup
-@@:
-mov ax, VAK
-jmp setbx12
-back2:					;dit veranderd
+	loopleft:
+	mov bx, ax
+	mov dx, 0
+	mov bx, 8						
+	div bx	
+	jmp setbx3						
+	back3:						; voor up en down cmp ax voor left right cmp dx
+		mov ax, bx
+		je laststepback
+		push bp
+		mov bp, ax
+		mov bl, speelveld[bp]
+		pop bp
+		cmp bl, 0
+			jne @F
+			jmp callup
+	@@:
+		cmp bx, 3
+			jne @F
+			jmp callup
+	@@:
+		cmp bx, 4
+			jne @F
+			jmp callup
+	@@:
+		cmp bx, 5
+			jne @F
+			jmp callup
+	@@: ;jump call -- 5min later is er nog eens gebeld geweest... knalt hem neer... en beld vanuit het kasteel naar zijn eigen huis
 
-;----------------------
-loopleft:
-mov bx, ax
-mov dx, 0
-mov bx, 8						
-div bx	
-jmp setbx3						
-back3:						; voor up en down cmp ax voor left right cmp dx
-mov ax, bx
-je laststepback
-push bp
-mov bp, ax
-mov bl, speelveld[bp]
-pop bp
-cmp bl, 0
-jne @F
-jmp callup
-@@:
-cmp bx, 3
-jne @F
-jmp callup
-@@:
-cmp bx, 4
-jne @F
-jmp callup
-@@:
-cmp bx, 5
-jne @F
-jmp callup
-@@: ;jump call -- 5min later is er nog eens gebeld geweest... knalt hem neer... en beld vanuit het kasteel naar zijn eigen huis
+		push bp
+		mov bp, ax
+		mov bl, speelveld[bp]
+		pop bp
 
-push bp
-mov bp, ax
-mov bl, speelveld[bp]
-pop bp
-
-cmp bl, beurt
-je loopleftback
-jmp setbx14
-z:
-jmp e
-back4:					;dit veranderd per righting
-jmp loopleft
+		cmp bl, beurt
+			je loopleftback
+			jmp setbx14
+	;z:
+	;	jmp e
+	back4:					;dit veranderd per righting
+		jmp loopleft
 
 ;----------------------
 laststepback:

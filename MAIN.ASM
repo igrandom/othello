@@ -108,7 +108,7 @@ mousereader PROC FAR
     	call calcvak			;dan is de pijl in het veld : bereken het vakje
         mov ax, VAK
         call WCoin
-        jmp loopje
+        jmp cont
     ;----end calculatevak----
     ; nu moet er nog gekeken worden of de vakjes clickable zijn
     ; functie komt ergens anders te staan maar moet hier ingeladen worden: merci :)
@@ -127,7 +127,7 @@ mousereader PROC FAR
     call printRectangle
     mov	ax, 4c00h
     int	21h
-    
+    cont:
 	pop ax
 	pop cx
 	pop es
