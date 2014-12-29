@@ -98,7 +98,7 @@ mousereader PROC FAR
     
     ;----comparecolbelow----
     comparecolbelow:
-        cmp ax, 196				 ;kijk of col onder 196 ligt
+        cmp ax, 388				 ;kijk of col onder 196 ligt
             jbe calculatevak     ;true branch
             jmp loopje           ;false branch
     ;----end comparecolbelow----
@@ -106,8 +106,6 @@ mousereader PROC FAR
     ;----calculatevak----
     calculatevak:
     	call calcvak			;dan is de pijl in het veld : bereken het vakje
-        mov ax, VAK
-        call WCoin
         jmp cont
     ;----end calculatevak----
     ; nu moet er nog gekeken worden of de vakjes clickable zijn

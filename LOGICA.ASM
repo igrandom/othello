@@ -29,7 +29,7 @@ locatiemunt equ 10000
 .DATA
 PUBLIC beurt
 savesi 			dw 0								; savesi is om si in op te slaan							
-richting		dw 1								; richting is om bij te houden welke richting je uit aan het swappen bent
+richting		db 1								; richting is om bij te houden welke richting je uit aan het swappen bent
 beurt			db 2								; beurt is om bij te houden wie er aan de beurt is
 blackcoins		dw 0	
 whitecoins		dw 0
@@ -60,9 +60,9 @@ calcvak PROC FAR
     mul bx
     mov ROW, ax
     mov ax, COL
-    sub ax, 20
+    sub ax, 40
     mov dx, 0
-    mov bx, 22
+    mov bx, 44
     div bx
     mov bx, ROW
     add ax, bx
@@ -141,8 +141,8 @@ gameloop PROC FAR
 
 	;----start loop----
 	startloop:
-    	call mousereader			
-    
+    	call mousereader
+
     	mov al, beurt 					;kijk wie er aan de beurt is 
     	cmp al, 1
     		je beurtwhite
@@ -151,31 +151,35 @@ gameloop PROC FAR
 
 	;----beurt wit----
 	beurtwhite: 						;kijk of het vakje een pw is, is het possible? 
-		mov ax, VAK
-		cmp ax, 3						
+		mov bx, VAK
+		mov al, [speelveld+bx]
+		cmp al, 3						
 			je vakjepossible			;True: ga naar vakje possible
 			jmp bothcmp					;False: kijk of het bothcmp is
 	;----end beurt wit-----
 
 	;----beurt zwart----
 	beurtblack:
-		mov ax, VAK						;kijk of het vakje een pb is, is het possible? 
-		cmp ax, 4
+		mov bx, VAK
+		mov al, [speelveld+bx]						;kijk of het vakje een pb is, is het possible? 
+		cmp al, 4
 			je vakjepossible			;True: ga naar vakje possible
 			jmp bothcmp					;False: kijk of het bothcmp is
 	;----end beurt zwart----
 	
 	;----both compare----
 	bothcmp:
-		mov ax, VAK
-		cmp ax, 5						;kijk of het vakje pa, is het possible?
+		mov bx, VAK
+		mov al, [speelveld+bx]
+		cmp al, 5						;kijk of het vakje pa, is het possible?
 			je vakjepossible			;True: ga naar: vakje possible
 			jmp startloop				;False: start opnieuw met gameloop
 	;----eind both compare----
 
 	;----vak possible----
 	vakjepossible:						; als vakje is possible
-		cmp ax, 1						;kijk wie er aan de beurt is
+		mov al, beurt
+		cmp al, 1						;kijk wie er aan de beurt is
 			je placewhite
 			jmp placeblack
 	;----end vak possible----
@@ -204,38 +208,48 @@ gameloop PROC FAR
     
     ;----start swap----
     startswap:							;start swappen
-        mov richting, 1
+    	mov al, 1
+        mov richting, al
         call swap
-        mov richting, 2
+        mov al, 2
+        mov richting, al
         call swap
-        mov richting, 3
+        mov al, 3
+        mov richting, al
         call swap
-        mov richting, 4
+        mov al, 4
+        mov richting, al
         call swap
-        mov richting, 5
+        mov al, 5
+        mov richting, al
         call swap
-        mov richting, 6
+        mov al, 6
+        mov richting, al
         call swap
-        mov richting, 7
+        mov al, 7
+        mov richting, al
         call swap
-        mov richting, 8
+        mov al, 8
+        mov richting, al
         call swap
-        
-        call berekenpossible			;bereken welke possible zijn
-        call countcoins					;tel het aantal muntjes
-        call printNumber
-        call switchbeurt				;verander van beurt
-        call drawcoins					;teken de muntjes op het veld
-        call countpossible				; tel het aantal possible
-        mov ax, countpossible	
-        cmp ax, 0						; als nul teken spel opnieuw
-        	je endgame				
+
+        ;call berekenpossible			;bereken welke possible zijn
+        ;call countcoins					;tel het aantal muntjes
+        ;call printNumber
+        ;call switchbeurt				;verander van beurt
+        ;call drawcoins					;teken de muntjes op het veld
+        ;call countpossible				; tel het aantal possible
+        ;mov ax, countpossible	
+        ;cmp ax, 0						; als nul teken spel opnieuw
+        ;	je endgame				
         	jmp startloop
     ;----end start swap----
     
     
     endgame	:
     	call whowon
+    	
+    cancel:
 
 	pop ax
 	pop cx
@@ -262,421 +276,337 @@ swap PROC FAR
 	push cx
 	push ax 
 
-	mov ax, VAK
-	mov bx, 8
-	div bx
-	jmp setbx1
-	back1:	
-		jne @F				;dit veranderd
-		jmp callup
-	@@:
-		mov ax, VAK
-		jmp setbx12
-	back2:					;dit veranderd
+	start:
+	 call juisterichting
+	 mov ax, 0
+	 mov al, richting
+	 
+	 cmp ax, 0
+	 	jne @F
+	 	jmp done
+	 @@:
 
-	loopleft:
-	mov bx, ax
-	mov dx, 0
-	mov bx, 8						
-	div bx	
-	jmp setbx3						
-	back3:						; voor up en down cmp ax voor left right cmp dx
-		mov ax, bx
-		je laststepback
-		push bp
-		mov bp, ax
-		mov bl, speelveld[bp]
-		pop bp
-		cmp bl, 0
-			jne @F
-			jmp callup
-	@@:
-		cmp bx, 3
-			jne @F
-			jmp callup
-	@@:
-		cmp bx, 4
-			jne @F
-			jmp callup
-	@@:
-		cmp bx, 5
-			jne @F
-			jmp callup
-	@@: ;jump call -- 5min later is er nog eens gebeld geweest... knalt hem neer... en beld vanuit het kasteel naar zijn eigen huis
-
-		push bp
-		mov bp, ax
-		mov bl, speelveld[bp]
-		pop bp
-
-		cmp bl, beurt
-			je loopleftback
-			jmp setbx14
-	;z:
-	;	jmp e
-	back4:					;dit veranderd per righting
-		jmp loopleft
-
-;----------------------
-laststepback:
-push bp
-mov bp, ax
-mov bl, speelveld[bp]
-pop bp
-cmp bl, beurt
-je @F
-jmp callup
-@@:
-jmp loopleftback
-
-loopleftback:
-jmp setbx15
-back5:					;dit veranderd per richting
-push bp
-mov bp, ax
-mov bl, speelveld[bp]
-pop bp
-cmp bl, beurt
-jne @F
-jmp callup
-@@:
-
-mov dl, beurt
-cmp dl, 1
-je witup
-jmp zwartup
-
-witup:
-push ax
-call setvakwhite
-push ax
-call Wcoin
-jmp e
-
-zwartup:
-push ax
-call setvakblack
-push ax
-call Bcoin
-jmp e
-
-
-setbx1:						;bij verandering een
-mov ax, richting
-cmp ax, 1
-je left1
-cmp ax, 2
-je up1
-cmp ax, 3
-je right1
-cmp ax, 4
-je down1
-cmp ax, 5
-je schuinlo1
-cmp ax, 6
-je schuinld1
-cmp ax, 7
-je schuinro1
-jmp schuinrd1
-
-left1:
-cmp dx, 0
-je t
-jmp back1
-e:
-jmp t
-up1:
-cmp ax, 0
-je t
-jmp back1
-
-right1:
-cmp dx, 7
-je t
-jmp back1
-
-down1:
-cmp ax, 7
-je t
-jmp back1
-
-schuinlo1:
-cmp dx, 0
-jne @F
-jmp back1
-@@:
-cmp ax, 0
-je t
-jmp back1
-
-schuinld1:
-cmp dx, 0
-jne @F
-jmp back1
-@@:
-cmp ax, 7
-je t
-jmp back1
-
-schuinro1:
-cmp dx, 7
-jne @F
-jmp back1
-@@:
-cmp ax, 0
-je t
-jmp back1
-
-schuinrd1:
-cmp dx, 7
-jne @F
-jmp back1
-@@:
-cmp ax, 7
-je callup
-jmp back1
-t:
-jmp callup
-setbx12:				;bij verandering twee
-mov ax, richting
-cmp ax, 1
-je left2
-cmp ax, 2
-je up2
-cmp ax, 3
-je right2
-cmp ax, 4
-je down2
-cmp ax, 5
-je schuinlo2
-cmp ax, 6
-je schuinld2
-cmp ax, 7
-je schuinro2
-jmp schuinrd2
-
-
-left2:
-sub ax, 1
-jmp down2
-
-up2:
-sub ax, 8
-jmp down2
-
-right2:
-add ax, 1
-jmp down2
-
-down2:
-add ax, 8
-jmp down2
-
-schuinlo2:
-sub ax, 9
-jmp down2
-
-schuinld2:
-add ax, 7
-jmp down2
-
-schuinro2:
-sub ax, 7
-jmp down2
-
-schuinrd2:
-add ax, 9
-jmp down2
-
-
-
-;----------------------
-setbx3:				;bij verandering drie
-mov ax, richting
-cmp ax, 1
-je left3
-cmp ax, 2
-je up3
-cmp ax, 3
-je right3
-cmp ax, 4
-je down3
-cmp ax, 5
-je schuinlo3
-cmp ax, 6
-je schuinlo3
-cmp ax, 7
-je schuinlo3
-jmp schuinlo3
-callup:
-jmp done
-left3:
-cmp dx, 0	
-jmp back3
-b3:
-jmp back3
-up3:
-cmp ax, 0
-jmp b3
-
-right3:
-cmp dx, 0	
-jmp b3
-
-down3:
-cmp ax, 0
-jmp b3
-
-schuinlo3:
-cmp dx, 0
-jne @F
-jmp back3
-@@:
-cmp ax, 0
-jmp b3
-
-schuinld3:
-cmp dx, 0
-jne @F
-jmp back3
-@@:
-cmp ax, 7
-jmp b3
-
-schuinro3:
-cmp dx, 7
-jne @F
-jmp back3
-@@:
-cmp ax, 3
-jmp back3
-
-schuinrd3:
-cmp dx, 7
-jne @F
-jmp back3
-@@:
-cmp ax, 7
-jmp b3
-
-
-;----------------------
-setbx14:			;bij verandering vier
-mov ax, richting
-cmp ax, 1
-je left4
-cmp ax, 2
-je up4
-cmp ax, 3
-je right4
-cmp ax, 4
-je down4
-cmp ax, 5
-je schuinlo4
-cmp ax, 6
-je schuinld4
-cmp ax, 7
-je schuinro4
-jmp schuinrd4
-
-
-left4:
-add ax, 1
-jmp down4
-
-up4:
-add ax, 8
-jmp down4
-
-right4:
-sub ax, 1
-jmp down4
-
-down4:
-sub ax, 8
-jmp down4
-
-schuinlo4:
-add ax, 9
-jmp down2
-
-schuinld4:
-sub ax, 7
-jmp down2
-
-schuinro4:
-add ax, 7
-jmp down2
-
-schuinrd4:
-sub ax, 9
-jmp down2
-d:
-jmp schuinro1
-;----------------------
-setbx15:			;bij verandering vijf
-mov ax, richting
-cmp ax, 1
-je left5
-cmp ax, 2
-je up5
-cmp ax, 3
-je right5
-cmp ax, 4
-je down5
-cmp ax, 5
-je schuinlo5
-cmp ax, 6
-je schuinld5
-cmp ax, 7
-jne @F
-jmp schuinro1
-@@:
-jmp schuinrd5
-
-
-left5:
-sub ax, 1
-jmp down5
-
-up5:
-sub ax, 8
-jmp down5
-
-right5:
-add ax, 1
-jmp down5
-
-down5:
-add ax, 8
-jmp down5
-
-schuinlo5:
-sub ax, 9
-jmp down5
-
-schuinld5:
-add ax, 7
-jmp down5
-
-schuinro5:
-sub ax, 7
-jmp down5
-
-schuinrd5:
-add ax, 9
-jmp down5
-done:
+    	;jmp done
+	 jmp vergelijkvak
 	
+		
+	vergelijkvak:
+		mov bl, beurt
+		cmp bl, 1
+			je vergelijkwit
+			jmp vergelijkzwart
+	
+	vergelijkwit:
+			mov bx, VAK
+			mov al, [speelveld+bx]
+			cmp al, 1
+				jne @F
+				jmp swapstart
+		@@:
+			cmp al, 2
+				je start
+				jmp done
+		
+	vergelijkzwart:
+		mov bx, VAK
+			mov al, [speelveld+bx]
+			cmp al, 2
+				jne @F
+				jmp swapstart
+		@@:
+			cmp al, 3
+				je start
+				jmp done
+				
+	swapstart:
+		mov ax, 0
+		mov al, richting
+		cmp ax, 1
+			je richting1
+		cmp ax, 2
+			je richting3
+		cmp ax, 3
+			je richting3
+		cmp ax, 4
+			je richting4
+		cmp ax, 5
+			je richting5
+		cmp ax, 6
+			je richting6
+		cmp ax, 7
+			je richting7
+		cmp ax, 8
+			je richting8
+	
+	richting1:
+		mov vak, 6
+	richting2:
+		mov vak, 7
+	richting3:
+		mov vak, 8
+	richting4:
+		mov vak, 5
+	richting5:
+		mov vak, 4
+	richting6:
+		mov vak, 1
+	richting7:
+		mov vak, 2
+	richting8:
+		mov vak, 3
+	
+	swapvergelijk:
+		call juisterichting 
+		mov bl, beurt
+		cmp bl, 1
+			je swapwit
+			jmp swapzwart
+	
+	swapwit:
+		mov bx, VAK
+			mov al, [speelveld+bx]
+			cmp al, 1
+				jne @F
+				jmp done
+			@@:
+				mov [speelveld+bx], 2
+				jmp swapvergelijk
+	swapzwart:
+		mov bx, VAK
+			mov al, [speelveld+bx]
+			cmp al, 2
+				jne @F
+				jmp done
+			@@:
+				mov [speelveld+bx], 1
+				jmp swapvergelijk
+	
+	
+	done:
+		
 	pop ax
 	pop cx
 	pop es
 	pop dx
 	pop bx
 	pop bp
-	ret 0
-   	
+	ret 0   	
 swap ENDP
+;-----------------------------------------------;
+
+;-----------verplaats juiste richting-----------;
+; Uitleg: berekening van mogelijke zetten       ;
+; Parameters doorgegeven met push:              ;
+;             geen                              ;
+;-----------------------------------------------;
+juisterichting PROC NEAR
+	push bp
+	mov bp, sp
+	push bx
+	push dx
+	push es
+	push cx
+	push ax 
+	
+		 ;TESTER	
+		push bx
+		mov bx, 6000
+    	push bx
+    	mov bx, 4
+    	push bx
+    	mov bx, 3
+    	push bx
+    	call printNumber
+    	pop bx
+    ;end TESTER
+		jmp done
+	 mov ax, 0
+	 mov al, richting
+
+
+    		
+    	jmp done
+    	verplaatsjuisterichting:
+		cmp ax, 1
+			je verplaatsrechtsboven
+		cmp ax, 2
+			je verplaatsmiddenboven
+		cmp ax, 3 
+			je verplaatslinksboven
+		cmp ax, 4
+			jne @F
+			jmp verplaatslinksmidden
+		@@:
+		cmp ax, 5
+			jne @F
+			jmp verplaatsrechtsmidden
+		@@:
+		cmp ax, 6
+			jne @F
+			jmp verplaatslinksonder
+		@@:
+		cmp ax, 7
+			jne @F
+			jmp verplaatsmiddenonder
+		@@:
+		cmp ax, 8
+			jne @F
+			jmp verplaatsrechtsonder
+		@@:
+			jmp done
+	
+	
+	verplaatsrechtsboven:
+		mov dx, 0
+		mov ax, 0
+		mov bx, 8
+		mov ax, vak
+		div bx
+		cmp ax, 0
+				jne @F
+				jmp	done
+		@@:
+			cmp dx, 7
+				jne @F
+				jmp done
+		@@:		
+		mov bx, VAK
+		sub bx, 7
+		mov vak, bx
+		jmp vergelijkvak
+	
+	verplaatsmiddenboven:
+		mov dx, 0
+		mov ax, 0
+		mov bx, 8
+		mov ax, vak
+		div bx
+		cmp ax, 0
+				jne @F
+				jmp	done
+		@@:
+		
+		mov ax, VAK
+		sub ax, 8
+		mov vak, ax
+		jmp vergelijkvak
+	
+	verplaatslinksboven:
+		mov dx, 0
+		mov ax, 0
+		mov bx, 8
+		mov ax, vak
+		div bx
+		cmp ax, 0
+				jne @F
+				jmp	done
+		@@:
+		cmp dx, 0
+				jne @F
+				jmp	done
+		@@:
+		
+		mov ax, VAK
+		sub ax, 9
+		mov vak, ax
+		jmp vergelijkvak
+	
+	verplaatslinksmidden:
+		mov dx, 0
+		mov ax, 0
+		mov bx, 8
+		mov ax, vak
+		div bx
+		cmp dx, 0
+				jne @F
+				jmp	done
+		@@:
+		mov ax, VAK
+		sub ax, 1
+		mov vak, ax
+		jmp vergelijkvak
+	
+	verplaatsrechtsmidden:
+		mov dx, 0
+		mov ax, 0
+		mov bx, 8
+		mov ax, vak
+		div bx
+		cmp ax, 7
+				jne @F
+				jmp	done
+		@@:
+		mov ax, VAK
+		add ax, 1
+		mov vak, ax
+		jmp vergelijkvak
+	
+	verplaatslinksonder:
+		mov dx, 0
+		mov ax, 0
+		mov bx, 8
+		mov ax, vak
+		div bx
+		cmp ax, 7
+				jne @F
+				jmp	done
+		@@:
+		cmp dx, 0
+				jne @F
+				jmp	done
+		@@:
+		mov ax, VAK
+		add ax, 7
+		mov vak, ax
+		jmp vergelijkvak
+	
+	verplaatsmiddenonder:
+		mov dx, 0
+		mov ax, 0
+		mov bx, 8
+		mov ax, vak
+		div bx
+		cmp ax, 7
+				jne @F
+				jmp	done
+		@@:
+		mov ax, VAK
+		add ax, 8
+		mov vak, ax
+		jmp vergelijkvak
+	
+	verplaatsrechtsonder:
+		mov dx, 0
+		mov ax, 0
+		mov bx, 8
+		mov ax, vak
+		div bx
+		cmp ax, 7
+				jne @F
+				jmp	done
+		@@:
+		cmp dx, 7
+				jne @F
+				jmp	done
+		@@:
+		mov ax, VAK
+		add ax, 9
+		mov vak, ax
+		jmp vergelijkvak
+		
+	done:
+		mov richting, 0
+		
+	vergelijkvak:
+		
+	pop ax
+	pop cx
+	pop es
+	pop dx
+	pop bx
+	pop bp
+	ret 0   	
+juisterichting ENDP
 ;-----------------------------------------------;
 
 ;-----------------BEREKEN POSSIBLE--------------;
