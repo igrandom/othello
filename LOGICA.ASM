@@ -174,7 +174,7 @@ juisterichting PROC FAR
 		mov dx, 0
 		mov ax, 0
 		mov bx, 8
-		mov ax, vak
+		mov ax, VAK
 		div bx
 		cmp ax, 0
 				jne @F
@@ -323,395 +323,30 @@ juisterichting PROC FAR
 juisterichting ENDP
 ;-----------------------------------------------;
 
-;-----------------BEREKEN POSSIBLE--------------;
+;--------------BEREKEN POSSIBLE NEW-------------;
 ; Uitleg: berekening van mogelijke zetten       ;
 ; Parameters doorgegeven met push:              ;
 ;             geen                              ;
 ;-----------------------------------------------;
-berekenpossible PROC FAR
-	push bp
-	mov bp, sp
-	push bx
-	push dx
-	push es
-	push cx
-	push ax 
+berekenpossible PROC NEAR
+	mov si, 0
 	
-	mov si, 0       
-	;---- Startloop ----         	
-	startloop:
+	possibleloop:
 		cmp si, 64
-			jne @F
-			jmp eindeloop
-		@@:
-		mov ax, 0
-		mov al, [speelveld+si]
-		mov savesi, si
-		cmp ax, 1					;witte steen?
-			jne @F
-			jmp restartloop
-		@@:
-								; jump over
-		cmp ax, 2					; zwarte steen
-			jne @F
-			jmp restartloop
-			
-				
-		@@:	
-		mov [speelveld+si], 0		; clear de vorige possibles, zodat hij niet kan gaan verwarren.
-	;---- end Startloop ----
-	
-	possibleup:
-			
-		mov si, savesi
-		mov ax, si					;nu kijken of er ergens een steen omheen staat
-		mov bx, 8					; delen om te kijken of vakje aan de rand zit
-		div bx						; col: dx row: ax
-		cmp ax, 0					; bovenste rij?
-			je possibleleft				;ga naar volgende test			
-		sub si, 8
-		mov dx, 0
-		mov dl, [speelveld+si]
-		cmp dx, 1
-			jne @F
-			jmp loopposblackup
-		@@:
-		cmp dx, 2
-			jne @F
-			jmp loopposwhiteup
-		@@:
-			jmp restartloop
-	
-	bup:
-
-
-	possibleleft:
-		mov si, savesi
-		mov ax, si					;nu kijken of er ergens een steen omheen staat
-		mov bx, 8					; delen om te kijken of vakje aan de rand zit
-		div bx						; col: dx row: ax
-		cmp dx, 0					;meest linkse kolom?
-			je possibledown				; ga naar volgende test
-		sub si, 1
-		mov dx, 0
-		mov dl, [speelveld+si]
-		cmp dx, 1
-			jne @F
-			jmp loopposblackleft
-		@@:
-		cmp dx, 2
-			jne @F
-			jmp loopposwhiteleft
-		@@:
-			jmp restartloop
-
-	bleft:
-
-	possibledown:
-		mov si, savesi
-		mov ax, si					;nu kijken of er ergens een steen omheen staat
-		mov bx, 8					; delen om te kijken of vakje aan de rand zit
-		div bx						; col: dx row: ax
-		cmp ax, 7					;meest onderste rij?
-			je possibleright			; ga naar volgende test
-		add si, 8
-		mov dx, 0
-		mov dl, [speelveld+si]
-		cmp dx, 1
-			jne @F
-			jmp loopposblackdown
-		@@:
-		cmp dx, 2
-			jne @F
-			jmp loopposwhitedown
-		@@: 
-			jmp restartloop
-
-	bdown:
-
-	possibleright:
-		mov si, savesi
-		mov ax, si					;nu kijken of er ergens een steen omheen staat
-		mov bx, 8					; delen om te kijken of vakje aan de rand zit
-		div bx						; col: dx row: ax
-		cmp dx, 7					;meest rechtse kolom?
-			jne @F
-			jmp restartloop
-		@@:							; ga naar volgende test
-			add si, 1
-			mov dx, 0
-			mov dl, [speelveld+si]
-			cmp dx, 1
-				jne @F
-				jmp loopposblackright
-		@@:
-			cmp dx, 2
-				jne @F
-				jmp loopposwhiteright
-		@@:
-			jmp restartloop
-
-	loopposblackup:		
-		mov ax, si					;test of je boven aan bent	  		
-		mov bx, 8
-		div bx	
-		cmp ax, 0
-			jne @F
-			jmp bup
-		@@:					; zo ja volgende 
-			sub si, 8					; een omlaag
-			mov dx, 0
-			mov dl, [speelveld+si]		;lees en zet in dx
-			cmp dx, 2	
-				jne @F
-				jmp placeposblackup
-		@@:				;is het een zwarte?			;plaats pos black
-			cmp dx, 1
-				jne @F
-				jmp loopposblackup
-		@@:					;vergelijk dx met 1			;restart loop
-			jmp bup
-			
-	placeposblackup:
-		mov si, savesi
-		mov dx, 0
-		mov dl, [speelveld+si]
-		cmp dx, 3					; staat er al een poswit?
-			je placebothup
-		push si
-		call setvakpossibleblack
-		jmp bup
-
-	loopposwhiteup:
-		mov ax, si					;test of je boven aan bent	
-		mov dx, 0  		
-		mov bx, 8
-		div bx
-		cmp ax, 0
-			jne @F
-			jmp bup
-		@@:						; zo ja volgende 
-			sub si, 8					; een omlaag
-			mov dx, 0
-			mov dl, [speelveld+si]		;lees en zet in dx
-			cmp dx, 1					;is het een witte?
-				je placeposwhiteup			;plaats poswhite
-			cmp dx, 2
-				je loopposwhiteup			;restart loop
-				jmp bup
-
-		placeposwhiteup:
-			mov si, savesi
-			mov dx, 0
-			mov dl, [speelveld+si]
-			cmp dx, 4					;staat er al een posblack?
-				je placebothup				;set pos both
-			push si
-			call setvakpossiblewhite
-			jmp bup
-
-		placebothup:
-			mov si, savesi
-			push si
-			call setvakpossibleboth
-			jmp bup
-
-		loopposblackleft:
-			mov ax, si					;test of je boven aan bent
-			mov bx, 8
-			mov dx, 0
-			div bx
-			cmp dx, 0
-				jne @F
-				jmp bleft
-			@@:					;zo ja een omlaag
-			sub si, 1 					;een naar links
-			mov dx, 0
-			mov dl, [speelveld+si]
-			cmp dx, 2					;is het een zwarte?
-				je placeposblackleft		;plaats pos black
-			cmp dx, 1
-				je loopposblackleft			;startloop opnieuw
-				jmp bleft
-					
-		placeposblackleft:
-			mov si, savesi
-			mov dx, 0
-			mov dl, [speelveld+si]
-			cmp dx, 3					;staat er al een pos white?		
-				je placebothleft			;set pos both
-			push si
-			call setvakpossibleblack
-			jmp bleft
-
-		loopposwhiteleft:
-			mov ax, si					;test of je boven aan bent
-			mov dx, 0
-			mov bx, 8
-			div bx
-			cmp dx, 0
-				jne @F
-				jmp bleft
-			@@:					;zo ja ga door
-			sub si, 1 					;een naar links
-			mov dx, 0
-			mov dl, [speelveld+si]
-			cmp dx, 1					;is het een witte?
-				je placeposwhiteleft		;plaats pos white
-			cmp dx, 2
-				je loopposwhiteleft			;startloop opnieuw
-				jmp bleft
-
-		placeposwhiteleft:
-			mov si, savesi
-			mov dx, 0
-			mov dl, [speelveld+si]
-			cmp dx, 4					;staat er al een pos black?		
-				je placebothleft			;set pos both
-			push si
-			call setvakpossiblewhite
-			jmp bleft
-
-		placebothleft:
-			mov si, savesi
-			push si
-			call setvakpossibleboth
-			jmp bleft
-
-		loopposblackdown:
-			mov ax, si					;test of je onder aan bent
-			mov bx, 8
-			mov dx, 0
-			div bx
-			cmp ax, 7
-				jne @F
-				jmp bdown
-			@@:					;zo ja ga door
-			add si, 8					;een naar beneden
-			mov dx, 0
-			mov dl, [speelveld+si]
-			cmp dx, 2					;is het een zwarte?
-				je placeposblackdown		;plaats pos black
-			cmp dx, 1
-				je loopposblackdown
-				jmp bdown
-
-		placeposblackdown:			;plaats possible black	
-			mov si, savesi				;lees plaats uit
-			mov dx, 0
-			mov dl, [speelveld+si]
-			cmp dx, 4					; staat er al een pw
-				je placeposbothdown			; plaats dan een both
-			push si	
-			call setvakpossibleblack	; anders een pb
-			jmp bdown					; ga verder
-
-
-		loopposwhitedown:
-			mov ax, si					;test of je op de onderste rij bent?
-			mov bx, 8
-			mov dx, 0
-			div bx
-			cmp ax, 7
-				jne @F
-				jmp bdown
-			@@:					; zo ja ga naar volgende test
-			add si, 8					;zo nee ga naar volgende vak
-			mov dx, 0
-			mov dl, [speelveld+si]
-			cmp dx, 1					; als dit wit is
-				je placeposwhitedown		;ga naar schrijf pw
-			cmp dx, 2					; als dit zwart is
-				je loopposwhitedown			; ga door met pw loop
-				jmp bdown					;anders ga naar volgende test
+			je einde
+		mov ax, [speelveld+si]
+		cmp ax, 1								;is er een steentje in een vakje?
+			je bpeinde							;ga naar einde
+		cmp ax, 2
+			je bpeinde
 		
-		placeposwhitedown:
-			mov si, savesi				; lees juiste vak uit
-			mov dx, 0
-			mov dl, [speelveld+si]		
-			cmp dx, 3
-				je placeposbothdown			; anders ga naar plaats pa
-			push si
-			call setvakpossiblewhite	; anders plaats pw
-			jmp bdown
+		mov [speelveld+si], 0					;reset mogelijk andere possibles
+		
+		caseloop:
+			mov richting, 1
+			
 
-		placeposbothdown:			; plaats pa
-			mov si, savesi
-			push si
-			call setvakpossibleboth
-			jmp bdown
 
-		loopposblackright:
-			mov ax, si
-			mov bx, 8
-			div bx
-			cmp dx, 7
-				je restartloop
-			add si, 1
-			mov dx, 0
-			mov dl, [speelveld+si]
-			cmp dx, 2
-				je placeposblackright
-			cmp dx, 1
-				je loopposblackright
-				jmp restartloop
-
-		placeposblackright:
-			mov si, savesi
-			mov dx, 0
-			mov dl, [speelveld+si]
-			cmp dx, 4
-				je placeposbothright
-			push si
-			call setvakpossibleblack
-			jmp restartloop
-
-		loopposwhiteright:
-			mov ax, si
-			mov bx, 8
-			mov dx, 0
-			div bx
-			cmp dx, 7
-				je restartloop
-			add si, 1
-			mov dx, 0
-			mov dl, [speelveld+si]
-			cmp dx, 1
-				je placeposwhiteright
-			cmp dx, 2
-				je loopposwhiteright
-				jmp restartloop
-				
-		placeposwhiteright:
-			mov si, savesi
-			mov dx, 0
-			mov dl, [speelveld+si]
-			cmp dx, 3
-				je placeposbothright
-				push si
-			call setvakpossiblewhite
-			jmp restartloop
-
-		placeposbothright:
-			mov si, savesi
-			push si
-			call setvakpossibleboth
-			jmp restartloop
-
-		restartloop:					;restartloop
-			mov si, savesi					;haal locatie er uit
-			inc si							; ga naar volgende vakje
-			jmp startloop					; en ga naar de start van de loop
-
-	eindeloop:
-
-	pop ax
-	pop cx
-	pop es
-	pop dx
-	pop bx
-	pop bp
-	ret 0
 berekenpossible ENDP
 ;-----------------------------------------------;
 
@@ -1065,29 +700,21 @@ gameloop PROC FAR
     
     ;----start swap----
     startswap:							;start swappen
-    	mov al, 1
-        mov richting, al
+        mov richting, 1
         call swap
-        mov al, 2
-        mov richting, al
+        mov richting, 2
         call swap
-        mov al, 3
-        mov richting, al
+        mov richting, 3
         call swap
-        mov al, 4
-        mov richting, al
+        mov richting, 4
         call swap
-        mov al, 5
-        mov richting, al
+        mov richting, 5
         call swap
-        mov al, 6
-        mov richting, al
+        mov richting, 6
         call swap
-        mov al, 7
-        mov richting, al
+        mov richting, 7
         call swap
-        mov al, 8
-        mov richting, al
+        mov richting, 8
         call swap
 
         call berekenpossible			;bereken welke possible zijn
