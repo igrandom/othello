@@ -539,7 +539,7 @@ main:
     push cx
     push dx
     
-    mov beurt, 1
+    mov beurt, 2
 	
 	call printgame							;teken spel
     call setupvakjes						;zet de vakjes

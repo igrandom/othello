@@ -23,6 +23,7 @@ SCREENW		equ 320
 include TEKEN.INC
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA        ; data segment, variables
+PUBLIC palette
 PLAYFIELD       dw 6420
 palette			db 768 dup(0)
 
