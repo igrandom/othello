@@ -91,14 +91,14 @@ mousereader PROC FAR
     ;----comparecolabove----
     comparecolabove:
         mov ax, COL				
-        cmp ax, 40               ;kijk of col boven 20 ligt
+        cmp ax, 20               ;kijk of col boven 20 ligt
             jae comparecolbelow  ;true branch
             jmp loopje           ;false branch
     ;----end comparecolabove----
     
     ;----comparecolbelow----
     comparecolbelow:
-        cmp ax, 392				 ;kijk of col onder 196 ligt
+        cmp ax, 388				 ;kijk of col onder 196 ligt
             jbe calculatevak     ;true branch
             jmp loopje           ;false branch
     ;----end comparecolbelow----
@@ -106,8 +106,6 @@ mousereader PROC FAR
     ;----calculatevak----
     calculatevak:
     	call calcvak			;dan is de pijl in het veld : bereken het vakje
-        mov ax, VAK
-        call WCoin
         jmp cont
     ;----end calculatevak----
     ; nu moet er nog gekeken worden of de vakjes clickable zijn
@@ -541,7 +539,7 @@ main:
     push cx
     push dx
     
-    mov beurt, 1
+    mov beurt, 2
 	
 	call printgame							;teken spel
     call setupvakjes						;zet de vakjes
