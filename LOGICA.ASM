@@ -329,24 +329,147 @@ juisterichting ENDP
 ;             geen                              ;
 ;-----------------------------------------------;
 berekenpossible PROC NEAR
+    push bp
+	mov bp, sp
+	push dx
+	push es
+	push cx
+	push ax 
+	push bx
+    push si
+
 	mov si, 0
-	
 	possibleloop:
 		cmp si, 64
-			je einde
-		mov ax, [speelveld+si]
+			jne @F
+            jmp einde
+        @@:
+        mov ax, 0
+		mov al, [speelveld+si]
 		cmp ax, 1								;is er een steentje in een vakje?
-			je bpeinde							;ga naar einde
+			jne @F   							;ga naar einde
+            jmp bpeinde
+        @@:
 		cmp ax, 2
-			je bpeinde
-		
+			jne @F
+            jmp bpeinde
+        @@:
 		mov [speelveld+si], 0					;reset mogelijk andere possibles
-		
-		caseloop:
-			mov richting, 1
-			
+        mov dx, 0
+        mov dl, 1
+        
+        richtingloop:
+            cmp dx, 9
+                jne @F
+                jmp bpeinde
+            @@:
+                                ;tester
+                push bx
+                mov bx, 300
+                push bx
+                mov bx, 20
+                push bx
+                push bx
+                mov bx, 3
+                push bx
+                call printRectangle
+                pop bx
+            ;end tester
+            mov richting, dl
+            mov VAK, si
+            call juisterichting
+            mov bx, 0
+            mov bl, richting
+            cmp bx, 0
+                je restartrichtingloop
 
-
+            mov bx, VAK
+            mov ax, 0
+            mov al, [speelveld+bx]
+            cmp ax, 1                           ;WIT STEENTJE AANWEZIG?
+                je loopwit
+            cmp ax, 2                           ;ZWART STEENTJE AANWEZIG?
+                je loopzwart
+            restartrichtingloop:
+                inc dl
+                jmp richtingloop
+            
+            loopwit:
+                call juisterichting
+                mov bx, 0
+                mov bl, richting
+                cmp bx, 0
+                    je restartrichtingloop
+                mov bx, VAK
+                cmp bx, 1                       ;STEENTJE WIT? GA DAN DOOR MET ZOEKEN
+                    je loopwit            
+                cmp bx, 2                       ;STEENTJE ZWART? ZET DAN EEN POSSIBLE BLACK IN HET ORIGINEVAKJE
+                    je zetvakpossibleblack
+                jmp restartrichtingloop         ;ANDERS HERSTART RICHTINGLOOP
+                
+            loopzwart:
+                call juisterichting
+                mov bx, 0
+                mov bl, richting
+                cmp bx, 0
+                    je restartrichtingloop
+                mov bx, VAK
+                cmp bx, 1
+                    je zetvakpossiblewhite
+                cmp bx, 2
+                    je loopzwart
+                jmp restartrichtingloop
+            
+            
+                
+        bpeinde:
+            ;tester
+                push bx
+                mov bx, 300
+                push bx
+                mov bx, 20
+                push bx
+                push bx
+                mov bx, 3
+                push bx
+                call printRectangle
+                pop bx
+            ;end tester
+            inc si
+            jmp possibleloop
+            
+            
+        zetvakpossibleblack:
+            mov bx, 0
+            mov bl, [speelveld+si]
+            cmp bx, 0
+                je @F
+            call setvakpossibleboth
+            jmp restartrichtingloop
+            @@:
+                call setvakpossibleblack
+                jmp restartrichtingloop
+        
+        zetvakpossiblewhite:
+            mov bx, 0
+            mov bl, [speelveld+si]
+            cmp bx, 0
+                je @F
+            call setvakpossibleboth
+            jmp restartrichtingloop
+            @@:
+                call setvakpossiblewhite
+                jmp restartrichtingloop
+        
+        einde:
+        
+    pop si
+    pop bx
+    pop ax
+    pop cx
+    pop es
+    pop dx
+    pop bp      
 berekenpossible ENDP
 ;-----------------------------------------------;
 

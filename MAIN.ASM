@@ -347,11 +347,13 @@ setvakpossiblewhite PROC FAR
 	push es
 	push cx
 	push ax 
+    push si
 	
     mov si, [bp+6][0]
     mov bl, 3
     mov [speelveld+si], bl	
     
+    pop si
 	pop ax
 	pop cx
 	pop es
@@ -374,12 +376,14 @@ setvakpossibleblack PROC FAR
 	push dx
 	push es
 	push cx
-	push ax 
+	push ax
+    push si
 	
     mov si, [bp+6][0]
     mov bl, 4
     mov [speelveld+si], bl
 
+    pop si
     pop ax
 	pop cx
 	pop es
@@ -402,12 +406,14 @@ setvakpossibleboth PROC FAR
 	push dx
 	push es
 	push cx
-	push ax 
+	push ax
+    push si
 	
     mov si, [bp+6][0]
     mov bl, 5
     mov [speelveld+si], bl
     
+    pop si
     pop ax
 	pop cx
 	pop es
