@@ -91,14 +91,14 @@ mousereader PROC FAR
     ;----comparecolabove----
     comparecolabove:
         mov ax, COL				
-        cmp ax, 20               ;kijk of col boven 20 ligt
+        cmp ax, 40               ;kijk of col boven 20 ligt
             jae comparecolbelow  ;true branch
             jmp loopje           ;false branch
     ;----end comparecolabove----
     
     ;----comparecolbelow----
     comparecolbelow:
-        cmp ax, 196				 ;kijk of col onder 196 ligt
+        cmp ax, 392				 ;kijk of col onder 196 ligt
             jbe calculatevak     ;true branch
             jmp loopje           ;false branch
     ;----end comparecolbelow----
@@ -108,7 +108,7 @@ mousereader PROC FAR
     	call calcvak			;dan is de pijl in het veld : bereken het vakje
         mov ax, VAK
         call WCoin
-        jmp loopje
+        jmp cont
     ;----end calculatevak----
     ; nu moet er nog gekeken worden of de vakjes clickable zijn
     ; functie komt ergens anders te staan maar moet hier ingeladen worden: merci :)
@@ -127,7 +127,7 @@ mousereader PROC FAR
     call printRectangle
     mov	ax, 4c00h
     int	21h
-    
+    cont:
 	pop ax
 	pop cx
 	pop es

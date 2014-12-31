@@ -60,9 +60,9 @@ calcvak PROC FAR
     mul bx
     mov ROW, ax
     mov ax, COL
-    sub ax, 20
+    sub ax, 40
     mov dx, 0
-    mov bx, 22
+    mov bx, 44
     div bx
     mov bx, ROW
     add ax, bx
@@ -91,7 +91,6 @@ switchbeurt PROC NEAR
 	push es
 	push cx
 	push ax 
-
 
     mov al, beurt							;zet je beurt in ax
 	cmp al, 1								;vergelijk beurt met 1
@@ -151,31 +150,34 @@ gameloop PROC FAR
 
 	;----beurt wit----
 	beurtwhite: 						;kijk of het vakje een pw is, is het possible? 
-		mov ax, VAK
-		cmp ax, 3						
+        mov si, VAK
+		mov al, [speelveld+si]
+		cmp al, 3						
 			je vakjepossible			;True: ga naar vakje possible
 			jmp bothcmp					;False: kijk of het bothcmp is
 	;----end beurt wit-----
 
 	;----beurt zwart----
 	beurtblack:
-		mov ax, VAK						;kijk of het vakje een pb is, is het possible? 
-		cmp ax, 4
+        mov si, VAK
+		mov al, [speelveld+si]			;kijk of het vakje een pb is, is het possible? 
+		cmp al, 4
 			je vakjepossible			;True: ga naar vakje possible
 			jmp bothcmp					;False: kijk of het bothcmp is
 	;----end beurt zwart----
 	
 	;----both compare----
 	bothcmp:
-		mov ax, VAK
-		cmp ax, 5						;kijk of het vakje pa, is het possible?
+        mov si, VAK
+		mov al, [speelveld+si]
+		cmp al, 5						;kijk of het vakje pa, is het possible?
 			je vakjepossible			;True: ga naar: vakje possible
 			jmp startloop				;False: start opnieuw met gameloop
 	;----eind both compare----
 
 	;----vak possible----
-	vakjepossible:						; als vakje is possible
-		cmp ax, 1						;kijk wie er aan de beurt is
+	vakjepossible:						;als vakje is possible
+		cmp al, 1						;kijk wie er aan de beurt is
 			je placewhite
 			jmp placeblack
 	;----end vak possible----
@@ -185,7 +187,6 @@ gameloop PROC FAR
 		mov ax, VAK			
     	push ax
     	call Wcoin						;teken white coin
-    	mov ax, VAK
     	push ax
    	 	call setvakwhite				; zet dit in de array
    	 	jmp startswap					; start swappen
@@ -196,7 +197,6 @@ gameloop PROC FAR
         mov ax, VAK
         push ax
         call Bcoin						; teken black coin
-        mov ax, VAK
         push ax
         call setvakblack				;zet dit in de array
         jmp startswap					;start swappen
@@ -225,16 +225,14 @@ gameloop PROC FAR
         call countcoins					;tel het aantal muntjes
         call printNumber
         call switchbeurt				;verander van beurt
-        call drawcoins					;teken de muntjes op het veld
+        call drawcoins					;teken de muntjes op het veld 
         call countpossible				; tel het aantal possible
         mov ax, countpossible	
         cmp ax, 0						; als nul teken spel opnieuw
         	je endgame				
         	jmp startloop
     ;----end start swap----
-    
-    
-    endgame	:
+    endgame:   
     	call whowon
 
 	pop ax
