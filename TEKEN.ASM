@@ -2254,7 +2254,16 @@ printNumber PROC FAR
     mov ax, [bp+6][2] 						;haal number van stack
     mov bx, [bp+6][4] 						;haal location van stack
 
-    
+	push bx
+	mov dx, 7
+	push dx
+	mov dx, 20
+	push dx
+	mov dx, 6
+	push dx
+	call printRectangle
+
+
     mov dx, 0
     push bx
     mov bx, 10

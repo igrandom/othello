@@ -28,7 +28,7 @@ include TEKEN.INC
 ; --- DATA SEGMENT -------------------------------------------------------------
 .DATA
     PUBLIC speelveld
-    PUBLIC COL, ROW, VAK
+    PUBLIC COL, ROW, VAK, blackcoins, whitecoins
     blackcoins 		  db 0
     whitecoins 	   	  db 0
     speelveld	      db 64 dup(0)
@@ -293,11 +293,13 @@ setvakwhite PROC FAR
 	push es
 	push cx
 	push ax
+	push si
 	
     mov si, [bp+6][0]
     mov bl, 1
     mov [speelveld+si], bl
     
+    pop si
     pop ax
 	pop cx
 	pop es
@@ -321,11 +323,13 @@ setvakblack PROC FAR
 	push es
 	push cx
 	push ax
+	push si
 	 
     mov si, [bp+6][0]
     mov bl, 2
     mov [speelveld+si], bl
     
+    pop si
     pop ax
 	pop cx
 	pop es
@@ -547,7 +551,8 @@ main:
     push cx
     push dx
     
-    mov beurt, 2
+    mov bx, 2
+    mov beurt, bx
 	
 	call printgame							;teken spel
     call setupvakjes						;zet de vakjes
