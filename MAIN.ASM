@@ -263,11 +263,13 @@ setvakempty PROC FAR
 	push es
 	push cx
 	push ax
+	push si
 
     mov si, [bp+6][0]
     mov bl, 0
     mov [speelveld+si], bl
     
+    pop si
     pop ax
 	pop cx
 	pop es
