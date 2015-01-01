@@ -365,11 +365,68 @@ berekenpossible PROC FAR
             inc cx
             jmp possibleloop
         @@:
+<<<<<<< HEAD
         mov [speelveld+si], 0
         mov bx, 0                               ;richtingopslag
         vakloop:
             inc bx
             cmp bx, 9
+=======
+        jmp kleinesetup
+        
+        
+        kleinesetup:
+        	;mov bx, dx
+  			;mov speelveld[bx], 4				;reset mogelijk andere possibles
+        	;mov cx, 1
+        	
+        
+        kleineloop:
+        	
+
+            
+                
+        bpeinde:
+            inc dx
+            jmp possibleloop
+            
+            
+        zetvakpossibleblack:
+            mov bx, 0
+            mov bl, [speelveld+dx]
+            cmp bx, 0
+                je @F
+            call setvakpossibleboth
+            jmp restartrichtingloop
+            @@:
+                call setvakpossibleblack
+                jmp restartrichtingloop
+        
+        zetvakpossiblewhite:
+            mov bx, 0
+            mov bl, [speelveld+dx]
+            cmp bx, 0
+                je @F
+            call setvakpossibleboth
+            jmp restartrichtingloop
+            @@:
+                call setvakpossiblewhite
+                jmp restartrichtingloop
+        
+        einde:   
+    pop bx
+    pop ax
+    pop cx
+    pop es
+    pop dx
+    pop bp      
+berekenpossible ENDP
+;-----------------------------------------------;
+possiblekleineloop PROC FAR
+kleineloop:
+    mov ax, cx
+            cmp ax, 9
+>>>>>>> FETCH_HEAD
                 jne @F
                 inc si
                 jmp possibleloop
@@ -383,6 +440,7 @@ berekenpossible PROC FAR
                 jmp vakloop
             @@:
             mov ax, 0
+<<<<<<< HEAD
             mov al, [speelveld+cx]
             cmp ax, 1
                 je witloop
@@ -468,6 +526,57 @@ berekenpossible PROC FAR
     pop dx
     pop bp
 berekenpossible ENDP
+=======
+            mov al, [speelveld+bx]
+            cmp ax, 1                           ;WIT STEENTJE AANWEZIG?
+                je loopwit
+                jmp @F
+            loopwit:
+                call witteloop
+                jmp restartrichtingloop
+            @@:
+            cmp ax, 2                           ;ZWART STEENTJE AANWEZIG?
+                je loopzwart
+                jmp @F
+            loopzwart:
+                call zwarteloop
+            @@:
+            restartrichtingloop:
+            	inc cx
+                jmp kleineloop
+possiblekleineloop ENDP
+
+witteloop PROC FAR
+            
+            loopwit:
+                call juisterichting
+                mov bx, 0
+                mov bl, richting
+                cmp bx, 0
+                    je restartrichtingloop
+                mov bx, VAK
+                cmp bx, 1                       ;STEENTJE WIT? GA DAN DOOR MET ZOEKEN
+                    je loopwit            
+                cmp bx, 2                       ;STEENTJE ZWART? ZET DAN EEN POSSIBLE BLACK IN HET ORIGINEVAKJE
+                    je zetvakpossibleblack
+witteloop END
+
+
+zwarteloop PROC FAR                
+            loopzwart:
+                call juisterichting
+                mov bx, 0
+                mov bl, richting
+                cmp bx, 0
+                    je restartrichtingloop
+                mov bx, VAK
+                cmp bx, 1
+                    je zetvakpossiblewhite
+                cmp bx, 2
+                    je loopzwart
+zwarteloop ENDP
+            
+>>>>>>> FETCH_HEAD
 
 ;------------------countpossible----------------;
 ; Uitleg: tellen van mogelijke zetten           ;
