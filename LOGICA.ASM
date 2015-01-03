@@ -90,7 +90,6 @@ switchbeurt PROC NEAR
 	push cx
 	push ax 
 
-
     mov ax, beurt							;zet je beurt in ax
     mov ah, 0
 	cmp ax, 1
@@ -112,7 +111,6 @@ switchbeurt PROC NEAR
 		jmp done
 	;-----end naar white----
 	
-	;----done----
 	done:
 
 
@@ -473,34 +471,34 @@ countpossible PROC NEAR
 	
 	mov si, 0               	
 	
-	looper:						; einde van speelveld?
+	looper:										;einde van speelveld?
 		cmp si, 64				
-			je eindeloop				; ga naar eindeloop
+			je eindeloop						;ga naar eindeloop
 		mov ax, 0
 		mov al, [speelveld+si]
 		mov bx, beurt
 		mov bh, 0
-		cmp bx, 1					;beurt is wit
-			je witbeurt					; ga naar beurt wit
-			jmp zwartbeurt				; anders naar beurt zwart
+		cmp bx, 1								;beurt is wit
+			je witbeurt							;ga naar beurt wit
+			jmp zwartbeurt						;anders naar beurt zwart
 
-	witbeurt:					; wit beurt	
-		cmp ax, 3					; is er een pw?
+	witbeurt:									;wit beurt	
+		cmp ax, 3								;is er een pw?
 			je pluseen
-		cmp ax, 5					; of een pa?
+		cmp ax, 5								;of een pa?
 			je pluseen
 			inc si
-			jmp looper					; loopverder
+			jmp looper							;loopverder
 
-	zwartbeurt:					; zwart beurt
-		cmp ax, 4					; is er een pb?		
+	zwartbeurt:									;zwart beurt
+		cmp ax, 4								;is er een pb?		
 			je pluseen				
-		cmp ax, 5					; of een pa?
+		cmp ax, 5								;of een pa?
 			je pluseen
 			inc si
 			jmp looper
 
-	pluseen:					; tel een op bij countpos
+	pluseen:									;tel een op bij countpos
 		mov dx, countpos	
 		add dx, 1
 		mov countpos, dx
@@ -532,8 +530,8 @@ whowon PROC NEAR
 	push cx
 	push ax 
 	push bx
-	mov dx, 0				;witte coins
-	mov cx, 0				;zwarte coins
+	mov dx, 0									;witte coins
+	mov cx, 0									;zwarte coins
 
 	mov si, 0
 	looper2:
@@ -567,7 +565,7 @@ whowon PROC NEAR
     	je bothwon
     	jmp whitewon
     
-    blackwon:					;zwart heeft gewonnen
+    blackwon:									;zwart heeft gewonnen
     	mov ax, locatiemunt
     	push ax
 		mov ax, 0
@@ -575,22 +573,22 @@ whowon PROC NEAR
 		call printCircle
     	jmp einde
     
-    bothwon:					;Beide spelers hebben gewonnen
-    	mov ax, locatiemunt	 	;Zwarte Munt
+    bothwon:									;Beide spelers hebben gewonnen
+    	mov ax, locatiemunt	 					;Zwarte Munt
     	sub ax, 25
     	push ax
 		mov ax, 0
 		push ax
 		call printCircle
 	
-    	mov ax, locatiemunt 	;Witte Munt
+    	mov ax, locatiemunt 					;Witte Munt
     	push ax					
 		mov ax, 15
 		push ax
 		call printCircle							
     	jmp einde
     
-    whitewon:					;wit heeft gewonnen
+    whitewon:									;wit heeft gewonnen
     	mov ax, locatiemunt
     	push ax
 		mov ax, 15 ; kleur
@@ -599,10 +597,10 @@ whowon PROC NEAR
 	    jmp einde 
     
     einde: 
-		mov ax, locatiemunt			;won plaatsen
-		add ax, 25					; 25 px from coin
+		mov ax, locatiemunt						;won plaatsen
+		add ax, 25								;25 px from coin
 		push ax
-		call printWON			; call it
+		call printWON							; call it
 	
 	pop ax
 	pop cx
@@ -627,8 +625,8 @@ countcoins PROC NEAR
 	push es
 	push cx
 	push ax 
-	mov dx, 0				;witte coins
-	mov cx, 0				;zwarte coins
+	mov dx, 0									;witte coins
+	mov cx, 0									;zwarte coins
 
 	mov si, 0
 	looper2:
@@ -753,7 +751,7 @@ drawcoins PROC FAR
     	mov bx, beurt
         cmp bx, 1
             je dpos
-            jmp dleeg                   ;!!!!!!!!!!!!!!!!!!!!!
+            jmp dleeg                   
 
     dposblack:
     	mov bx, beurt
@@ -802,28 +800,28 @@ gameloop PROC FAR
 	startloop:
     	call mousereader
 
-    	mov ax, beurt 					;kijk wie er aan de beurt is 
+    	mov ax, beurt 							;kijk wie er aan de beurt is 
     	cmp ax, 1
     		je beurtwhite
     		jmp beurtblack
 	;----end startloop
 
 	;----beurt wit----
-	beurtwhite: 						;kijk of het vakje een pw is, is het possible? 
+	beurtwhite: 								;kijk of het vakje een pw is, is het possible? 
 		mov bx, VAK
 		mov al, [speelveld+bx]
 		cmp al, 3						
-			je vakjepossible			;True: ga naar vakje possible
-			jmp bothcmp					;False: kijk of het bothcmp is
+			je vakjepossible					;True: ga naar vakje possible
+			jmp bothcmp							;False: kijk of het bothcmp is
 	;----end beurt wit-----
 
 	;----beurt zwart----
 	beurtblack:
 		mov bx, VAK
-		mov al, [speelveld+bx]						;kijk of het vakje een pb is, is het possible? 
+		mov al, [speelveld+bx]					;kijk of het vakje een pb is, is het possible? 
 		cmp al, 4
-			je vakjepossible			;True: ga naar vakje possible
-			jmp bothcmp					;False: kijk of het bothcmp is
+			je vakjepossible					;True: ga naar vakje possible
+			jmp bothcmp							;False: kijk of het bothcmp is
 	;----end beurt zwart----
 	
 	;----both compare----
@@ -831,33 +829,33 @@ gameloop PROC FAR
 		mov bx, VAK
 		mov al, [speelveld+bx]
 		jmp vakjepossible
-		;cmp al, 5						;kijk of het vakje pa, is het possible?
-			;je vakjepossible			;True: ga naar: vakje possible
-			;jmp startloop				;False: start opnieuw met gameloop
+		;cmp al, 5								;kijk of het vakje pa, is het possible?
+			;je vakjepossible					;True: ga naar: vakje possible
+			;jmp startloop						;False: start opnieuw met gameloop
 	;----eind both compare----
 
 	;----vak possible----
-	vakjepossible:						; als vakje is possible
+	vakjepossible:								;als vakje is possible
 		mov ax, beurt
-		cmp ax, 1						;kijk wie er aan de beurt is
+		cmp ax, 1								;kijk wie er aan de beurt is
 			je placewhite
 			jmp placeblack
 	;----end vak possible----
 
 	;----plaats wit----
-	placewhite:						;teken white coin
+	placewhite:									;teken white coin
     	mov ax, VAK
     	push ax
-   	 	call setvakwhite				; zet dit in de array
-   	 	jmp startswap					; start swappen
+   	 	call setvakwhite						;zet dit in de array
+   	 	jmp startswap							;start swappen
    	 ;----eind plaats wit----
    	 
     ;----plaats zwart----
-    placeblack:						; teken black coin
+    placeblack:									;teken black coin
         mov ax, VAK
         push ax
-        call setvakblack				;zet dit in de array
-        jmp startswap					;start swappen
+        call setvakblack						;zet dit in de array
+        jmp startswap							;start swappen
 	;----end plaats zwart-----
     
     ;----start swap----
@@ -874,12 +872,12 @@ gameloop PROC FAR
     	jmp swaploop
     @@:
     
-        ;call berekenpossible			;bereken welke possible zijn
-        call countcoins					;tel het aantal muntjes
+        ;call berekenpossible					;bereken welke possible zijn
+        call countcoins							;tel het aantal muntjes
         
-        call switchbeurt				;verander van beurt
+        call switchbeurt						;verander van beurt
         call resetmouse
-        call drawcoins					;teken de muntjes op het veld
+        call drawcoins							;teken de muntjes op het veld
         mov ax, 0
         mov al, blackcoins
         mov bl, whitecoins
@@ -887,9 +885,9 @@ gameloop PROC FAR
         cmp ax, 64
         	je endgame
         	
-        ;call countpossible				; tel het aantal possible
+        ;call countpossible						;tel het aantal possible
         ;mov ax, countpos	
-        ;cmp ax, 0						; als nul teken spel opnieuw
+        ;cmp ax, 0								;als nul teken spel opnieuw
         ;	je endgame				
         	jmp startloop
         ; cancel
@@ -910,6 +908,7 @@ gameloop PROC FAR
 	ret 0
 gameloop ENDP
 ;-----------------------------------------------;
+
 ;--------------------reset mouse----------------;
 ; Uitleg: zorg er voor dat de muis uit het      ;
 ;         het te tekenen gebied is	            ;
@@ -939,6 +938,7 @@ push bp
 	ret 0
 resetmouse ENDP
 ;-----------------------------------------------;
+
 ;--------------------SWAP-----------------------;
 ; Uitleg: draai stenen                          ;
 ; Parameters doorgegeven met push:              ;

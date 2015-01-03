@@ -26,13 +26,9 @@ include TEKEN.INC
 PUBLIC palette
 PLAYFIELD       dw 6420
 palette			db 768 dup(0)
-
 ; --- SCREEN BUFFER ------------------------------------------------------------
 .FARDATA?	; segment that contains the screenBuffer for mode 13h drawing
-
 screenBuffer	db 64000 dup(?)	; the 64000 bytes for the screen
-
-
 ; ----------------------------- CODE STARTS HERE -------------------------------
 .CODE        ; code segment
 ;---------------PRINT LINE----------------------;
@@ -137,128 +133,6 @@ printRectangle PROC FAR
 	ret 8
 printRectangle ENDP
 ;----------------------------------------------;
-
-;-----------PRINT TILE--------------------------;
-; Uitleg: printen van een tile                  ;
-; Parameters doorgegeven met push:              ;
-;                   - locatie   [0]             ;
-;       !! FIX THIS                             ;
-;        Locatie moet gefixt worden             ;
-;-----------------------------------------------;
-printTile PROC NEAR
-	push bp
-	mov bp, sp
-	push bx
-	push dx
-	push es
-	push cx
-	push ax
-	
-	mov ax, [bp+4][0]					; haal locatie van de stack
-	push ax								; zet deze er opnieuw op
-	
-    mov ax, 20                      	; vakje = 20
-    push ax								; zet dit op de stack
-    
-
-	mov ax, 20 							; lengte = 20
-    push ax								; zet dit op de stack
-	
-	mov ax, 2 							; kleur = donkergroen 
-	push ax								; zet op stack
-	
-	call printRectangle					; roep print rechthoek op
-	
-	pop ax
-	pop cx
-	pop es
-	pop dx
-	pop bx
-	pop bp
-	ret 2
-printTile ENDP
-    
-;-----------------------------------------------;
-
-;-----------PRINT FIELDLINE---------------------;
-; Uitleg: printen van een lijn van vakjes       ;
-; Parameters doorgegeven met push:              ;
-;                   - start van lijn (px) [0]   ;
-;-----------------------------------------------;
-printFieldLine PROC NEAR
-	
-	push bp
-	mov bp, sp
-	push bx
-	push dx
-	push es
-	push cx
-	push ax 
-	
-	mov cx, 8
-	
-										; zet in ax start van lijn
-    mov ax, [bp+4][0]					
-	
-	;----lineloop----
-	lineloop:
-		
-		push ax							;zet de startpixel op stack
-		call printTile					;print vakje
-		add ax, 22						;zet de startpixel een vakje verder
-		
-  		dec cx 							; decrement CX by 1
-		jnz lineloop 					; jump to loopje if dec cx did not result in 0
-   	;----end lineloop----
-	
-	pop ax
-	pop cx
-	pop es
-	pop dx
-	pop bx
-	pop bp
-	ret 2
-printFieldLine ENDP
-;-----------------------------------------------;
-
-;-----------PRINT PLAYFIELD---------------------;
-; Uitleg: printen van het raster                ;
-; Parameters doorgegeven met push:              ;
-;                   - positie (px) [0]          ;
-;-----------------------------------------------;
-printPlayField PROC NEAR	
-	push bp
-	mov bp, sp
-	push bx
-	push dx
-	push es
-	push cx
-	push ax 
-	
-    mov ax, [bp+4][0]					;haal pixel positie van stack
-    
-	mov cx, 8							; zet counter op 8
-	
-	;----fieldloop----
-	fieldloop:
-		
-		push ax							; zet pixel positie op stack
-		call printFieldLine
-		add ax, 7040					; zet de pixel waarde een vak verder
-		
-  		dec cx 							; decrement CX by 1
-		jnz fieldloop					; jump to loopje if dec cx did not result in 0
-	;----end fieldloop----
-	
-	pop ax
-	pop cx
-	pop es
-	pop dx
-	pop bx
-	pop bp
-	ret 2
-printPlayField ENDP
-;-----------------------------------------------;
 
 ;-----------PRINT BACKGROUND--------------------;
 ; Uitleg: printen van de achtergrond            ;
