@@ -1,0 +1,13 @@
+	ML /W3 /WX LOGICA.OBJ TEKEN.OBJ MAIN.OBJ /Fe OTHELLO.EXE
+
+Microsoft (R) Segmented Executable Linker  Version 5.60.339 Dec  5 1994
+Copyright (C) Microsoft Corp 1984-1993.  All rights reserved.
+
+LINK : warning L4017: /r : unrecognized option name; option ignored
+Object Modules [.obj]: /r LOGICA.OBJ+
+Object Modules [.obj]: "TEKEN.OBJ"+
+Object Modules [.obj]: "MAIN.OBJ"
+Run File [LOGICA.exe]: "OTHELLO.EXE"
+List File [nul.map]: NUL
+Libraries [.lib]: 
+Definitions File [nul.def]: 

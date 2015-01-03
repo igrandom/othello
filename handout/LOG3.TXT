@@ -1,0 +1,16 @@
+	ML /c /W3 /WX /FoLOGICA.OBJ /Ta LOGICA.ASM
+ Assembling: LOGICA.ASM
+LOGICA.ASM(693): warning A6003: conditional jump lengthened : by 652 byte(s)
+LOGICA.ASM(695): warning A6003: conditional jump lengthened : by 644 byte(s)
+LOGICA.ASM(719): warning A6003: conditional jump lengthened : by 23 byte(s)
+LOGICA.ASM(721): warning A6003: conditional jump lengthened : by 82 byte(s)
+LOGICA.ASM(743): warning A6003: conditional jump lengthened : by 122 byte(s)
+LOGICA.ASM(745): warning A6003: conditional jump lengthened : by 182 byte(s)
+LOGICA.ASM(768): warning A6003: conditional jump lengthened : by 222 byte(s)
+LOGICA.ASM(770): warning A6003: conditional jump lengthened : by 284 byte(s)
+LOGICA.ASM(789): warning A6003: conditional jump lengthened : by 330 byte(s)
+LOGICA.ASM(791): warning A6003: conditional jump lengthened : by 382 byte(s)
+LOGICA.ASM(802): warning A6003: conditional jump lengthened : by 20 byte(s)
+LOGICA.ASM(838): warning A6003: conditional jump lengthened : by 87 byte(s)
+LOGICA.ASM(882): warning A6003: conditional jump lengthened : by 122 byte(s)
+LOGICA.ASM(917): warning A6003: conditional jump lengthened : by 190 byte(s)

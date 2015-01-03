@@ -1,0 +1,22 @@
+	ML /c /W3 /WX /FoD.OBJ /Ta D.ASM
+ Assembling: D.ASM
+	ML /W3 /WX B.OBJ C.OBJ R.OBJ P.OBJ D.OBJ M.OBJ Q.OBJ L.OBJ S.OBJ N.OBJ /Fe OTHELLO.EXE
+
+Microsoft (R) Segmented Executable Linker  Version 5.60.339 Dec  5 1994
+Copyright (C) Microsoft Corp 1984-1993.  All rights reserved.
+
+LINK : warning L4017: /r : unrecognized option name; option ignored
+Object Modules [.obj]: /r B.OBJ+
+Object Modules [.obj]: "C.OBJ"+
+Object Modules [.obj]: "R.OBJ"+
+Object Modules [.obj]: "P.OBJ"+
+Object Modules [.obj]: "D.OBJ"+
+Object Modules [.obj]: "M.OBJ"+
+Object Modules [.obj]: "Q.OBJ"+
+Object Modules [.obj]: "L.OBJ"+
+Object Modules [.obj]: "S.OBJ"+
+Object Modules [.obj]: "N.OBJ"
+Run File [B.exe]: "OTHELLO.EXE"
+List File [nul.map]: NUL
+Libraries [.lib]: 
+Definitions File [nul.def]: 

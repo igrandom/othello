@@ -1,0 +1,17 @@
+	ML /c /W3 /WX /FoPRINTG.OBJ /Ta PRINTG.ASM
+ Assembling: PRINTG.ASM
+	ML /W3 /WX BACKGR.OBJ DRAWC.OBJ DRAWR.OBJ PRINTG.OBJ MAIN.OBJ /Fe OTHELLO.EXE
+
+Microsoft (R) Segmented Executable Linker  Version 5.60.339 Dec  5 1994
+Copyright (C) Microsoft Corp 1984-1993.  All rights reserved.
+
+LINK : warning L4017: /r : unrecognized option name; option ignored
+Object Modules [.obj]: /r BACKGR.OBJ+
+Object Modules [.obj]: "DRAWC.OBJ"+
+Object Modules [.obj]: "DRAWR.OBJ"+
+Object Modules [.obj]: "PRINTG.OBJ"+
+Object Modules [.obj]: "MAIN.OBJ"
+Run File [BACKGR.exe]: "OTHELLO.EXE"
+List File [nul.map]: NUL
+Libraries [.lib]: 
+Definitions File [nul.def]: 
