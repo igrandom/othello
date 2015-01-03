@@ -460,7 +460,7 @@ setupvakjes PROC NEAR
         cleanloop:
             cmp si, 64
                 je @F
-            mov [speelveld+si], 0
+            mov [speelveld+si], 5				;TEMPORARLY CAUSE BEREKENPOSSIBLE DOESN'T WORK
             inc si
             jmp cleanloop
             
@@ -468,15 +468,15 @@ setupvakjes PROC NEAR
     @@:
     mov ax, 19
     push ax
-    call setvakpossibleblack
+    call setvakpossibleboth
 
     mov ax, 20
     push ax
-    call setvakpossiblewhite
+    call setvakpossibleboth
 
     mov ax, 26
     push ax
-    call setvakpossibleblack
+    call setvakpossibleboth
 
     mov ax, 27
     push ax
@@ -488,11 +488,11 @@ setupvakjes PROC NEAR
 
     mov ax, 29
     push ax
-    call setvakpossiblewhite
+    call setvakpossibleboth
 
     mov ax, 34
     push ax
-    call setvakpossiblewhite
+    call setvakpossibleboth
 
     mov ax, 35
     push ax
@@ -504,15 +504,15 @@ setupvakjes PROC NEAR
 
     mov ax, 37
     push ax
-    call setvakpossibleblack
+    call setvakpossibleboth
 
     mov ax, 43
     push ax
-    call setvakpossiblewhite
+    call setvakpossibleboth
 
     mov ax, 44
     push ax
-    call setvakpossibleblack
+    call setvakpossibleboth
 
     pop si
     pop es

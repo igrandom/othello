@@ -649,7 +649,7 @@ drawpos PROC FAR
 	mov ax, 20 								; lengte
     push ax									; zet op stack
 	
-	mov ax, 10
+	mov ax, 2
     push ax									; zet op stack
     	
 	call printRectangle

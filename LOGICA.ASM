@@ -93,7 +93,7 @@ switchbeurt PROC NEAR
     mov ax, beurt							;zet je beurt in ax
     mov ah, 0
 	cmp ax, 1
-										;vergelijk beurt met 1
+											;vergelijk beurt met 1
 		je naarblack						;true: naar black
 		jmp naarwhite						;false: naar white
 	
@@ -101,6 +101,27 @@ switchbeurt PROC NEAR
 	naarblack:
 		mov ax, 2
 		mov beurt, ax
+		
+		;witte pijl clearen
+		mov ax, 12360
+		push ax
+		mov ax, 20
+		push ax
+		mov ax, 40
+		push ax
+		mov ax, 6
+		push ax
+		call printRectangle
+		;end clearen
+		
+		;zwarte pijl tekenen
+		mov ax, 7240
+		push ax
+		mov ax, 2
+		push ax
+		call printArrow
+		;end tekenen
+		
 		jmp done
 	;----end naar black----
 
@@ -108,6 +129,27 @@ switchbeurt PROC NEAR
 	naarwhite:
 		mov ax, 1
 		mov beurt, ax
+		
+		;zwarte pijl clearen
+		mov ax, 5960
+		push ax
+		mov ax, 20
+		push ax
+		mov ax, 40
+		push ax
+		mov ax, 6
+		push ax
+		call printRectangle
+		;end clearen
+		
+		;witte pijl tekenen
+		mov ax, 13640
+		push ax
+		mov ax, 2
+		push ax
+		call printArrow
+		;end tekenen
+		
 		jmp done
 	;-----end naar white----
 	
@@ -591,7 +633,7 @@ whowon PROC NEAR
     whitewon:									;wit heeft gewonnen
     	mov ax, locatiemunt
     	push ax
-		mov ax, 15 ; kleur
+		mov ax, 15 								;kleur
 		push ax
 		call printCircle
 	    jmp einde 
@@ -828,10 +870,9 @@ gameloop PROC FAR
 	bothcmp:
 		mov bx, VAK
 		mov al, [speelveld+bx]
-		jmp vakjepossible
-		;cmp al, 5								;kijk of het vakje pa, is het possible?
-			;je vakjepossible					;True: ga naar: vakje possible
-			;jmp startloop						;False: start opnieuw met gameloop
+		cmp al, 5								;kijk of het vakje pa, is het possible?
+			je vakjepossible					;True: ga naar: vakje possible
+			jmp startloop						;False: start opnieuw met gameloop
 	;----eind both compare----
 
 	;----vak possible----
@@ -925,8 +966,8 @@ push bp
 	push ax 
 	
 	mov ax, 04h
-	mov cx, 550
-	mov dx, 170
+	mov cx, 640
+	mov dx, 200
 	int 33h
 	
 	pop ax
